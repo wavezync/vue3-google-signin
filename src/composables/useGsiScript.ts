@@ -1,5 +1,11 @@
-import { onMounted, onUnmounted, readonly } from "vue";
-import useScriptState from "./useScriptState";
+import { onMounted, onUnmounted, readonly, ref, watch } from "vue";
+
+const loaded = ref(false);
+const isLoading = ref(false);
+const error = ref(false);
+const subscriberCount = ref(0);
+
+let scriptTag: HTMLScriptElement | null = null;
 
 function createScriptTag() {
   const scriptTag = document.createElement("script");
@@ -10,28 +16,52 @@ function createScriptTag() {
   return scriptTag;
 }
 
-export default function useGsiScript() {
-  const scriptTag = createScriptTag();
-  const { loaded } = useScriptState();
-  const isScriptLoaded = readonly(loaded);
+const initialize = () => {
+  scriptTag = createScriptTag();
+  document.head.appendChild(scriptTag);
+  isLoading.value = true;
 
-  onMounted(() => {
-    scriptTag.onload = () => {
-      loaded.value = true;
-    };
-    scriptTag.onerror = () => {
-      loaded.value = false;
-    };
+  scriptTag.onload = () => {
+    isLoading.value = false;
+    loaded.value = true;
+  };
 
-    if (!window.isLoadingGoogle) {
-      document.head.appendChild(scriptTag);
-      window.isLoadingGoogle = true;
+  scriptTag.onerror = () => {
+    isLoading.value = false;
+    error.value = true;
+  };
+};
+
+const cleanup = () => {
+  scriptTag && document.head.removeChild(scriptTag);
+  loaded.value = false;
+  error.value = false;
+};
+
+watch(
+  () => subscriberCount.value,
+  (newCount, _oldCount) => {
+    if (newCount > 0 && !isLoading.value && !loaded.value) {
+      initialize();
     }
+
+    if (newCount === 0 && loaded.value) {
+      cleanup();
+    }
+  }
+);
+
+export default function useGsiScript() {
+  onMounted(() => {
+    subscriberCount.value++;
   });
 
   onUnmounted(() => {
-    if (loaded.value) document.head.removeChild(scriptTag);
+    subscriberCount.value--;
   });
 
-  return { isScriptLoaded };
+  return {
+    loaded: readonly(loaded),
+    error: readonly(error),
+  };
 }

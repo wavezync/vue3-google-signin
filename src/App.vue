@@ -2,7 +2,7 @@
 import useGsiScript from "./composables/useGsiScript";
 import GoogleLoginButton from "./components/GoogleLoginButton.vue";
 import GoogleLoginOneTapButton from "./components/GoogleLoginOneTapButton.vue";
-const { isScriptLoaded } = useGsiScript();
+const { loaded: isScriptLoaded } = useGsiScript();
 </script>
 
 <template>
