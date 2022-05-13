@@ -11,4 +11,6 @@ const { loaded: isScriptLoaded } = useGsiScript();
 
   <google-login-button></google-login-button>
   <google-login-one-tap-button></google-login-one-tap-button>
+
+  <div>hello</div>
 </template>

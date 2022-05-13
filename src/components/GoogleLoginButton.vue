@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import useGsiScript from "../composables/useGsiScript";
-const { loaded: isScriptLoaded } = useGsiScript();
+const { loaded } = useGsiScript();
 </script>
 
 <template>
-  <button>Hello {{ isScriptLoaded }}</button>
+  <button>Hello {{ loaded }}</button>
 </template>

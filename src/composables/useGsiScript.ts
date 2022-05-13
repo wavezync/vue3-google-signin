@@ -7,14 +7,14 @@ const subscriberCount = ref(0);
 
 let scriptTag: HTMLScriptElement | null = null;
 
-function createScriptTag() {
+const createScriptTag = () => {
   const scriptTag = document.createElement("script");
   scriptTag.src = "https://accounts.google.com/gsi/client";
   scriptTag.async = true;
   scriptTag.defer = true;
 
   return scriptTag;
-}
+};
 
 const initialize = () => {
   scriptTag = createScriptTag();
