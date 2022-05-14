@@ -6,9 +6,4 @@ export interface IGoogleLoginConfig {
 
 export default function useGoogleLogin(options: IGoogleLoginConfig) {
   const { loaded } = useGsiScript();
-
-  watch(
-    () => loaded.value,
-    () => {}
-  );
 }
