@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, readonly, ref, watch } from "vue";
 
-const loaded = ref(false);
+const loaded = ref(!!window.google || false);
 const isLoading = ref(false);
 const error = ref(false);
 const subscriberCount = ref(0);
@@ -41,7 +41,7 @@ const cleanup = () => {
 watch(
   () => subscriberCount.value,
   (newCount, _oldCount) => {
-    if (newCount > 0 && !isLoading.value && !loaded.value) {
+    if (newCount > 0 && !loaded.value && !isLoading.value) {
       initialize();
     }
 
