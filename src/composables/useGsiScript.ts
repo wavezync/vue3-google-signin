@@ -19,7 +19,6 @@ const createScriptTag = () => {
 const initialize = () => {
   scriptTag = createScriptTag();
   document.head.appendChild(scriptTag);
-  isLoading.value = true;
 
   scriptTag.onload = () => {
     isLoading.value = false;
@@ -61,7 +60,7 @@ export default function useGsiScript() {
   });
 
   return {
-    loaded: readonly(loaded),
-    error: readonly(error),
+    scriptLoaded: readonly(loaded),
+    scriptLoadError: readonly(error),
   };
 }
