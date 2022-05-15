@@ -211,7 +211,7 @@ const emits = defineEmits<{
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
 }>();
 
-const clientId = inject<string>(GoogleClientIdKey, "");
+const clientId = inject<string>(GoogleClientIdKey);
 const targetElement = ref<HTMLElement | null>(null);
 const { scriptLoaded } = useGsiScript();
 
@@ -219,7 +219,8 @@ watchEffect(() => {
   if (!scriptLoaded.value) return;
 
   window.google?.accounts.id.initialize({
-    client_id: clientId,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    client_id: clientId!,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.clientId || !credentialResponse.credential) {
         emits("onLoginError");
