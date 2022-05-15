@@ -1,5 +1,6 @@
 import type { App, Plugin } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
+import GoogleLoginButton from "./components/GoogleLoginButton.vue";
 
 const PLUGIN_NAME = "GoogleOauthPlugin";
 
@@ -27,7 +28,10 @@ const plugin: Plugin = {
     }
 
     app.provide(GoogleClientIdKey, options.clientId);
+    app.component("GoogleLoginButton", GoogleLoginButton);
   },
 };
+
+export { GoogleLoginButton };
 
 export default plugin;
