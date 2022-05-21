@@ -7,7 +7,7 @@ import type {
 } from "@/interfaces/accounts";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import { inject, ref, watchEffect, onUnmounted, computed } from "vue";
-import useGsiScript from "../composables/useGsiScript";
+import useGsiScript from "@/composables/useGsiScript";
 
 interface GoogleLoginButtonProps {
   /**
