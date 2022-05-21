@@ -1,3 +1,4 @@
+import { CodeClient } from "../interfaces/oauth2";
 import {
   IdConfiguration,
   MomentListener,
@@ -9,7 +10,7 @@ declare global {
     google?: {
       accounts: {
         id: {
-          initialize: (input: IdConfiguration) => void;
+          initialize: (idConfiguration: IdConfiguration) => void;
           prompt: (momentListener?: MomentListener) => void;
           renderButton: (
             parent: HTMLElement,
@@ -31,9 +32,7 @@ declare global {
               overridableClientConfig?: OverridableTokenClientConfig
             ) => void;
           };
-          initCodeClient: (config: CodeClientConfig) => {
-            requestCode: () => void;
-          };
+          initCodeClient: (config: CodeClientConfig) => CodeClient;
           hasGrantedAnyScope: (
             tokenRsponse: TokenResponse,
             firstScope: string,
