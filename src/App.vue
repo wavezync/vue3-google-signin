@@ -44,7 +44,7 @@ const { isReady: isTokenClientReady, login: loginTokenClient } = useTokenClient(
     Login Code Client
   </button>
 
-  <button @click="loginTokenClient" :disabled="!isTokenClientReady">
+  <button @click="() => loginTokenClient()" :disabled="!isTokenClientReady">
     Login Token Client
   </button>
 </template>

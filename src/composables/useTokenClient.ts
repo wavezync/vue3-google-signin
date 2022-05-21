@@ -26,7 +26,7 @@ export interface AuthCodeFlowOptions
 
 export interface UseTokenClientResult {
   isReady: Readonly<Ref<boolean>>;
-  login: () => void | undefined;
+  login: (overrideConfig?: OverridableTokenClientConfig) => void | undefined;
 }
 
 /**
