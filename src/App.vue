@@ -34,8 +34,8 @@ const { isReady: isTokenClientReady, login: loginTokenClient } = useTokenClient(
 
 <template>
   <GoogleLoginButton
-    @on-login-success="onLoginSuccessCallback"
-    @on-login-error="onLoginErrorCallback"
+    @on-success="onLoginSuccessCallback"
+    @on-error="onLoginErrorCallback"
     size="large"
   ></GoogleLoginButton>
 
