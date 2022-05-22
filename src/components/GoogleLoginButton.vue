@@ -25,7 +25,7 @@ interface GoogleLoginButtonProps {
    * @type {boolean}
    * @default false
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#auto_select
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   autoSelect?: boolean;
 
@@ -36,7 +36,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#login_uri
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   loginUri?: string;
 
@@ -46,7 +46,7 @@ interface GoogleLoginButtonProps {
    * @type {boolean}
    * @default true
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#cancel_on_tap_outside
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   cancelOnTapOutside?: boolean;
 
@@ -55,7 +55,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#prompt_parent_id
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   promptParentId?: string;
 
@@ -64,7 +64,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#nonce
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   nonce?: string;
 
@@ -73,7 +73,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {Context}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#context
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   context?: Context;
 
@@ -82,7 +82,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#state_cookie_domain
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   stateCookieDomain?: string;
 
@@ -92,7 +92,7 @@ interface GoogleLoginButtonProps {
    * @type {UxMode}
    * @default popup
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#ux_mode
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   uxMode?: UxMode;
 
@@ -101,7 +101,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {(string | string[])}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#allowed_parent_origin
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   allowedParentOrigin?: string | string[];
 
@@ -110,7 +110,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {boolean}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#itp_support
-   * @memberof IdConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   itpSupport?: boolean;
 
@@ -119,7 +119,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {("standard" | "icon")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#type
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   type?: "standard" | "icon";
 
@@ -129,7 +129,7 @@ interface GoogleLoginButtonProps {
    * @type {("outline" | "filled_blue" | "filled_black")}
    * @default outline
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#theme
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   theme?: "outline" | "filled_blue" | "filled_black";
 
@@ -139,7 +139,7 @@ interface GoogleLoginButtonProps {
    * @type {("large" | "medium" | "small")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#size
    * @default small
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   size?: "large" | "medium" | "small";
 
@@ -149,7 +149,7 @@ interface GoogleLoginButtonProps {
    * @type {("signin_with" | "signup_with" | "continue_with" | "signin")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#text
    * @default signup_with
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   text?: "signin_with" | "signup_with" | "continue_with" | "signin";
 
@@ -159,7 +159,7 @@ interface GoogleLoginButtonProps {
    * @type {("rectangular" | "pill" | "circle" | "square")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#shape
    * @default rectangular
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   shape?: "rectangular" | "pill" | "circle" | "square";
 
@@ -169,7 +169,7 @@ interface GoogleLoginButtonProps {
    * @type {("left" | "center")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#logo_alignment
    * @default left
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   logoAlignment?: "left" | "center";
 
@@ -179,7 +179,7 @@ interface GoogleLoginButtonProps {
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#width
    * @default 400
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   width?: string;
 
@@ -189,7 +189,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#locale
-   * @memberof GsiButtonConfiguration
+   * @memberof GoogleLoginButtonProps
    */
   locale?: string;
 }
@@ -198,8 +198,8 @@ const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
 
 const props = defineProps<GoogleLoginButtonProps>();
 const emits = defineEmits<{
-  (e: "onLoginSuccess", response: CredentialResponse): void;
-  (e: "onLoginError"): void;
+  (e: "onSuccess", response: CredentialResponse): void;
+  (e: "onError"): void;
   (e: "intermediateIframeCloseCallback"): void;
   (
     e: "nativeCallback",
@@ -215,7 +215,7 @@ const clientId = inject<string>(GoogleClientIdKey);
 const targetElement = ref<HTMLElement | null>(null);
 const { scriptLoaded } = useGsiScript();
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   if (!scriptLoaded.value) return;
 
   window.google?.accounts.id.initialize({
@@ -223,11 +223,11 @@ watchEffect(() => {
     client_id: clientId!,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.clientId || !credentialResponse.credential) {
-        emits("onLoginError");
+        emits("onError");
         return;
       }
 
-      emits("onLoginSuccess", credentialResponse);
+      emits("onSuccess", credentialResponse);
     },
     allowed_parent_origin: props.allowedParentOrigin,
     auto_select: props.autoSelect,
@@ -263,6 +263,10 @@ watchEffect(() => {
     window.google?.accounts.id.prompt((notification) => {
       emits("promptMomentNotification", notification);
     });
+
+  onCleanup(() => {
+    if (props.useOneTap) window.google?.accounts.id.cancel();
+  });
 });
 
 onUnmounted(() => {
