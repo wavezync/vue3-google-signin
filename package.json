@@ -1,6 +1,6 @@
 {
-  "name": "vue3-google-oauth",
-  "version": "0.0.0",
+  "name": "@syetalabs/vue3-google-oauth2",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
