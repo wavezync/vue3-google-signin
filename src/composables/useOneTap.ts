@@ -6,7 +6,7 @@ import type {
   NativeCallbackResponse,
   PromptMomentNotification,
 } from "@/interfaces/accounts";
-import { inject, unref, watchEffect, ref, readonly } from "vue";
+import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 
 export interface UseGoogleOneTapLoginOptions {
@@ -142,6 +142,23 @@ export interface UseGoogleOneTapLoginOptions {
   itpSupport?: MaybeRef<boolean>;
 }
 
+export interface UseOneTapResponse {
+  /**
+   * Is one tap ready to be used?
+   *
+   * @type {Readonly<Ref<boolean>>}
+   * @memberof UseOneTapResponse
+   */
+  isReady: Readonly<Ref<boolean>>;
+
+  /**
+   * Trigger one tap login manually
+   *
+   * @memberof UseOneTapResponse
+   */
+  login: () => void;
+}
+
 export default function useOneTap({
   autoLogin = true,
   onSuccess,
@@ -158,7 +175,7 @@ export default function useOneTap({
   stateCookieDomain,
   allowedParentOrigin,
   itpSupport,
-}: UseGoogleOneTapLoginOptions) {
+}: UseGoogleOneTapLoginOptions): UseOneTapResponse {
   const { scriptLoaded } = useGsiScript();
   const clientId = inject<string>(GoogleClientIdKey);
   const isReady = ref(false);
