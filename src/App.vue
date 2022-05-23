@@ -4,6 +4,7 @@ import type { CredentialResponse } from "./interfaces/accounts";
 import useCodeClient from "./composables/useCodeClient";
 import { ref } from "vue";
 import useTokenClient from "./composables/useTokenClient";
+import useOneTap from "./composables/useOneTap";
 
 const scope = ref("");
 
@@ -30,6 +31,17 @@ const { isReady: isTokenClientReady, login: loginTokenClient } = useTokenClient(
     prompt: "consent",
   }
 );
+
+useOneTap({
+  onSuccess: (resp) => {
+    console.log(resp);
+  },
+  onError: () => console.error("e"),
+  onPromptMomentNotification: (p) => {
+    console.log(p);
+  },
+  autoLogin: false,
+});
 </script>
 
 <template>

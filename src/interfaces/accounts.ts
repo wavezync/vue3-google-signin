@@ -66,6 +66,17 @@ export interface CredentialResponse {
 }
 
 /**
+ * Native credential response
+ *
+ * @export
+ * @interface NativeCallbackResponse
+ */
+export interface NativeCallbackResponse {
+  id: string;
+  password: string;
+}
+
+/**
  * Configuration for Google Client.
  *
  * @export
@@ -118,7 +129,7 @@ export interface IdConfiguration {
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#native_callback
    * @memberof IdConfiguration
    */
-  native_callback?: (response: { id: string; password: string }) => void;
+  native_callback?: (response: NativeCallbackResponse) => void;
 
   /**
    * This field sets whether or not to cancel the One Tap request if a user clicks outside the prompt.

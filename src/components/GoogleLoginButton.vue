@@ -2,6 +2,7 @@
 import type {
   Context,
   CredentialResponse,
+  NativeCallbackResponse,
   PromptMomentNotification,
   UxMode,
 } from "@/interfaces/accounts";
@@ -16,7 +17,7 @@ interface GoogleLoginButtonProps {
    * @type {boolean}
    * @memberof GoogleLoginButtonProps
    */
-  useOneTap?: boolean;
+  oneTap?: boolean;
 
   /**
    * This field determines if an ID token is automatically returned without any user interaction
@@ -201,13 +202,7 @@ const emits = defineEmits<{
   (e: "onSuccess", response: CredentialResponse): void;
   (e: "onError"): void;
   (e: "intermediateIframeCloseCallback"): void;
-  (
-    e: "nativeCallback",
-    response: {
-      id: string;
-      password: string;
-    }
-  ): void;
+  (e: "nativeCallback", response: NativeCallbackResponse): void;
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
 }>();
 
@@ -259,18 +254,18 @@ watchEffect((onCleanup) => {
     locale: props.locale,
   });
 
-  if (props.useOneTap)
+  if (props.oneTap)
     window.google?.accounts.id.prompt((notification) => {
       emits("promptMomentNotification", notification);
     });
 
   onCleanup(() => {
-    if (props.useOneTap) window.google?.accounts.id.cancel();
+    if (props.oneTap) window.google?.accounts.id.cancel();
   });
 });
 
 onUnmounted(() => {
-  if (props.useOneTap) {
+  if (props.oneTap) {
     window.google?.accounts.id.cancel();
   }
 });
