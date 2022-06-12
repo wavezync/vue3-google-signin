@@ -1,8 +1,10 @@
 import { CodeClient } from "../interfaces/oauth2";
+
 import {
   IdConfiguration,
   MomentListener,
   GsiButtonConfiguration,
+  RevocationCallback,
 } from "@/interfaces/accounts";
 
 declare global {
@@ -24,7 +26,7 @@ declare global {
           ) => void;
           cancel: () => void;
           onGoogleLibraryLoad: () => void;
-          revoke: (accessToken: string, done: () => void) => void;
+          revoke: (hint: string, callback?: RevocationCallback) => void;
         };
         oauth2: {
           initTokenClient: (config: TokenClientConfig) => {

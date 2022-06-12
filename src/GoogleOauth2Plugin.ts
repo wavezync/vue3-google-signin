@@ -2,21 +2,21 @@ import type { App, Plugin } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleLoginButton from "./components/GoogleLoginButton.vue";
 
-const PLUGIN_NAME = "GoogleOauthPlugin";
+const PLUGIN_NAME = "GoogleOauth2Plugin";
 
-export interface GoogleOauthPluginOptions {
+export interface GoogleOauth2PluginOptions {
   /**
    * This field is your application's client ID, which is found and created in the Google Developers Console
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
-   * @memberof GoogleOauthPluginOptions
+   * @memberof GoogleOauth2PluginOptions
    */
   clientId: string;
 }
 
 const plugin: Plugin = {
-  install(app: App, options: GoogleOauthPluginOptions) {
+  install(app: App, options: GoogleOauth2PluginOptions) {
     // TODO: introduce plugin errors once proposal accepted
 
     if (!options) {

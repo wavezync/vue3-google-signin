@@ -414,3 +414,5 @@ export interface RevocationResponse {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
 }
+
+export type RevocationCallback = (response: RevocationResponse) => void;
