@@ -1,6 +1,10 @@
 import type { App, Plugin } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleLoginButton from "./components/GoogleLoginButton.vue";
+import useGsiScript from "./composables/useGsiScript";
+import useCodeClient from "./composables/useCodeClient";
+import useOneTap from "./composables/useOneTap";
+import useTokenClient from "./composables/useTokenClient";
 
 const PLUGIN_NAME = "GoogleOauth2Plugin";
 
@@ -32,6 +36,12 @@ const plugin: Plugin = {
   },
 };
 
-export { GoogleLoginButton };
+export {
+  GoogleLoginButton,
+  useCodeClient,
+  useGsiScript,
+  useTokenClient,
+  useOneTap,
+};
 
 export default plugin;
