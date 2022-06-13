@@ -12,6 +12,12 @@
         "./src/*"
       ]
     },
+    "lib": [
+      "ES2016",
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ]
   },
   "references": [
     {
