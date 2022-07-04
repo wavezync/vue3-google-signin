@@ -199,8 +199,8 @@ const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
 
 const props = defineProps<GoogleLoginButtonProps>();
 const emits = defineEmits<{
-  (e: "onSuccess", response: CredentialResponse): void;
-  (e: "onError"): void;
+  (e: "success", response: CredentialResponse): void;
+  (e: "error"): void;
   (e: "intermediateIframeCloseCallback"): void;
   (e: "nativeCallback", response: NativeCallbackResponse): void;
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
@@ -218,11 +218,11 @@ watchEffect((onCleanup) => {
     client_id: clientId!,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.clientId || !credentialResponse.credential) {
-        emits("onError");
+        emits("error");
         return;
       }
 
-      emits("onSuccess", credentialResponse);
+      emits("success", credentialResponse);
     },
     allowed_parent_origin: props.allowedParentOrigin,
     auto_select: props.autoSelect,

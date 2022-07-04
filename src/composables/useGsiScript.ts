@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, readonly, ref, watch } from "vue";
+import { onMounted, onUnmounted, readonly, ref, watch, type Ref } from "vue";
 
 const loaded = ref(!!window.google || false);
 const isLoading = ref(false);
@@ -50,7 +50,23 @@ watch(
   }
 );
 
-export default function useGsiScript() {
+export type UseGsiScriptReturn = {
+  scriptLoaded: Readonly<Ref<boolean>>;
+  scriptLoadError: Readonly<Ref<boolean>>;
+};
+
+/**
+ * Use google GSI script in the application.
+ *
+ * This is automatically called when you use any of
+ * the provided composables such as `useOneTap` or using the `GoogleLoginButton` component.
+ *
+ * No matter how many time this function called, it only loads the script once if it not present.
+ *
+ * @export
+ * @return {*}  {UseGsiScriptReturn}
+ */
+export default function useGsiScript(): UseGsiScriptReturn {
   onMounted(() => {
     subscriberCount.value++;
   });

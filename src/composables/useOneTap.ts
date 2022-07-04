@@ -15,7 +15,7 @@ export interface UseGoogleOneTapLoginOptions {
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onSuccess: (credentialResponse: CredentialResponse) => void;
+  onSuccess?: (credentialResponse: CredentialResponse) => void;
 
   /**
    * Callback to run on error
@@ -159,23 +159,35 @@ export interface UseOneTapResponse {
   login: () => void;
 }
 
-export default function useOneTap({
-  autoLogin = true,
-  onSuccess,
-  onError,
-  onPromptMomentNotification,
-  onNativeCallback,
-  onIntermediateIframeCloseCallback,
-  autoSelect,
-  loginUri,
-  cancelOnTapOutside,
-  promptParentId,
-  nonce,
-  context,
-  stateCookieDomain,
-  allowedParentOrigin,
-  itpSupport,
-}: UseGoogleOneTapLoginOptions): UseOneTapResponse {
+/**
+ * Use google one tap login
+ *
+ * @export
+ * @param {UseGoogleOneTapLoginOptions} [options]
+ * @see https://developers.google.com/identity/gsi/web/guides/display-google-one-tap
+ * @return {*}  {UseOneTapResponse}
+ */
+export default function useOneTap(
+  options?: UseGoogleOneTapLoginOptions
+): UseOneTapResponse {
+  const {
+    autoLogin = true,
+    onSuccess,
+    onError,
+    onPromptMomentNotification,
+    onNativeCallback,
+    onIntermediateIframeCloseCallback,
+    autoSelect,
+    loginUri,
+    cancelOnTapOutside,
+    promptParentId,
+    nonce,
+    context,
+    stateCookieDomain,
+    allowedParentOrigin,
+    itpSupport,
+  } = options || {};
+
   const { scriptLoaded } = useGsiScript();
   const clientId = inject<string>(GoogleClientIdKey);
   const isReady = ref(false);
@@ -190,7 +202,8 @@ export default function useOneTap({
     isReady.value = false;
     if (!scriptLoaded.value) return;
 
-    const shouldAutoLogin = unref(autoLogin);
+    const shouldAutoLogin = autoLogin && unref(autoLogin);
+    console.log("shouldAutoLogin", shouldAutoLogin);
 
     const auto_select = unref(autoSelect);
     const login_uri = unref(loginUri);

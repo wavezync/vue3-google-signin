@@ -35,16 +35,15 @@ export interface UseTokenClientResult {
  * It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
  *
  * @export
- * @param {AuthCodeFlowOptions} - Options
+ * @param {AuthCodeFlowOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-code-model
- * @return {*}  {UseCodeClientResult}
+ * @return {*}  {UseTokenClientResult}
  */
-export default function useTokenClient({
-  scope = "",
-  onError,
-  onSuccess,
-  ...rest
-}: AuthCodeFlowOptions): UseTokenClientResult {
+export default function useTokenClient(
+  options: AuthCodeFlowOptions = {}
+): UseTokenClientResult {
+  const { scope = "", onError, onSuccess, ...rest } = options;
+
   const { scriptLoaded } = useGsiScript();
   const clientId = inject<string>(GoogleClientIdKey);
   const isReady = ref(false);
