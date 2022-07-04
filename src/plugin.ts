@@ -3,10 +3,22 @@ import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleLoginButton from "./components/GoogleLoginButton.vue";
 import useGsiScript from "./composables/useGsiScript";
 import useCodeClient from "./composables/useCodeClient";
+import type {
+  ImplicitFlowOptions,
+  UseCodeClientResult,
+} from "./composables/useCodeClient";
 import useOneTap from "./composables/useOneTap";
+import type {
+  UseGoogleOneTapLoginOptions,
+  UseOneTapResponse,
+} from "./composables/useOneTap";
 import useTokenClient from "./composables/useTokenClient";
+import type {
+  AuthCodeFlowOptions,
+  UseTokenClientResult,
+} from "./composables/useTokenClient";
 
-const PLUGIN_NAME = "GoogleOauth2Plugin";
+export const PLUGIN_NAME = "GoogleOauth2Plugin";
 
 export interface GoogleOauth2PluginOptions {
   /**
@@ -19,16 +31,18 @@ export interface GoogleOauth2PluginOptions {
   clientId: string;
 }
 
+const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
+
 const plugin: Plugin = {
   install(app: App, options: GoogleOauth2PluginOptions) {
-    // TODO: introduce plugin errors once proposal accepted
-
     if (!options) {
-      throw new Error(`[${PLUGIN_NAME}]: initialize plugin by passing`);
+      throw new Error(
+        toPluginError(`initialize plugin by passing an options object`)
+      );
     }
 
-    if (!options.clientId) {
-      throw new Error(`[${PLUGIN_NAME}]: clientId is required to initialize`);
+    if (!options.clientId && options.clientId.trim().length === 0) {
+      throw new Error(toPluginError("clientId is required to initialize"));
     }
 
     app.provide(GoogleClientIdKey, options.clientId);
@@ -42,6 +56,17 @@ export {
   useGsiScript,
   useTokenClient,
   useOneTap,
+};
+
+export * from "./interfaces";
+export * from "./utils";
+export type {
+  ImplicitFlowOptions,
+  AuthCodeFlowOptions,
+  UseCodeClientResult,
+  UseGoogleOneTapLoginOptions,
+  UseOneTapResponse,
+  UseTokenClientResult,
 };
 
 export default plugin;

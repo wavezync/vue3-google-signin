@@ -16,6 +16,8 @@ export default defineConfig({
           sourceMap: true,
           declaration: true,
           declarationMap: true,
+          strict: true,
+          removeComments: false,
         },
         exclude: ["vite.config.ts", "main.ts"],
       },
@@ -29,10 +31,10 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     lib: {
-      entry: "./src/GoogleOauth2Plugin",
-      formats: ["es", "cjs"],
+      entry: "./src/plugin",
+      formats: ["es", "umd", "cjs"],
       name: "GoogleOauth2Plugin",
-      fileName: (format) => (format === "es" ? "index.js" : "index.cjs"),
+      fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
       external: ["vue"],

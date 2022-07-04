@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import GoogleOauth2Plugin from "./GoogleOauth2Plugin";
+import GoogleOauth2Plugin from "./plugin";
 
 const app = createApp(App);
 
