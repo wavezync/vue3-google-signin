@@ -48,12 +48,13 @@ export interface UseGoogleOneTapLoginOptions {
   onIntermediateIframeCloseCallback?: () => void;
 
   /**
-   * Automatically login with One Tap
+   * Explicitly disable the automatic prompt.
+   * This is `false` by default. You can trigger the prompet using `login` returned by the composable
    *
    * @type {MaybeRef<boolean>}
    * @memberof UseGoogleOneTapLoginOptions
    */
-  autoLogin?: MaybeRef<boolean>;
+  disableAutomaticPrompt?: MaybeRef<boolean>;
 
   /**
    * This field determines if an ID token is automatically returned without any user interaction
@@ -171,7 +172,7 @@ export default function useOneTap(
   options?: UseGoogleOneTapLoginOptions
 ): UseOneTapResponse {
   const {
-    autoLogin = true,
+    disableAutomaticPrompt = false,
     onSuccess,
     onError,
     onPromptMomentNotification,
@@ -202,8 +203,7 @@ export default function useOneTap(
     isReady.value = false;
     if (!scriptLoaded.value) return;
 
-    const shouldAutoLogin = autoLogin && unref(autoLogin);
-    console.log("shouldAutoLogin", shouldAutoLogin);
+    const shouldAutoLogin = !unref(disableAutomaticPrompt);
 
     const auto_select = unref(autoSelect);
     const login_uri = unref(loginUri);
