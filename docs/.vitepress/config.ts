@@ -1,6 +1,13 @@
 import { defineConfig } from "vitepress";
 import pkg from "../../package.json";
 
+const SideBar = [
+  {
+    text: "Guide",
+    items: [{ text: "Get Started", link: "/guide/" }],
+  },
+];
+
 export default defineConfig({
   title: "Vue3 Google Signin",
   description: "Google Signin for Vue3 Applications",
@@ -22,5 +29,6 @@ export default defineConfig({
         link: "https://syetalabs.io",
       },
     ],
+    sidebar: SideBar,
   },
 });
