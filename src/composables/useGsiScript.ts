@@ -59,7 +59,7 @@ export type UseGsiScriptReturn = {
  * Use google GSI script in the application.
  *
  * This is automatically called when you use any of
- * the provided composables such as `useOneTap` or using the `GoogleLoginButton` component.
+ * the provided composables such as `useOneTap` or using the `GoogleSignInButton` component.
  *
  * No matter how many time this function called, it only loads the script once if it not present.
  *
