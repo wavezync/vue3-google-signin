@@ -10,12 +10,12 @@ import { GoogleClientIdKey } from "@/utils/symbols";
 import { inject, ref, watchEffect, onUnmounted, computed } from "vue";
 import useGsiScript from "@/composables/useGsiScript";
 
-interface GoogleLoginButtonProps {
+interface GoogleSignInButtonProps {
   /**
    * Use One Tap Login
    *
    * @type {boolean}
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   oneTap?: boolean;
 
@@ -26,7 +26,7 @@ interface GoogleLoginButtonProps {
    * @type {boolean}
    * @default false
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#auto_select
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   autoSelect?: boolean;
 
@@ -37,7 +37,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#login_uri
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   loginUri?: string;
 
@@ -47,7 +47,7 @@ interface GoogleLoginButtonProps {
    * @type {boolean}
    * @default true
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#cancel_on_tap_outside
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   cancelOnTapOutside?: boolean;
 
@@ -56,7 +56,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#prompt_parent_id
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   promptParentId?: string;
 
@@ -65,7 +65,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#nonce
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   nonce?: string;
 
@@ -74,7 +74,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {Context}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#context
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   context?: Context;
 
@@ -83,7 +83,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#state_cookie_domain
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   stateCookieDomain?: string;
 
@@ -93,7 +93,7 @@ interface GoogleLoginButtonProps {
    * @type {UxMode}
    * @default popup
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#ux_mode
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   uxMode?: UxMode;
 
@@ -102,7 +102,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {(string | string[])}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#allowed_parent_origin
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   allowedParentOrigin?: string | string[];
 
@@ -111,7 +111,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {boolean}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#itp_support
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   itpSupport?: boolean;
 
@@ -120,7 +120,7 @@ interface GoogleLoginButtonProps {
    *
    * @type {("standard" | "icon")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#type
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   type?: "standard" | "icon";
 
@@ -130,7 +130,7 @@ interface GoogleLoginButtonProps {
    * @type {("outline" | "filled_blue" | "filled_black")}
    * @default outline
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#theme
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   theme?: "outline" | "filled_blue" | "filled_black";
 
@@ -140,7 +140,7 @@ interface GoogleLoginButtonProps {
    * @type {("large" | "medium" | "small")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#size
    * @default small
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   size?: "large" | "medium" | "small";
 
@@ -150,7 +150,7 @@ interface GoogleLoginButtonProps {
    * @type {("signin_with" | "signup_with" | "continue_with" | "signin")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#text
    * @default signup_with
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   text?: "signin_with" | "signup_with" | "continue_with" | "signin";
 
@@ -160,7 +160,7 @@ interface GoogleLoginButtonProps {
    * @type {("rectangular" | "pill" | "circle" | "square")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#shape
    * @default rectangular
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   shape?: "rectangular" | "pill" | "circle" | "square";
 
@@ -170,7 +170,7 @@ interface GoogleLoginButtonProps {
    * @type {("left" | "center")}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#logo_alignment
    * @default left
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   logoAlignment?: "left" | "center";
 
@@ -180,7 +180,7 @@ interface GoogleLoginButtonProps {
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#width
    * @default 400
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   width?: string;
 
@@ -190,14 +190,14 @@ interface GoogleLoginButtonProps {
    *
    * @type {string}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#locale
-   * @memberof GoogleLoginButtonProps
+   * @memberof GoogleSignInButtonProps
    */
   locale?: string;
 }
 
 const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
 
-const props = defineProps<GoogleLoginButtonProps>();
+const props = defineProps<GoogleSignInButtonProps>();
 const emits = defineEmits<{
   (e: "success", response: CredentialResponse): void;
   (e: "error"): void;

@@ -4,7 +4,13 @@ import pkg from "../../package.json";
 const SideBar = [
   {
     text: "Guide",
-    items: [{ text: "Get Started", link: "/guide/" }],
+    items: [
+      { text: "Get Started", link: "/guide/" },
+      {
+        text: "Google Sign In Button",
+        link: "/guide/google-signin-button",
+      },
+    ],
   },
 ];
 

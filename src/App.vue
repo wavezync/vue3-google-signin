@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GoogleLoginButton from "./components/GoogleLoginButton.vue";
+import GoogleSignInButton from "./components/GoogleSignInButton.vue";
 import type { CredentialResponse } from "./interfaces/accounts";
 import useCodeClient from "./composables/useCodeClient";
 import { ref } from "vue";
@@ -9,7 +9,7 @@ import useOneTap from "./composables/useOneTap";
 const scope = ref("");
 
 const onLoginSuccess = (resp: CredentialResponse) => {
-  console.log("Login successful", resp);
+  console.log("Login successful", resp.);
 };
 
 const onLoginError = () => {
@@ -45,11 +45,11 @@ useOneTap({
     <div class="col">
       <div class="row"><h1>Vue3 Google Oauth</h1></div>
       <div class="row">
-        <GoogleLoginButton
+        <GoogleSignInButton
           @success="onLoginSuccess"
           @error="onLoginError"
           size="large"
-        ></GoogleLoginButton>
+        ></GoogleSignInButton>
       </div>
 
       <div class="row">
