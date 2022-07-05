@@ -2,12 +2,9 @@
 title: Google SignIn button
 ---
 
-<script setup lang="ts">
-import GoogleSignInButton from "@/components/GoogleSignInButton.vue";
-import type { CredentialResponse } from "@/interfaces/accounts";
-
+<!-- <script setup lang="ts">
 // handle success event
-const handleLoginSuccess = (response: CredentialResponse) => {
+const handleLoginSuccess = (response) => {
   console.log("Login successful", response);
 };
 
@@ -15,7 +12,7 @@ const handleLoginSuccess = (response: CredentialResponse) => {
 const handleLoginError = () => {
   console.error("Login failed");
 };
-</script>
+</script> -->
 
 # Google SignIn Button
 
@@ -33,8 +30,10 @@ For better IDE support we are going to import it.
 
 ```vue
 <script setup lang="ts">
-import GoogleSignInButton from "vue3-google-singin";
-import type { CredentialResponse } from "vue3-google-singin";
+import { 
+  GoogleSignInButton, 
+  type CredentialResponse
+} from "vue3-google-singin";
 
 // handle success event
 const handleLoginSuccess = (response: CredentialResponse) => {
@@ -56,10 +55,11 @@ const handleLoginError = () => {
 </template>
 ```
 
+<!-- <ClientOnly>
 <div>
   <GoogleSignInButton
     @success="handleLoginSuccess"
     @error="handleLoginError"
   ></GoogleSignInButton>
 </div>
-
+</ClientOnly> -->

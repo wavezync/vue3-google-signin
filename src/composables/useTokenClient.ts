@@ -8,7 +8,6 @@ import type {
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "../utils/symbols";
 import type { MaybeRef } from "@/utils/types";
-import { isArray } from "@vue/shared";
 
 export interface AuthCodeFlowOptions
   extends Omit<TokenClientConfig, "client_id" | "scope" | "callback"> {
@@ -54,7 +53,9 @@ export default function useTokenClient(
     if (!scriptLoaded.value) return;
 
     const scopeValue = unref(scope);
-    const scopes = isArray(scopeValue) ? scopeValue.join(" ") : scopeValue;
+    const scopes = Array.isArray(scopeValue)
+      ? scopeValue.join(" ")
+      : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
       client_id: clientId,
