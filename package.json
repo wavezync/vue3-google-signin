@@ -1,6 +1,14 @@
 {
   "name": "vue3-google-signin",
   "version": "0.0.0",
+  "description": "Google Sign In for Vue3 with Google Identity Service",
+  "license": "MIT",
+  "author": {
+    "name": "Kasun Vithanage",
+    "email": "kasun@syetalabs.io",
+    "url": "https://kasvith.me"
+  },
+  "homepage": "https://vue3-google-signin.syetalabs.io",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
