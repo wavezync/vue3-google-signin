@@ -1,12 +1,53 @@
-# vue3-google-signin
+# Vue3 Google Signin
 
-This template should help get you started developing with Vue 3 in Vite.
+Use Google Identity Services with your Vue3 App easily
 
-## Recommended IDE Setup
+## Installation
+
+- With **NPM**
+
+```bash
+npm install -S vue3-google-signin
+```
+
+- With **Yarn**
+
+```bash
+yarn add vue3-google-signin
+```
+
+- With **PNPM**
+
+```bash
+pnpm add vue3-google-signin
+```
+
+## Setup the Library
+
+Setting up the library is very simple. In your application entry point(`main.js` or `main.ts`)
+put the following code.
+
+```js
+// rest of the code
+
+import GoogleOauth2Plugin from "vue3-google-signin"
+
+app.use(GoogleOauth2Plugin, {
+  clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
+});
+
+// other config
+
+app.mount("#app");
+```
+
+## Development
+
+### Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
 
-## Type Support for `.vue` Imports in TS
+### Type Support for `.vue` Imports in TS
 
 TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
@@ -17,11 +58,11 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
     2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-## Customize configuration
+### Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+### Project Setup
 
 ```sh
 npm install
