@@ -2,7 +2,7 @@
 title: Google SignIn button
 ---
 
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 // handle success event
 const handleLoginSuccess = (response) => {
   console.log("Login successful", response);
@@ -12,7 +12,7 @@ const handleLoginSuccess = (response) => {
 const handleLoginError = () => {
   console.error("Login failed");
 };
-</script> -->
+</script>
 
 # Google SignIn Button
 
@@ -55,11 +55,11 @@ const handleLoginError = () => {
 </template>
 ```
 
-<!-- <ClientOnly>
+<ClientOnly>
 <div>
   <GoogleSignInButton
     @success="handleLoginSuccess"
     @error="handleLoginError"
   ></GoogleSignInButton>
 </div>
-</ClientOnly> -->
+</ClientOnly>
