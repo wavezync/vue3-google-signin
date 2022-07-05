@@ -9,7 +9,7 @@ import useOneTap from "./composables/useOneTap";
 const scope = ref("");
 
 const onLoginSuccess = (resp: CredentialResponse) => {
-  console.log("Login successful", resp.);
+  console.log("Login successful", resp);
 };
 
 const onLoginError = () => {
