@@ -40,9 +40,9 @@ put the following code.
 ```js
 // rest of the code
 
-import GoogleOauth2Plugin from "vue3-google-signin"
+import GoogleSignInPlugin from "vue3-google-signin"
 
-app.use(GoogleOauth2Plugin, {
+app.use(GoogleSignInPlugin, {
   clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
 });
 
