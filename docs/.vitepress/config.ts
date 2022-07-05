@@ -1,8 +1,10 @@
 import { defineConfig } from "vitepress";
+import pkg from "../../package.json";
 
 export default defineConfig({
   title: "Vue3 Google Signin",
   description: "Google Signin for Vue3 Applications",
+  head: [["meta", { name: "keywords", content: pkg.keywords.join(",") }]],
   themeConfig: {
     socialLinks: [
       {
