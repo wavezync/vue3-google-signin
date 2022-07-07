@@ -55,8 +55,10 @@ const handleLoginError = () => {
 </template>
 ```
 
+And the result is the following button rendered on your page
+
 <ClientOnly>
-<div>
+<div :style="{ 'color-scheme': 'auto' }">
   <GoogleSignInButton
     @success="handleLoginSuccess"
     @error="handleLoginError"
