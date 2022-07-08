@@ -38,7 +38,7 @@ const Head: HeadConfig[] = [
   ["meta", { name: "keywords", content: pkg.keywords.join(",") }],
 ];
 
-const Nav = [
+const Nav: DefaultTheme.NavItem[] = [
   {
     text: "Guide",
     link: "/guide/",
@@ -64,5 +64,9 @@ export default defineConfig({
     socialLinks: SocialLinks,
     nav: Nav,
     sidebar: SideBar,
+    footer: {
+      message: "Released under the MIT License.",
+      copyright: "Copyright © 2022-present Syeta Labs",
+    },
   },
 });
