@@ -11,6 +11,7 @@ export default defineConfig({
     typescript2({
       check: false,
       include: ["src/components/*.vue"],
+      exclude: ["docs"],
       tsconfigOverride: {
         compilerOptions: {
           sourceMap: true,

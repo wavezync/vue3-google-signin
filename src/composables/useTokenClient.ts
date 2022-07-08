@@ -9,17 +9,20 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "../utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 
+export type AuthCodeFlowSuccessResponse = Omit<
+  TokenResponse,
+  "error" | "error_description" | "error_uri"
+>;
+
+export type AuthCodeFlowErrorResponse = Pick<
+  TokenResponse,
+  "error" | "error_description" | "error_uri"
+>;
+
 export interface AuthCodeFlowOptions
   extends Omit<TokenClientConfig, "client_id" | "scope" | "callback"> {
-  onSuccess?: (
-    response: Omit<TokenResponse, "error" | "error_description" | "error_uri">
-  ) => void;
-  onError?: (
-    errorResponse: Pick<
-      TokenResponse,
-      "error" | "error_description" | "error_uri"
-    >
-  ) => void;
+  onSuccess?: (response: AuthCodeFlowSuccessResponse) => void;
+  onError?: (errorResponse: AuthCodeFlowErrorResponse) => void;
   scope?: MaybeRef<string> | MaybeRef<string[]>;
 }
 

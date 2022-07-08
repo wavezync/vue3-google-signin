@@ -1,0 +1,22 @@
+:root {
+  --demo-primary-color: rgb(44, 150, 75);
+  --demo-primary-color-highlight: rgb(44, 175, 75)
+}
+
+.demo {
+  display: flex;
+  justify-content: center;
+
+  button {
+    background-color: var(--demo-primary-color);
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: var(--demo-primary-color-highlight);
+      transition: all 0.3s;
+    }
+  }
+
+}

@@ -3,19 +3,26 @@ import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleSignInButton from "./components/GoogleSignInButton.vue";
 import useGsiScript from "./composables/useGsiScript";
 import useCodeClient from "./composables/useCodeClient";
+import useOneTap from "./composables/useOneTap";
+import useTokenClient from "./composables/useTokenClient";
+
 import type {
   ImplicitFlowOptions,
   UseCodeClientResult,
+  ImplicitFlowErrorResponse,
+  ImplicitFlowSuccessResponse,
 } from "./composables/useCodeClient";
-import useOneTap from "./composables/useOneTap";
+
 import type {
   UseGoogleOneTapLoginOptions,
   UseOneTapResponse,
 } from "./composables/useOneTap";
-import useTokenClient from "./composables/useTokenClient";
+
 import type {
   AuthCodeFlowOptions,
   UseTokenClientResult,
+  AuthCodeFlowErrorResponse,
+  AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
 
 export const PLUGIN_NAME = "GoogleSignInPlugin";
@@ -70,6 +77,10 @@ export type {
   UseGoogleOneTapLoginOptions,
   UseOneTapResponse,
   UseTokenClientResult,
+  ImplicitFlowErrorResponse,
+  ImplicitFlowSuccessResponse,
+  AuthCodeFlowErrorResponse,
+  AuthCodeFlowSuccessResponse,
 };
 
 export default plugin;

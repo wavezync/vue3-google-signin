@@ -12,6 +12,12 @@ which allows you to develop Vue3 apps with google login :rocket:
 You need to configure a project in [Google API Console](https://console.developers.google.com/apis) and obtain a **Client ID** using the following
 [:memo: guide](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id) from google.
 
+::: tip
+Make sure to properly configure **Redirects** and **JavaScript Origins** in the Cloud Console.
+
+To PopUps work, you may need to add same URL to **both** Redirects and JavaScript Origins.
+:::
+
 ## Installation
 
 - With **NPM**

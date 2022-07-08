@@ -16,8 +16,8 @@ hero:
 features:
   - title: Minimalistic Configuration
     details: You can integrate Google Login Strategies using few keystrokes
-  - title: Latest Google GSI Script
-    details: We use latest google GSI script, so dont't you worry about legacy deprecation warnings
+  - title: Latest Google Javascript SDK
+    details: We use Google 3P Authorization JavaScript Library
   - title: Power of Vue Composables
     details: There are number of composables you can use to implement different login strategies such as One Tap Login
   - title: Built In Components
