@@ -22,14 +22,36 @@ const SideBar: DefaultTheme.Sidebar = [
   },
   {
     text: "Components",
-    items: [],
+    items: [
+      {
+        text: "GoogleSignInButton",
+        link: "/components/google-signin-button",
+      },
+    ],
   },
   {
     text: "Composables",
-    items: [],
+    items: [
+      {
+        text: "useCodeClient",
+        link: "/composables/use-code-client",
+      },
+      {
+        text: "useTokenClient",
+        link: "/composables/use-token-client",
+      },
+      {
+        text: "useTokenClient",
+        link: "/composables/use-one-tap",
+      },
+      {
+        text: "useGsiScript",
+        link: "/composables/use-gsi-script",
+      },
+    ],
   },
   {
-    text: "Utility Methods",
+    text: "Utilities",
     items: [],
   },
 ];

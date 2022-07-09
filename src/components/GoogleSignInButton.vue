@@ -177,12 +177,12 @@ interface GoogleSignInButtonProps {
   /**
    * The minimum button width, in pixels.
    *
-   * @type {string}
+   * @type {number}
    * @see https://developers.google.com/identity/gsi/web/reference/js-reference#width
    * @default 400
    * @memberof GoogleSignInButtonProps
    */
-  width?: string;
+  width?: number;
 
   /**
    * The pre-set locale of the button text. If it's not set, the browser's default locale or the Google session user’s preference is used.

@@ -18,7 +18,7 @@ onMounted(async () => {
 </script>
 
 
-# Using One Tap Login
+# One Tap Login
 
 ## Automatically
 
