@@ -58,7 +58,7 @@ const SocialLinks: DefaultTheme.SocialLink[] = [
 
 export default defineConfig({
   title: "Vue3 Google SignIn",
-  description: "Google SignIn for Vue3 Applications",
+  description: "Google SignIn for Vue3 Apps",
   head: Head,
   themeConfig: {
     socialLinks: SocialLinks,

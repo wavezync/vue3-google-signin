@@ -3,10 +3,10 @@ title: Creating Custom Buttons
 ---
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { shallowRef, onMounted } from "vue"
 
-const tokenClientDemo = ref(null)
-const codeClientDemo = ref(null)
+const tokenClientDemo = shallowRef(null)
+const codeClientDemo = shallowRef(null)
 
 onMounted(async () => {
   const tokenClientDemoComponent = await import("./demo/creating-custom-buttons/TokenClientDemo.vue")

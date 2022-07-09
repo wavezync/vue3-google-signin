@@ -17,6 +17,9 @@
       background-color: var(--demo-primary-color-highlight);
       transition: all 0.3s;
     }
-  }
 
+    &:disabled {
+      background-color: gray;
+    }
+  }
 }
