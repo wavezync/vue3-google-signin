@@ -1,7 +1,7 @@
 {
   "name": "vue3-google-signin",
   "version": "0.0.0",
-  "description": "Google Sign In for Vue3 with Google Identity Service",
+  "description": "Google Sign-in for Vue3 with Google Identity Service",
   "license": "MIT",
   "author": {
     "name": "Kasun Vithanage",
@@ -14,7 +14,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
+    "lint:fix": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"
