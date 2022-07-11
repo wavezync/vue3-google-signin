@@ -57,7 +57,6 @@ const SideBar: DefaultTheme.Sidebar = [
 ];
 
 const Head: HeadConfig[] = [
-  ["meta", { name: "keywords", content: pkg.keywords.join(",") }],
   [
     "link",
     {
@@ -103,6 +102,24 @@ const Head: HeadConfig[] = [
     },
   ],
   ["meta", { name: "theme-color", content: "#ffffff" }],
+
+  ["meta", { name: "keywords", content: pkg.keywords.join(",") }],
+
+  // og tags
+
+  ["meta", { property: "og:title", content: "Vue3 Google Sign-in" }],
+  ["meta", { property: "og:type", content: "website" }],
+  [
+    "meta",
+    {
+      property: "og:image",
+      content: "https://vue3-google-signin.syetalabs.io/cover.png",
+    },
+  ],
+  [
+    "meta",
+    { property: "og:url", content: "https://vue3-google-signin.syetalabs.io/" },
+  ],
 ];
 
 const Nav: DefaultTheme.NavItem[] = [
@@ -124,7 +141,7 @@ const SocialLinks: DefaultTheme.SocialLink[] = [
 ];
 
 export default defineConfig({
-  title: "Vue3 Google SignIn",
+  title: "Vue3 Google Sign-in",
   description: "Google SignIn for Vue3 Apps",
   head: Head,
   themeConfig: {
