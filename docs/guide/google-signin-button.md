@@ -2,9 +2,9 @@
 title: Google SignIn button
 ---
 
-# Google SignIn Button
+# Google Sign-in Button
 
-Adding Google Sign In button anywhere can be done using the provided `GoogleSignInButton` component imported from `vue3-google-signin`.
+Adding Google Sign-in button anywhere can be done using the provided `GoogleSignInButton` component imported from `vue3-google-signin`.
 This button is rendered by google using their branding guidelines.
 
 ::: tip

@@ -1,13 +1,17 @@
 import { defineConfig, HeadConfig, DefaultTheme } from "vitepress";
 import pkg from "../../package.json";
 
+const TITLE = "Vue3 Google Sign-in";
+const DESCRIPTION = "Google SignIn for Vue3 Apps";
+const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.syetalabs.io/cover.png";
+
 const SideBar: DefaultTheme.Sidebar = [
   {
     text: "Guide",
     items: [
       { text: "Get Started", link: "/guide/" },
       {
-        text: "Google Sign-In Button",
+        text: "Google Sign-in Button",
         link: "/guide/google-signin-button",
       },
       {
@@ -107,18 +111,56 @@ const Head: HeadConfig[] = [
 
   // og tags
 
-  ["meta", { property: "og:title", content: "Vue3 Google Sign-in" }],
+  ["meta", { property: "og:title", content: TITLE }],
+  ["meta", { property: "og:description", content: DESCRIPTION }],
   ["meta", { property: "og:type", content: "website" }],
   [
     "meta",
     {
       property: "og:image",
-      content: "https://vue3-google-signin.syetalabs.io/cover.png",
+      content: SOCIAL_PREVIEW_URL,
     },
   ],
   [
     "meta",
     { property: "og:url", content: "https://vue3-google-signin.syetalabs.io/" },
+  ],
+
+  // twitter card
+  [
+    "meta",
+    {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+  ],
+  [
+    "meta",
+    {
+      name: "twitter:site",
+      content: "@syetalabs",
+    },
+  ],
+  [
+    "meta",
+    {
+      name: "twitter:title",
+      content: TITLE,
+    },
+  ],
+  [
+    "meta",
+    {
+      name: "twitter:description",
+      content: DESCRIPTION,
+    },
+  ],
+  [
+    "meta",
+    {
+      name: "twitter:image",
+      content: SOCIAL_PREVIEW_URL,
+    },
   ],
 ];
 
@@ -141,8 +183,8 @@ const SocialLinks: DefaultTheme.SocialLink[] = [
 ];
 
 export default defineConfig({
-  title: "Vue3 Google Sign-in",
-  description: "Google SignIn for Vue3 Apps",
+  title: TITLE,
+  description: DESCRIPTION,
   head: Head,
   themeConfig: {
     socialLinks: SocialLinks,
