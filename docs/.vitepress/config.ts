@@ -2,7 +2,7 @@ import { defineConfig, HeadConfig, DefaultTheme } from "vitepress";
 import pkg from "../../package.json";
 
 const TITLE = "Vue3 Google Sign-in";
-const DESCRIPTION = "Google SignIn for Vue3 Apps";
+const DESCRIPTION = "Google Sign-in for Vue3 Apps";
 const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.syetalabs.io/cover.png";
 
 const SideBar: DefaultTheme.Sidebar = [
