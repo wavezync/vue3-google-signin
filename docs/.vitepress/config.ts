@@ -7,7 +7,7 @@ const SideBar: DefaultTheme.Sidebar = [
     items: [
       { text: "Get Started", link: "/guide/" },
       {
-        text: "Google Sign In Button",
+        text: "Google Sign-In Button",
         link: "/guide/google-signin-button",
       },
       {
@@ -58,6 +58,51 @@ const SideBar: DefaultTheme.Sidebar = [
 
 const Head: HeadConfig[] = [
   ["meta", { name: "keywords", content: pkg.keywords.join(",") }],
+  [
+    "link",
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: "/apple-touch-icon.png",
+    },
+  ],
+  [
+    "link",
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      href: "/favicon-32x32.png",
+    },
+  ],
+  [
+    "link",
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      href: "/favicon-16x16.png",
+    },
+  ],
+  ["link", { rel: "manifest", href: "/manifest.json" }],
+  [
+    "link",
+    {
+      rel: "mask-icon",
+      href: "/safari-pinned-tab.svg",
+      color: "#3a0839",
+    },
+  ],
+  ["link", { rel: "shortcut icon", href: "/favicon.ico" }],
+  ["meta", { name: "msapplication-TileColor", content: "#3a0839" }],
+  [
+    "meta",
+    {
+      name: "msapplication-config",
+      content: "/browserconfig.xml",
+    },
+  ],
+  ["meta", { name: "theme-color", content: "#ffffff" }],
 ];
 
 const Nav: DefaultTheme.NavItem[] = [
@@ -66,7 +111,7 @@ const Nav: DefaultTheme.NavItem[] = [
     link: "/guide/",
   },
   {
-    text: "SyetaLabs",
+    text: "SyetaLabs 🡕",
     link: "https://syetalabs.io",
   },
 ];
@@ -84,6 +129,7 @@ export default defineConfig({
   head: Head,
   themeConfig: {
     socialLinks: SocialLinks,
+    logo: "/logo.svg",
     nav: Nav,
     sidebar: SideBar,
     footer: {
