@@ -169,4 +169,37 @@ This button renders default Google SignIn Button using Google API.
 
 ### @success
 
+- **Arguments**: `{credential: string; select_by: string; clientId: string}`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse)
+
+On successful login, this will be emitted
+
+
+
+### @error
+
+When an error occures this will be emitted
+
 - **Arguments**: `{}`
+
+
+### @intermediateIframeCloseCallback
+
+Overrides the default intermediate iframe behavior when users manually close One Tap by tapping on the 'X' button in the One Tap UI. The default behavior is to remove the intermediate iframe from the DOM immediately.
+
+- **Arguments**: `{}`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#intermediate_iframe_close_callback)
+
+
+### @nativeCallback
+
+This event can be used to handle password credentials.
+
+- **Arguments**: `{id: string; password: string;}`
+
+### @promptMomentNotification
+
+This event emitted when the `one-tap` prop is set to `true`. This can be used to handle the prompt of one tap UI.
+
+- **Arguments**: `PromptMomentNotification`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#PromptMomentNotification)
