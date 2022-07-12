@@ -1,4 +1,4 @@
-# Vue3 Google Signin
+# Vue3 Google Sign-in
 
 [![Build](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml/badge.svg)](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml) ![npm](https://img.shields.io/npm/v/vue3-google-signin) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue3-google-signin) ![npm](https://img.shields.io/npm/dw/vue3-google-signin) ![NPM](https://img.shields.io/npm/l/vue3-google-signin)
 
