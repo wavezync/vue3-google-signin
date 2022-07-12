@@ -1,5 +1,7 @@
 # Vue3 Google Signin
 
+[![Build](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml/badge.svg)](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml) ![npm](https://img.shields.io/npm/v/vue3-google-signin) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue3-google-signin) ![npm](https://img.shields.io/npm/dw/vue3-google-signin)
+
 Use Google Identity Services with your Vue3 App easily
 
 ## Installation
