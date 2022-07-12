@@ -169,3 +169,4 @@ This button renders default Google SignIn Button using Google API.
 
 ### @success
 
+- **Arguments**: `{}`

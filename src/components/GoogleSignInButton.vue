@@ -199,12 +199,35 @@ const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
 
 const props = defineProps<GoogleSignInButtonProps>();
 const emits = defineEmits<{
+  /**
+   * On successful login, this will be emitted
+   * @arg {CredentialResponse} response - The response from google
+   */
   (e: "success", response: CredentialResponse): void;
+
+  /**
+   * When an error occures this will be emitted
+   */
   (e: "error"): void;
+
+  /**
+   * When `intermediateIframeCloseCallback` activates this will be emitted
+   */
   (e: "intermediateIframeCloseCallback"): void;
+
+  /**
+   * When `nativeCallback` activates this will be emitted
+   *
+   * @arg {NativeCallbackResponse} response - The response from google
+   */
   (e: "nativeCallback", response: NativeCallbackResponse): void;
+
+  /**
+   * When `promptMomentNotification` activates this will be emitted
+   *
+   * @arg {PromptMomentNotification} response - The response from google
+   */
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
-  (e: "test", v: number): void;
 }>();
 
 const clientId = inject<string>(GoogleClientIdKey);
