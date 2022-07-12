@@ -9,36 +9,86 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "../utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 
+/**
+ * Success response
+ */
 export type AuthCodeFlowSuccessResponse = Omit<
   TokenResponse,
   "error" | "error_description" | "error_uri"
 >;
 
+/**
+ * Error response
+ */
 export type AuthCodeFlowErrorResponse = Pick<
   TokenResponse,
   "error" | "error_description" | "error_uri"
 >;
 
+/**
+ * Auth Code Flow Options
+ *
+ * @export
+ * @interface AuthCodeFlowOptions
+ * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback">)}
+ */
 export interface AuthCodeFlowOptions
   extends Omit<TokenClientConfig, "client_id" | "scope" | "callback"> {
+  /**
+   * On success callback
+   *
+   * @memberof AuthCodeFlowOptions
+   */
   onSuccess?: (response: AuthCodeFlowSuccessResponse) => void;
+
+  /**
+   * On error callback
+   *
+   * @memberof AuthCodeFlowOptions
+   */
   onError?: (errorResponse: AuthCodeFlowErrorResponse) => void;
+
+  /**
+   * Authorization scopes
+   *
+   * @type {(MaybeRef<string> | MaybeRef<string[]>)}
+   * @see https://developers.google.com/identity/protocols/oauth2/scopes
+   * @memberof ImplicitFlowOptions
+   */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
 }
 
+/**
+ * Token Client Result
+ *
+ * @export
+ * @interface UseTokenClientResult
+ */
 export interface UseTokenClientResult {
+  /**
+   * Is script ready to be used?
+   *
+   * @type {Readonly<Ref<boolean>>}
+   * @memberof UseTokenClientResult
+   */
   isReady: Readonly<Ref<boolean>>;
+
+  /**
+   * Invoke login flow. You can provide a `OverridableTokenClientConfig` to override the login flow options.
+   *
+   * @memberof UseTokenClientResult
+   */
   login: (overrideConfig?: OverridableTokenClientConfig) => void | undefined;
 }
 
 /**
- * Initiate login with implicit flow using code client. Return values of the composable can be used
+ * Initiate login with authcode flow using token client. Return values of the composable can be used
  * to trigger the login flow and determine the readiness of the client.
  * It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
  *
  * @export
  * @param {AuthCodeFlowOptions} [options={}]
- * @see https://developers.google.com/identity/oauth2/web/guides/use-code-model
+ * @see https://developers.google.com/identity/oauth2/web/guides/use-token-model
  * @return {*}  {UseTokenClientResult}
  */
 export default function useTokenClient(

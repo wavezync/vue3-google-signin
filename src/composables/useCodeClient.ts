@@ -8,24 +8,75 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 
+/**
+ * On success with implicit flow
+ */
 export type ImplicitFlowSuccessResponse = Omit<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
+
+/**
+ * On error with implicit flow
+ */
 export type ImplicitFlowErrorResponse = Pick<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
 
+/**
+ * Options for Implicit flow
+ *
+ * @export
+ * @interface ImplicitFlowOptions
+ * @extends {(Omit<CodeClientConfig, "client_id" | "scope" | "callback">)}
+ */
 export interface ImplicitFlowOptions
   extends Omit<CodeClientConfig, "client_id" | "scope" | "callback"> {
+  /**
+   * On success callback
+   *
+   * @memberof ImplicitFlowOptions
+   */
   onSuccess?: (response: ImplicitFlowSuccessResponse) => void;
+
+  /**
+   * On error callback
+   *
+   * @memberof ImplicitFlowOptions
+   */
   onError?: (errorResponse: ImplicitFlowErrorResponse) => void;
+
+  /**
+   * Authorization scopes
+   *
+   * @type {(MaybeRef<string> | MaybeRef<string[]>)}
+   * @see https://developers.google.com/identity/protocols/oauth2/scopes
+   * @memberof ImplicitFlowOptions
+   */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
 }
 
+/**
+ * Result of composable
+ *
+ * @export
+ * @interface UseCodeClientResult
+ */
 export interface UseCodeClientResult {
+  /**
+   * Is script is ready to be used?
+   *
+   * @type {Readonly<Ref<boolean>>}
+   * @memberof UseCodeClientResult
+   */
   isReady: Readonly<Ref<boolean>>;
+
+  /**
+   * Execute login with code client
+   *
+   * @memberof UseCodeClientResult
+   */
   login: () => void | undefined;
 }
 

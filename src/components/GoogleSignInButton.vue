@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * Google Sign In Button
+ */
 import type {
   Context,
   CredentialResponse,
