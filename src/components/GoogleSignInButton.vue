@@ -204,6 +204,7 @@ const emits = defineEmits<{
   (e: "intermediateIframeCloseCallback"): void;
   (e: "nativeCallback", response: NativeCallbackResponse): void;
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
+  (e: "test", v: number): void;
 }>();
 
 const clientId = inject<string>(GoogleClientIdKey);
@@ -250,7 +251,7 @@ watchEffect((onCleanup) => {
     text: props.text,
     shape: props.shape,
     logo_alignment: props.logoAlignment,
-    width: props.width,
+    width: props.width?.toString(),
     locale: props.locale,
   });
 
