@@ -1,7 +1,7 @@
 import type { TokenResponse } from "@/interfaces/oauth2";
 
 /**
- * Helper method to [google.accounts.oauth2.hasGrantedAllScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAllScopes)
+ * Helper method for [google.accounts.oauth2.hasGrantedAllScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAllScopes)
  *
  * @export
  * @param {TokenResponse} tokenResponse - A valid access token
@@ -24,7 +24,7 @@ export function hasGrantedAllScopes(
 }
 
 /**
- * Helper method to [google.accounts.oauth2.hasGrantedAnyScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAnyScopes)
+ * Helper method for [google.accounts.oauth2.hasGrantedAnyScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAnyScopes)
  *
  * @export
  * @param {TokenResponse} tokenResponse - A valid access token
@@ -47,7 +47,7 @@ export function hasGrantedAnyScopes(
 }
 
 /**
- * Helper method to [google.accounts.oauth2.revoke](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.revoke)
+ * Helper method for [google.accounts.oauth2.revoke](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.revoke)
  *
  * @export
  * @param {string} accessToken

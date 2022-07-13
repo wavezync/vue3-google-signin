@@ -55,8 +55,17 @@ const SideBar: DefaultTheme.Sidebar = [
     ],
   },
   {
-    text: "Utilities",
-    items: [],
+    text: "Helpers",
+    items: [
+      {
+        text: "Account",
+        link: "/helpers/account",
+      },
+      {
+        text: "OAuth2",
+        link: "/helpers/oauth2",
+      },
+    ],
   },
 ];
 
