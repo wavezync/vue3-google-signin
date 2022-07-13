@@ -45,7 +45,7 @@ const SideBar: DefaultTheme.Sidebar = [
         link: "/composables/use-token-client",
       },
       {
-        text: "useTokenClient",
+        text: "useOneTap",
         link: "/composables/use-one-tap",
       },
       {

@@ -62,21 +62,21 @@ export interface AuthCodeFlowOptions
  * Token Client Result
  *
  * @export
- * @interface UseTokenClientResult
+ * @interface UseTokenClientReturn
  */
-export interface UseTokenClientResult {
+export interface UseTokenClientReturn {
   /**
    * Is script ready to be used?
    *
    * @type {Readonly<Ref<boolean>>}
-   * @memberof UseTokenClientResult
+   * @memberof UseTokenClientReturn
    */
   isReady: Readonly<Ref<boolean>>;
 
   /**
    * Invoke login flow. You can provide a `OverridableTokenClientConfig` to override the login flow options.
    *
-   * @memberof UseTokenClientResult
+   * @memberof UseTokenClientReturn
    */
   login: (overrideConfig?: OverridableTokenClientConfig) => void | undefined;
 }
@@ -89,11 +89,11 @@ export interface UseTokenClientResult {
  * @export
  * @param {AuthCodeFlowOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-token-model
- * @return {*}  {UseTokenClientResult}
+ * @return {*}  {UseTokenClientReturn}
  */
 export default function useTokenClient(
   options: AuthCodeFlowOptions = {}
-): UseTokenClientResult {
+): UseTokenClientReturn {
   const { scope = "", onError, onSuccess, ...rest } = options;
 
   const { scriptLoaded } = useGsiScript();

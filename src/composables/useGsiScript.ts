@@ -51,7 +51,18 @@ watch(
 );
 
 export type UseGsiScriptReturn = {
+  /**
+   * Script loaded successfully
+   *
+   * @type {Readonly<Ref<boolean>>}
+   */
   scriptLoaded: Readonly<Ref<boolean>>;
+
+  /**
+   * Failed to load the GSI script
+   *
+   * @type {Readonly<Ref<boolean>>}
+   */
   scriptLoadError: Readonly<Ref<boolean>>;
 };
 

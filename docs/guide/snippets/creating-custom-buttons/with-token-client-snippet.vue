@@ -16,6 +16,7 @@ const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
 const { isReady, login } = useTokenClient({
   onSuccess: handleOnSuccess,
   onError: handleOnError,
+  // other options
 });
 </script>
 

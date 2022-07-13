@@ -25,6 +25,7 @@ const handleOnError = (errorResponse: ImplicitFlowErrorResponse) => {
 const { isReady, login } = useCodeClient({
   onSuccess: handleOnSuccess,
   onError: handleOnError,
+  // other options
 });
 </script>
 

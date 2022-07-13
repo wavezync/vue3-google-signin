@@ -61,21 +61,21 @@ export interface ImplicitFlowOptions
  * Result of composable
  *
  * @export
- * @interface UseCodeClientResult
+ * @interface UseCodeClientReturn
  */
-export interface UseCodeClientResult {
+export interface UseCodeClientReturn {
   /**
    * Is script is ready to be used?
    *
    * @type {Readonly<Ref<boolean>>}
-   * @memberof UseCodeClientResult
+   * @memberof UseCodeClientReturn
    */
   isReady: Readonly<Ref<boolean>>;
 
   /**
    * Execute login with code client
    *
-   * @memberof UseCodeClientResult
+   * @memberof UseCodeClientReturn
    */
   login: () => void | undefined;
 }
@@ -88,11 +88,11 @@ export interface UseCodeClientResult {
  * @export
  * @param {ImplicitFlowOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-code-model
- * @return {*}  {UseCodeClientResult}
+ * @return {*}  {UseCodeClientReturn}
  */
 export default function useCodeClient(
   options: ImplicitFlowOptions = {}
-): UseCodeClientResult {
+): UseCodeClientReturn {
   const { scope = "", onError, onSuccess, ...rest } = options;
 
   const { scriptLoaded } = useGsiScript();

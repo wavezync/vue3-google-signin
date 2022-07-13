@@ -143,19 +143,19 @@ export interface UseGoogleOneTapLoginOptions {
   itpSupport?: MaybeRef<boolean>;
 }
 
-export interface UseOneTapResponse {
+export interface UseOneTapResult {
   /**
    * Is one tap ready to be used?
    *
    * @type {Readonly<Ref<boolean>>}
-   * @memberof UseOneTapResponse
+   * @memberof UseOneTapResult
    */
   isReady: Readonly<Ref<boolean>>;
 
   /**
    * Trigger one tap login manually
    *
-   * @memberof UseOneTapResponse
+   * @memberof UseOneTapResult
    */
   login: () => void;
 }
@@ -166,11 +166,11 @@ export interface UseOneTapResponse {
  * @export
  * @param {UseGoogleOneTapLoginOptions} [options]
  * @see https://developers.google.com/identity/gsi/web/guides/display-google-one-tap
- * @return {*}  {UseOneTapResponse}
+ * @return {*}  {UseOneTapResult}
  */
 export default function useOneTap(
   options?: UseGoogleOneTapLoginOptions
-): UseOneTapResponse {
+): UseOneTapResult {
   const {
     disableAutomaticPrompt = false,
     onSuccess,

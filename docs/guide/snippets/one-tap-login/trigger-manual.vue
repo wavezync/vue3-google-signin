@@ -7,6 +7,7 @@ const { isReady, login } = useOneTap({
     console.log("Success:", response);
   },
   onError: () => console.error("Error with One Tap Login"),
+  // options
 });
 </script>
 

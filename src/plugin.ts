@@ -8,19 +8,19 @@ import useTokenClient from "./composables/useTokenClient";
 
 import type {
   ImplicitFlowOptions,
-  UseCodeClientResult,
+  UseCodeClientReturn,
   ImplicitFlowErrorResponse,
   ImplicitFlowSuccessResponse,
 } from "./composables/useCodeClient";
 
 import type {
   UseGoogleOneTapLoginOptions,
-  UseOneTapResponse,
+  UseOneTapResult,
 } from "./composables/useOneTap";
 
 import type {
   AuthCodeFlowOptions,
-  UseTokenClientResult,
+  UseTokenClientReturn,
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
@@ -73,10 +73,10 @@ export * from "./utils";
 export type {
   ImplicitFlowOptions,
   AuthCodeFlowOptions,
-  UseCodeClientResult,
+  UseCodeClientReturn as UseCodeClientResult,
   UseGoogleOneTapLoginOptions,
-  UseOneTapResponse,
-  UseTokenClientResult,
+  UseOneTapResult as UseOneTapResponse,
+  UseTokenClientReturn as UseTokenClientResult,
   ImplicitFlowErrorResponse,
   ImplicitFlowSuccessResponse,
   AuthCodeFlowErrorResponse,
