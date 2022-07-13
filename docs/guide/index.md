@@ -13,7 +13,7 @@ You need to configure a project in [Google API Console](https://console.develope
 [:memo: guide](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id) from google.
 
 ::: tip
-Make sure to properly configure **Redirects** and **JavaScript Origins** in the Cloud Console.
+:bulb: Make sure to properly configure **Redirects** and **JavaScript Origins** in the Cloud Console.
 
 To PopUps work, you may need to add same URL to **both** Redirects and JavaScript Origins.
 :::

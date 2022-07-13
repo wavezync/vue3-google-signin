@@ -8,7 +8,7 @@ This composable loads the [Google Client Library](https://developers.google.com/
 load the library only once. So multiple calls wont add multiple script tags to the page.
 
 ::: info
-  This is automatically called when you use any of
+  :bulb: This is automatically called when you use any of
   the provided composables such as `useOneTap` or using the `GoogleSignInButton` component.
 :::
 

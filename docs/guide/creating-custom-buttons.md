@@ -28,13 +28,17 @@ Often, you may want to use a custom designed button to handle Google Sign In.
 
 Based on your usecase, you can select the best flow for you.
 
+:::tip
+:bulb: To select the proper user authorization model, checkout this [guide](https://developers.google.com/identity/oauth2/web/guides/choose-authorization-model)
+:::
+
 ## With `useTokenClient`
 
 With [Token Model Auth flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model) an **Access Token** is returned from
 Google to the browser, which can be used directly to call Google APIs.
 
 ::: tip
-For backend API requests, you can pass this token from the frontend to backend with a header like `x-google-token`
+:bulb: For backend API requests, you can pass this token from the frontend to backend with a header like `x-google-token`
 :::
 
 Both composables returns `isReady` and `login` to work with the authentication flow.

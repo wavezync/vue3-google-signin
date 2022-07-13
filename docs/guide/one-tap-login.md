@@ -45,7 +45,7 @@ Google enforces an [exponential cooldown](https://developers.google.com/identity
 You may want to trigger One Tap flow manually. This can be achived by using the returns of `useOneTap`.
 
 ::: tip
-To disable automatic prompt you can set `disableAutomaticPrompt: true` property.
+:bulb: To disable automatic prompt you can set `disableAutomaticPrompt: true` property.
 :::
 
 <<< @/guide/snippets/one-tap-login/trigger-manual.vue
