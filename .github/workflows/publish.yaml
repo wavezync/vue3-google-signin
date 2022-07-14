@@ -53,12 +53,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Build docs
+      - name: Setup Node
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm run docs:build
+      - name: Install Deps
+        run: npm ci
+      - name: Build Docs
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+        run: npm run docs:build
 
         # Deploy to Netlify using our production secrets
       - name: Deploy to netlify
