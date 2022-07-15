@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Vue3 Google Sign-in
-  text: Google OAuth2 strategies simplified for Vue3
-  tagline: Empower your Vue3 app with Google Sign-in quickly
+  text: Simple Google Sign-in on the go
+  tagline: Empower your Vue3 app with Google Sign-in hassle-free
   image:
     light:
       src: /logo.svg
