@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: Vue3 Google Sign-in
-  text: Simple Google Sign-in on the go
+  text: Google OAuth2 strategies simplified for Vue3
   tagline: Empower your Vue3 app with Google Sign-in hassle-free
   image:
     light:
@@ -32,5 +32,5 @@ features:
     details: There are a number of composables you can use to implement different login strategies such as One Tap Login
   - icon: 👌
     title: Built In Components
-    details: Want to use the default button rendered by Google? It's also included
+    details: Want to display the default button rendered by Google with a Vue3 taste? Well, it would be rude not to include it right?
 ---
