@@ -179,7 +179,7 @@ const Nav: DefaultTheme.NavItem[] = [
     link: "/guide/",
   },
   {
-    text: "SyetaLabs 🡕",
+    text: "Syeta Labs 🡕",
     link: "https://syetalabs.io",
   },
 ];
