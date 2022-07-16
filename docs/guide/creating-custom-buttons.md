@@ -66,7 +66,7 @@ With [Code Model authentication flow](https://developers.google.com/identity/oau
 
 The usage of this composable is similar to to the above section.
 
-Only difference here is we have added an *optional* section which calls a backend API to verify the code. 
+Only difference here is we have added an *optional* section which calls a backend API to verify the code.
 Its using body of a **POST** request to do the verification.
 
 <<< @/guide/snippets/creating-custom-buttons/with-code-client-snippet.vue
@@ -77,3 +77,38 @@ Its using body of a **POST** request to do the verification.
     :is="codeClientDemo">
   </component>
 </ClientOnly>
+
+
+## Verify code on the backend
+
+When you obtain a code, the backend needs to verify in order to get the **AccessToken**/**RefreshToken** as per previous [section](#with-usecodeclient).
+
+::: info
+:bulb: This depends on your backend programming language.
+:::
+
+But for sake of completeness, we will provide a simple snipppet to do the verification and obtain tokens in **Node.js** with [**Express**](https://expressjs.com/) framework.
+
+First of all you will need to obtain the followings from [Google Developers Console](https://console.cloud.google.com/)
+
+- `CLIENT_ID`
+- `CLIENT_SECRET`
+- `REDIRECT_URL`
+
+You can find them in **Your project > APIs & auth > Credentials**
+
+Read more about OAuth2 [here](https://developers.google.com/identity/protocols/oauth2)
+
+Now for Node.js, you need to install [`google-auth-library`](https://www.npmjs.com/package/google-auth-library) package.
+
+```bash
+npm i -S google-auth-library
+```
+
+This is a sample implementation using ExpressJS.
+
+<<< @/guide/snippets/creating-custom-buttons/code-verification.js
+
+::: danger
+:rotating_light: You **must** store Refresh Tokens in a **secure storage**
+:::
