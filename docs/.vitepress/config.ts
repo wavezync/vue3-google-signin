@@ -204,5 +204,10 @@ export default defineConfig({
       message: "Released under the MIT License.",
       copyright: "Copyright © 2022-present Syeta Labs",
     },
+    algolia: {
+      apiKey: "5780c07dfe3e4a16e39773773e8a7b07",
+      appId: "0N5FZ8VALF",
+      indexName: "vue3-google-signin",
+    },
   },
 });
