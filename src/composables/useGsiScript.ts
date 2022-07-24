@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, readonly, ref, watch, type Ref } from "vue";
 
-const loaded = ref(!!window.google || false);
+const loaded = ref(false);
 const isLoading = ref(false);
 const error = ref(false);
 const subscriberCount = ref(0);
@@ -17,6 +17,7 @@ const createScriptTag = () => {
 };
 
 const initialize = () => {
+  isLoading.value = true;
   scriptTag = createScriptTag();
   document.head.appendChild(scriptTag);
 
@@ -31,21 +32,11 @@ const initialize = () => {
   };
 };
 
-const cleanup = () => {
-  scriptTag && document.head.removeChild(scriptTag);
-  loaded.value = false;
-  error.value = false;
-};
-
 watch(
   () => subscriberCount.value,
   (newCount, _oldCount) => {
     if (newCount > 0 && !loaded.value && !isLoading.value) {
       initialize();
-    }
-
-    if (newCount === 0 && loaded.value) {
-      cleanup();
     }
   }
 );
