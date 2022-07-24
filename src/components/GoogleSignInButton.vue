@@ -237,7 +237,7 @@ const clientId = inject<string>(GoogleClientIdKey);
 const targetElement = ref<HTMLElement | null>(null);
 const { scriptLoaded } = useGsiScript();
 
-watchEffect((onCleanup) => {
+watchEffect(() => {
   if (!scriptLoaded.value) return;
 
   window.google?.accounts.id.initialize({
@@ -285,10 +285,6 @@ watchEffect((onCleanup) => {
     window.google?.accounts.id.prompt((notification) => {
       emits("promptMomentNotification", notification);
     });
-
-  onCleanup(() => {
-    if (props.oneTap) window.google?.accounts.id.cancel();
-  });
 });
 
 onUnmounted(() => {
