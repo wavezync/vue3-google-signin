@@ -26,7 +26,7 @@ Checks if the user granted all the specified scope or scopes.
 - **Example**
 
 ```ts
-import { hasGrantedAllScope } from "vue3-google-signin";
+import { hasGrantedAllScopes } from "vue3-google-signin";
 
 const tokenResponse = // token response from google
 const result = hasGrantedAllScope(
@@ -62,7 +62,7 @@ Checks if the user granted any the specified scope or scopes.
 - **Example**
 
 ```ts
-import { hasGrantedAnyScope } from "vue3-google-signin";
+import { hasGrantedAnyScopes } from "vue3-google-signin";
 
 const tokenResponse = // token response from google
 const result = hasGrantedAnyScope(
