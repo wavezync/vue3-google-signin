@@ -29,7 +29,7 @@ Checks if the user granted all the specified scope or scopes.
 import { hasGrantedAllScopes } from "vue3-google-signin";
 
 const tokenResponse = // token response from google
-const result = hasGrantedAllScope(
+const result = hasGrantedAllScopes(
   tokenResponse,
   "profile",
   "email",
@@ -65,7 +65,7 @@ Checks if the user granted any the specified scope or scopes.
 import { hasGrantedAnyScopes } from "vue3-google-signin";
 
 const tokenResponse = // token response from google
-const result = hasGrantedAnyScope(
+const result = hasGrantedAnyScopes(
   tokenResponse,
   "profile",
   "email",
