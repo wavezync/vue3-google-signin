@@ -18,6 +18,10 @@ You need to configure a project in [Google API Console](https://console.develope
 To PopUps work, you may need to add same URL to **both** Redirects and JavaScript Origins.
 :::
 
+::: info
+If you want to use the library with Nuxt jump to following [section](#with-nuxt)
+:::
+
 ## Installation
 
 - With **NPM**
@@ -61,7 +65,7 @@ Now the library is ready to be used :sparkles:
 
 ## With Nuxt
 
-To easily use the library with Nuxt3 we have provided a module which take care of proper component registration and plugin initialization with Nuxt.
+To easily use the library with **Nuxt3** we have provided a module which take care of proper component registration and plugin initialization with Nuxt.
 
 ### Add package
 
