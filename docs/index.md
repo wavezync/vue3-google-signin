@@ -23,7 +23,7 @@ hero:
 features:
   - icon: ⚙️
     title: Minimalistic Configuration
-    details: You can integrate Google Login Strategies using few keystrokes
+    details: You can integrate Google Login Strategies using few keystrokes. We also supports Nuxt3 🚀
   - icon: ⚡
     title: Latest Google Javascript SDK
     details: We use Google 3P Authorization JavaScript Library
