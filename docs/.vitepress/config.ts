@@ -22,6 +22,10 @@ const SideBar: DefaultTheme.Sidebar = [
         text: "Creating Custom Buttons",
         link: "/guide/creating-custom-buttons",
       },
+      {
+        text: "Using with Electron",
+        link: "/guide/using-with-electron",
+      },
     ],
   },
   {

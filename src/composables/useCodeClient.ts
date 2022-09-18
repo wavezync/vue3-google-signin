@@ -7,6 +7,7 @@ import type {
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
+import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
 
 /**
  * On success with implicit flow
@@ -78,6 +79,15 @@ export interface UseCodeClientReturn {
    * @memberof UseCodeClientReturn
    */
   login: () => void | undefined;
+
+  /**
+   * Get a URL to perform code request without actually redirecting user.
+   * This is useful for platforms like _Electron/Tauri_ for redirecting user with system browser
+   *
+   * @type {Readonly<ComputedRef<string>>}
+   * @memberof UseCodeClientReturn
+   */
+  codeRequestRedirectUrl: Readonly<Ref<string | null>>;
 }
 
 /**
@@ -98,6 +108,7 @@ export default function useCodeClient(
   const { scriptLoaded } = useGsiScript();
   const clientId = inject<string>(GoogleClientIdKey);
   const isReady = ref(false);
+  const codeRequestRedirectUrl = ref<string | null>(null);
   let client: CodeClient | undefined;
 
   watchEffect(() => {
@@ -108,10 +119,18 @@ export default function useCodeClient(
     const scopes = Array.isArray(scopeValue)
       ? scopeValue.join(" ")
       : scopeValue;
+    const computedScopes = `openid email profile ${scopes}`;
+
+    codeRequestRedirectUrl.value = buildCodeRequestRedirectUrl({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client_id: clientId!,
+      scope: computedScopes,
+      ...rest,
+    });
 
     client = window.google?.accounts.oauth2.initCodeClient({
       client_id: clientId,
-      scope: `openid email profile ${scopes}`,
+      scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);
 
@@ -123,5 +142,9 @@ export default function useCodeClient(
     isReady.value = true;
   });
 
-  return { isReady: readonly(isReady), login: () => client?.requestCode() };
+  return {
+    isReady: readonly(isReady),
+    login: () => client?.requestCode(),
+    codeRequestRedirectUrl: readonly(codeRequestRedirectUrl),
+  };
 }

@@ -67,5 +67,14 @@ export interface UseCodeClientReturn {
    * @memberof UseCodeClientReturn
    */
   login: () => void | undefined;
+
+  /**
+   * Get a URL to perform code request without actually redirecting user.
+   * This is useful for platforms like _Electron/Tauri_ for redirecting user with system browser
+   *
+   * @type {Readonly<ComputedRef<string>>}
+   * @memberof UseCodeClientReturn
+   */
+  codeRequestRedirectUrl: Readonly<Ref<string | null>>;
 }
 ```
