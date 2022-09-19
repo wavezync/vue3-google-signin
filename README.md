@@ -47,6 +47,47 @@ app.use(GoogleSignInPlugin, {
 app.mount("#app");
 ```
 
+## With Nuxt
+
+To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/syetalabs/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
+
+### Add package
+
+- With **NPM**
+
+```bash
+npm install -S nuxt-vue3-google-signin
+```
+
+- With **Yarn**
+
+```bash
+yarn add nuxt-vue3-google-signin
+```
+
+- With **PNPM**
+
+```bash
+pnpm add nuxt-vue3-google-signin
+```
+
+### Initialize
+
+Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
+
+```ts
+import { defineNuxtConfig } from 'nuxt'
+
+export default defineNuxtConfig({
+  modules: [
+    'nuxt-vue3-google-signin'
+  ],
+  googleSignIn: {
+    clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
+  }
+})
+```
+
 ## Development
 
 ### Recommended IDE Setup
