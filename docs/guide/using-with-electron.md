@@ -29,10 +29,7 @@ const { codeRequestRedirectUrl } = useCodeClient({
 });
 
 // open this url with system browser with Electron
-mainWindow.webContents.on('new-window', function(e, url) {
-  e.preventDefault();
-  require('electron').shell.openExternal(codeRequestRedirectUrl);
-});
+const openLoginSession = () => require('electron').shell.openExternal(codeRequestRedirectUrl);
 
 ```
 
