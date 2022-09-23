@@ -92,7 +92,7 @@ pnpm add nuxt-vue3-google-signin
 Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
 
 ```ts
-import { defineNuxtConfig } from 'nuxt'
+import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
   modules: [
