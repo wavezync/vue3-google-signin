@@ -11,17 +11,17 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce the behaviour:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
-4. See error
+4. See the error
 
 
 **Reproducible Example**
-If you can please provide a reproducible example with Stackbliz, CodeSandbox or any other suitable service
+If you can please provide a reproducible example with [Stackbliz](https://stackblitz.com/), [CodeSandbox](https://codesandbox.io/) or any other suitable service
 
-**Expected behavior**
+**Expected behaviour**
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
