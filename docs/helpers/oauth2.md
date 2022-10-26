@@ -120,4 +120,6 @@ Google returns a jwt token encoded using base64url. This method will help you ge
 
 <<< @/helpers/snippets/decodeJwt.vue
 
+**Output:**
+
 <<< @/helpers/snippets/jwtTokenExample.json
