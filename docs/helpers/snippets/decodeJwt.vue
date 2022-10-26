@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { CredentialResponse } from "vue3-google-signin";
-import { GoogleSignIn } from "vue3-google-signin";
-import { decodeJWTToken } from "vue3-google-signin/utils";
+import { GoogleSignInButton, decodeCredential } from "vue3-google-signin";
 
 const handleSignInSuccess = (response: CredentialResponse) => {
   const { credential } = response;
-  const decodedCredential = decodeJWTToken(credential);
+  const decodedCredential = decodeCredential(credential);
   console.log("Credentials", decodedCredential);
 };
 

@@ -1,5 +1,5 @@
 import type { CodeClientConfig, TokenResponse } from "@/interfaces/oauth2";
-import type { JwtToken } from "./types";
+import type { DecodedGoogleUser } from "./types";
 
 /**
  * Helper method for [google.accounts.oauth2.hasGrantedAllScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAllScopes)
@@ -120,9 +120,9 @@ export function buildCodeRequestRedirectUrl(
  * Decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
  *
  * @param {string} jwt
- * @returns {JwtToken}
+ * @returns {DecodedGoogleUser}
  */
-export function decodeJWTToken(jwt: string): JwtToken {
+export function decodeCredential(jwt: string): DecodedGoogleUser {
   const base64Url = jwt.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   const jsonPayload = decodeURIComponent(

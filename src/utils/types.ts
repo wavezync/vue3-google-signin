@@ -2,7 +2,7 @@ import type { Ref } from "vue";
 
 export type MaybeRef<T> = T | Ref<T>;
 
-export interface JwtToken {
+export interface DecodedGoogleUser {
   email: string;
   email_verified: boolean;
   hd: string;
