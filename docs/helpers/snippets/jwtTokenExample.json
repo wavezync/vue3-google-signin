@@ -1,0 +1,10 @@
+{
+  "email": "user@example.com", // The user's email address
+  "email_verified": true, // true, if Google has verified the email address
+  "hd": "example.com", // If present, the host domain of the user's GSuite email address
+  "name": "John Smith",
+  "family_name": "Smith",
+  "given_name": "John",
+  "id": "3141592653589793238", // The unique ID of the user's Google Account
+  "picture": "https://lh3.googleusercontent.com/a-/e2718281828459045235360uler"
+}
