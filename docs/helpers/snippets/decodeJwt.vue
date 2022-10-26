@@ -6,7 +6,7 @@ import { decodeJWTToken } from "vue3-google-signin/utils";
 const handleSignInSuccess = (response: CredentialResponse) => {
   const { credential } = response;
   const decodedCredential = decodeJWTToken(credential);
-  console.log("Acess Token", decodedCredential);
+  console.log("Credentials", decodedCredential);
 };
 
 const handleSignInError = () => {
