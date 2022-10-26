@@ -1,4 +1,5 @@
 import type { CodeClientConfig, TokenResponse } from "@/interfaces/oauth2";
+import type { JwtToken } from "./types";
 
 /**
  * Helper method for [google.accounts.oauth2.hasGrantedAllScopes](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAllScopes)
@@ -113,4 +114,35 @@ export function buildCodeRequestRedirectUrl(
   if (options.state) queryParams.append("state", options.state);
 
   return `${baseUrl}?${queryParams.toString()}`;
+}
+
+/**
+ * Decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
+ *
+ * @param {string} jwt
+ * @returns {JwtToken}
+ */
+export function decodeJWTToken(jwt: string): JwtToken {
+  const base64Url = jwt.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+  const decodedToken = JSON.parse(jsonPayload);
+  return {
+    email: decodedToken.email,
+    email_verified: decodedToken.email_verified,
+    hd: decodedToken.hd,
+    family_name: decodedToken.family_name,
+    given_name: decodedToken.given_name,
+    name: decodedToken.name,
+    picture: decodedToken.picture,
+    id: decodedToken.sub,
+  };
 }
