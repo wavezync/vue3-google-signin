@@ -117,13 +117,13 @@ export function buildCodeRequestRedirectUrl(
 }
 
 /**
- * Decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
+ * Decode the credential token retrieved from the GoogleSignIn onSuccess response into a usable Object
  *
- * @param {string} jwt
+ * @param {string} credential
  * @returns {DecodedGoogleUser}
  */
-export function decodeCredential(jwt: string): DecodedGoogleUser {
-  const base64Url = jwt.split(".")[1];
+export function decodeCredential(credential: string): DecodedGoogleUser {
+  const base64Url = credential.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   const jsonPayload = decodeURIComponent(
     window
