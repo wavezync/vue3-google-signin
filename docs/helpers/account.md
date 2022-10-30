@@ -51,8 +51,8 @@ This is not an official method exposed by google
 
 - **Example**
 
-<<< @/helpers/snippets/decodeJwt.vue
+<<< @/helpers/snippets/decodeCredential.vue
 
 **Output:**
 
-<<< @/helpers/snippets/jwtTokenExample.json
+<<< @/helpers/snippets/decodeCredentialResponse.json
