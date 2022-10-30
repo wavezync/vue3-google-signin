@@ -30,3 +30,29 @@ idRevoke('1618033988749895', done => {
 ```
 
 - **See More**: [Docs](https://developers.google.com/identity/gsi/web/reference/js-reference#google.accounts.id.revoke)
+
+## decodeCredential()
+
+- **Type**
+
+```ts
+function decodeCredential(credential: string): DecodedGoogleUser;
+```
+
+- **Details**
+
+Helper method to decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
+
+Google returns a jwt token encoded using base64url. This method will help you get a typed object to manipulate the data for your application.
+
+:::info
+This is not an official method exposed by google
+:::
+
+- **Example**
+
+<<< @/helpers/snippets/decodeJwt.vue
+
+**Output:**
+
+<<< @/helpers/snippets/jwtTokenExample.json

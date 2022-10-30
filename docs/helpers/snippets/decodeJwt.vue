@@ -5,7 +5,7 @@ import { GoogleSignInButton, decodeCredential } from "vue3-google-signin";
 const handleSignInSuccess = (response: CredentialResponse) => {
   const { credential } = response;
   const decodedCredential = decodeCredential(credential);
-  console.log("Credentials", decodedCredential);
+  console.log("User:", decodedCredential);
 };
 
 const handleSignInError = () => {

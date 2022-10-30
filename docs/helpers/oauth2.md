@@ -101,25 +101,3 @@ revokeAccessToken("ACCESS TOKEN FROM GOOGLE", () => {
 ```
 
 - **See More**: [Docs](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.revoke)
-
-## decodeJWTToken()
-
-- **Type**
-
-```ts
-function decodeJWTToken(jwt: string): JwtToken;
-```
-
-- **Details**
-
-Helper method to decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
-
-Google returns a jwt token encoded using base64url. This method will help you get a typed object to manipulate the data for your application.
-
-- **Example**
-
-<<< @/helpers/snippets/decodeJwt.vue
-
-**Output:**
-
-<<< @/helpers/snippets/jwtTokenExample.json
