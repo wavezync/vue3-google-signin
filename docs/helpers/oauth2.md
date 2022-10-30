@@ -9,13 +9,13 @@ This contains helpers for `google.accounts.oauth2` [namespace](https://developer
 ## hasGrantedAllScopes()
 
 - **Type**
-  
+
 ```ts
 function hasGrantedAllScopes(
   tokenResponse: TokenResponse,
   firstScope: string,
   ...restScopes: string[]
-): boolean
+): boolean;
 ```
 
 - **Details**
@@ -41,17 +41,16 @@ console.log(result);
 
 - **See More**: [Docs](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAllScopes)
 
-
 ## hasGrantedAnyScopes()
 
 - **Type**
-  
+
 ```ts
 function hasGrantedAnyScopes(
   tokenResponse: TokenResponse,
   firstScope: string,
   ...restScopes: string[]
-): boolean 
+): boolean;
 ```
 
 - **Details**
@@ -77,13 +76,12 @@ console.log(result);
 
 - **See More**: [Docs](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.hasGrantedAnyScopes)
 
-
 ## revokeAccessToken()
 
 - **Type**
 
 ```ts
-function revokeAccessToken(accessToken: string, done?: () => void)
+function revokeAccessToken(accessToken: string, done?: () => void);
 ```
 
 - **Details**
@@ -97,9 +95,31 @@ The revoke method revokes all of the scopes that the user granted to the app. A 
 ```ts
 import { revokeAccessToken } from "vue3-google-signin";
 
-revokeAccessToken('ACCESS TOKEN FROM GOOGLE', () => {
-  console.log('Token revoked')
-})
+revokeAccessToken("ACCESS TOKEN FROM GOOGLE", () => {
+  console.log("Token revoked");
+});
 ```
 
 - **See More**: [Docs](https://developers.google.com/identity/oauth2/web/reference/js-reference#google.accounts.oauth2.revoke)
+
+## decodeJWTToken()
+
+- **Type**
+
+```ts
+function decodeJWTToken(jwt: string): JwtToken;
+```
+
+- **Details**
+
+Helper method to decode the JWT token retrieved from the GoogleSignIn onSuccess response into a usable Object
+
+Google returns a jwt token encoded using base64url. This method will help you get a typed object to manipulate the data for your application.
+
+- **Example**
+
+<<< @/helpers/snippets/decodeJwt.vue
+
+**Output:**
+
+<<< @/helpers/snippets/jwtTokenExample.json
