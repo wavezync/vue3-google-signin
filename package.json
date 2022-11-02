@@ -1,7 +1,7 @@
 {
   "name": "vue3-google-signin",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Google Sign-in for Vue3 with Google Identity Service",
   "license": "MIT",
   "author": {
