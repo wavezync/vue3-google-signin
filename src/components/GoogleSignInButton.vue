@@ -270,7 +270,7 @@ watchEffect(() => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  window.google?.accounts.id.renderButton(targetElement.value!, {
+  window.google?.accounts.id.renderButton(targetElement.value! as HTMLElement, {
     type: props.type,
     theme: props.theme,
     size: props.size,
