@@ -82,5 +82,6 @@ export type {
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 };
+export * from "./@types/globals";
 
 export default plugin;
