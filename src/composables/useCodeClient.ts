@@ -129,7 +129,8 @@ export default function useCodeClient(
     });
 
     client = window.google?.accounts.oauth2.initCodeClient({
-      client_id: clientId,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client_id: clientId!,
       scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);
