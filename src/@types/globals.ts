@@ -1,11 +1,17 @@
-import { CodeClient } from "../interfaces/oauth2";
+import type {
+  CodeClient,
+  CodeClientConfig,
+  OverridableTokenClientConfig,
+  TokenClientConfig,
+  TokenResponse,
+} from "../interfaces/oauth2";
 
-import {
+import type {
   IdConfiguration,
   MomentListener,
   GsiButtonConfiguration,
   RevocationCallback,
-} from "@/interfaces/accounts";
+} from "../interfaces/accounts";
 
 declare global {
   interface Window {
@@ -51,3 +57,5 @@ declare global {
     };
   }
 }
+
+export default {};

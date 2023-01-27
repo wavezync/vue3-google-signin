@@ -111,7 +111,8 @@ export default function useTokenClient(
       : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
-      client_id: clientId,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client_id: clientId!,
       scope: `openid email profile ${scopes}`,
       callback: (response: TokenResponse) => {
         if (response.error) return onError?.(response);
