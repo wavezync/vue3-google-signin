@@ -3,7 +3,7 @@ import pkg from "../../package.json";
 
 const TITLE = "Vue3 Google Sign-in";
 const DESCRIPTION = "Google Sign-in for Vue3 Apps";
-const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.syetalabs.io/cover.png";
+const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.vercel.app/cover.png";
 
 const SideBar: DefaultTheme.Sidebar = [
   {
@@ -136,7 +136,7 @@ const Head: HeadConfig[] = [
   ],
   [
     "meta",
-    { property: "og:url", content: "https://vue3-google-signin.syetalabs.io/" },
+    { property: "og:url", content: "https://vue3-google-signin.vercel.app/" },
   ],
 
   // twitter card
@@ -151,7 +151,7 @@ const Head: HeadConfig[] = [
     "meta",
     {
       name: "twitter:site",
-      content: "@syetalabs",
+      content: "@kasvith",
     },
   ],
   [
@@ -181,17 +181,13 @@ const Nav: DefaultTheme.NavItem[] = [
   {
     text: "Guide",
     link: "/guide/",
-  },
-  {
-    text: "Syeta Labs 🡕",
-    link: "https://syetalabs.io",
-  },
+  }
 ];
 
 const SocialLinks: DefaultTheme.SocialLink[] = [
   {
     icon: "github",
-    link: "https://github.com/syetalabs/vue3-google-signin",
+    link: "https://github.com/kasvith/vue3-google-signin",
   },
 ];
 
@@ -206,7 +202,7 @@ export default defineConfig({
     sidebar: SideBar,
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2022-present Syeta Labs",
+      copyright: "Copyright © 2022-present Kasun Vithanage",
     },
     algolia: {
       apiKey: "5780c07dfe3e4a16e39773773e8a7b07",

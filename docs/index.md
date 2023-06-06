@@ -18,7 +18,7 @@ hero:
       link: /guide/
     - theme: alt
       text: View on GitHub
-      link: https://github.com/syetalabs/vue3-google-signin
+      link: https://github.com/kasvith/vue3-google-signin
 
 features:
   - icon: ⚙️

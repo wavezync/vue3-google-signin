@@ -1,12 +1,12 @@
 # Vue3 Google Sign-in
 
-[![Build](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml/badge.svg)](https://github.com/syetalabs/vue3-google-signin/actions/workflows/build.yaml) [![npm](https://img.shields.io/npm/v/vue3-google-signin)](https://www.npmjs.com/package/vue3-google-signin) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue3-google-signin) ![npm](https://img.shields.io/npm/dw/vue3-google-signin) ![NPM](https://img.shields.io/npm/l/vue3-google-signin) [![Docs](https://img.shields.io/badge/docs-Read%20Now-green)](https://vue3-google-signin.syetalabs.io/)
+[![Build](https://github.com/kasvith/vue3-google-signin/actions/workflows/build.yaml/badge.svg)](https://github.com/kasvith/vue3-google-signin/actions/workflows/build.yaml) [![npm](https://img.shields.io/npm/v/vue3-google-signin)](https://www.npmjs.com/package/vue3-google-signin) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue3-google-signin) ![npm](https://img.shields.io/npm/dw/vue3-google-signin) ![NPM](https://img.shields.io/npm/l/vue3-google-signin) [![Docs](https://img.shields.io/badge/docs-Read%20Now-green)](https://vue3-google-signin.vercel.app/)
 
 Use Google Identity Services with your Vue3 App easily
 
 ## Documentation
 
-Full documentation can be accessed [here](https://vue3-google-signin.syetalabs.io/)
+Full documentation can be accessed [here](https://vue3-google-signin.vercel.app/)
 
 ## Installation
 
@@ -49,7 +49,7 @@ app.mount("#app");
 
 ## With Nuxt
 
-To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/syetalabs/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
+To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/kasvith/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
 
 ### Add package
 
