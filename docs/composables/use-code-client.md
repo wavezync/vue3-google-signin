@@ -4,7 +4,7 @@ title: useCodeClient
 
 # useCodeClient
 
-Initiate login with [implicit flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model) using code client. Return values of the composable can be used
+Initiate login with [auth code flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model) using code client. Return values of the composable can be used
 to trigger the login flow and determine the readiness of the client.
 It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
 
