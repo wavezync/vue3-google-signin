@@ -219,14 +219,10 @@ export default function useOneTap(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       client_id: clientId!,
       callback: (credentialResponse: CredentialResponse) => {
-        if (process.env.NODE_ENV === 'development') {
-            console.log("cb triggered");
-        }
         if (!credentialResponse.clientId || !credentialResponse.credential) {
           onError?.();
           return;
         }
-        
         onSuccess?.(credentialResponse);
       },
       native_callback: (response: NativeCallbackResponse) => {
