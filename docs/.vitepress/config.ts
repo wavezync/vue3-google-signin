@@ -3,7 +3,7 @@ import pkg from "../../package.json";
 
 const TITLE = "Vue3 Google Sign-in";
 const DESCRIPTION = "Google Sign-in for Vue3 Apps";
-const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.vercel.app/cover.png";
+const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.wavezync.com/cover.png";
 
 const SideBar: DefaultTheme.Sidebar = [
   {
@@ -136,7 +136,7 @@ const Head: HeadConfig[] = [
   ],
   [
     "meta",
-    { property: "og:url", content: "https://vue3-google-signin.vercel.app/" },
+    { property: "og:url", content: "https://vue3-google-signin.wavezync.com/" },
   ],
 
   // twitter card
@@ -151,7 +151,7 @@ const Head: HeadConfig[] = [
     "meta",
     {
       name: "twitter:site",
-      content: "@kasvith",
+      content: "@wavezync",
     },
   ],
   [
@@ -181,14 +181,18 @@ const Nav: DefaultTheme.NavItem[] = [
   {
     text: "Guide",
     link: "/guide/",
+  },
+  {
+    text: "🌐 Visit WaveZync",
+    link: "https://wavezync.com",
   }
 ];
 
 const SocialLinks: DefaultTheme.SocialLink[] = [
   {
     icon: "github",
-    link: "https://github.com/kasvith/vue3-google-signin",
-  },
+    link: "https://github.com/wavezync/vue3-google-signin",
+  }
 ];
 
 export default defineConfig({
@@ -202,7 +206,7 @@ export default defineConfig({
     sidebar: SideBar,
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2022-present Kasun Vithanage",
+      copyright: "Copyright © 2022-present WaveZync",
     },
     algolia: {
       apiKey: "5780c07dfe3e4a16e39773773e8a7b07",

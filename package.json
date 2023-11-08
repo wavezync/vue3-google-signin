@@ -1,7 +1,7 @@
 {
   "name": "vue3-google-signin",
   "type": "module",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Google Sign-in for Vue3 with Google Identity Service",
   "license": "MIT",
   "author": {
@@ -9,7 +9,7 @@
     "email": "alankasun@gmail.com",
     "url": "https://kasvith.me"
   },
-  "homepage": "https://vue3-google-signin.vercel.app",
+  "homepage": "https://vue3-google-signin.wavezync.com",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -61,7 +61,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kasvith/vue3-google-signin"
+    "url": "https://github.com/wavezync/vue3-google-signin"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",

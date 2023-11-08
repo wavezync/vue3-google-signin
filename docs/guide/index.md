@@ -65,7 +65,7 @@ Now the library is ready to be used :sparkles:
 
 ## With Nuxt
 
-To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/kasvith/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
+To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
 
 ### Add package
 
