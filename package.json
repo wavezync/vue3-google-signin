@@ -22,11 +22,12 @@
     "docs:serve": "vitepress serve docs"
   },
   "main": "./dist/index.umd.js",
-  "module": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
+      "require": "./dist/index.umd.js",
+      "types": "./dist/plugin.d.ts"
     }
   },
   "types": "./dist/plugin.d.ts",
