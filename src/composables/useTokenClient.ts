@@ -8,6 +8,7 @@ import type {
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "../utils/symbols";
 import type { MaybeRef } from "@/utils/types";
+import { toPluginError } from "@/utils/logs";
 
 /**
  * Success response
@@ -78,7 +79,7 @@ export interface UseTokenClientReturn {
    *
    * @memberof UseTokenClientReturn
    */
-  login: (overrideConfig?: OverridableTokenClientConfig) => void | undefined;
+  login: (overrideConfig?: OverridableTokenClientConfig) => void;
 }
 
 /**
@@ -97,13 +98,25 @@ export default function useTokenClient(
   const { scope = "", onError, onSuccess, ...rest } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = inject(GoogleClientIdKey);
   const isReady = ref(false);
   let client: TokenClient | undefined;
+
+  const login = (overrideConfig?: OverridableTokenClientConfig) => {
+    if (!isReady.value)
+      throw new Error(
+        toPluginError(
+          "Set clientId in options or use setClientId to initialize."
+        )
+      );
+
+    client?.requestAccessToken(overrideConfig);
+  };
 
   watchEffect(() => {
     isReady.value = false;
     if (!scriptLoaded.value) return;
+    if (!clientId?.value) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -111,8 +124,7 @@ export default function useTokenClient(
       : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id: clientId.value,
       scope: `openid email profile ${scopes}`,
       callback: (response: TokenResponse) => {
         if (response.error) return onError?.(response);
@@ -127,7 +139,6 @@ export default function useTokenClient(
 
   return {
     isReady: readonly(isReady),
-    login: (overrideConfig?: OverridableTokenClientConfig) =>
-      client?.requestAccessToken(overrideConfig),
+    login,
   };
 }

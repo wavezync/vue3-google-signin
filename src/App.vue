@@ -5,6 +5,7 @@ import useCodeClient from "./composables/useCodeClient";
 import { ref } from "vue";
 import useTokenClient from "./composables/useTokenClient";
 import useOneTap from "./composables/useOneTap";
+import { setGoogleClientId } from "./plugin";
 
 const scope = ref("");
 
@@ -15,6 +16,11 @@ const onLoginSuccess = (resp: CredentialResponse) => {
 const onLoginError = () => {
   console.error("Login failed");
 };
+
+(async () => {
+  await new Promise((r) => setTimeout(r, 3000));
+  setGoogleClientId(import.meta.env.VITE_GOOGLE_CLIENT_ID);
+})();
 
 const { isReady: isCodeClientReady, login: loginCodeClient } = useCodeClient({
   scope,

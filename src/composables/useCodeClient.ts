@@ -8,6 +8,7 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
+import { toPluginError } from "@/utils/logs";
 
 /**
  * On success with implicit flow
@@ -78,7 +79,7 @@ export interface UseCodeClientReturn {
    *
    * @memberof UseCodeClientReturn
    */
-  login: () => void | undefined;
+  login: () => void;
 
   /**
    * Get a URL to perform code request without actually redirecting user.
@@ -106,14 +107,26 @@ export default function useCodeClient(
   const { scope = "", onError, onSuccess, ...rest } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = inject(GoogleClientIdKey);
   const isReady = ref(false);
   const codeRequestRedirectUrl = ref<string | null>(null);
   let client: CodeClient | undefined;
 
+  const login = () => {
+    if (!isReady.value)
+      throw new Error(
+        toPluginError(
+          "Set clientId in options or use setClientId to initialize."
+        )
+      );
+
+    client?.requestCode();
+  };
+
   watchEffect(() => {
     isReady.value = false;
     if (!scriptLoaded.value) return;
+    if (!clientId?.value) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -122,15 +135,13 @@ export default function useCodeClient(
     const computedScopes = `openid email profile ${scopes}`;
 
     codeRequestRedirectUrl.value = buildCodeRequestRedirectUrl({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id: clientId.value,
       scope: computedScopes,
       ...rest,
     });
 
     client = window.google?.accounts.oauth2.initCodeClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id: clientId.value,
       scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);
@@ -145,7 +156,7 @@ export default function useCodeClient(
 
   return {
     isReady: readonly(isReady),
-    login: () => client?.requestCode(),
+    login,
     codeRequestRedirectUrl: readonly(codeRequestRedirectUrl),
   };
 }
