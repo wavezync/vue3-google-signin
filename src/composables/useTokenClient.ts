@@ -103,12 +103,17 @@ export default function useTokenClient(
   let client: TokenClient | undefined;
 
   const login = (overrideConfig?: OverridableTokenClientConfig) => {
-    if (!isReady.value)
-      throw new Error(
-        toPluginError(
-          "Set clientId in options or use setClientId to initialize."
-        )
-      );
+    if (!isReady.value) {
+      if (!clientId?.value) {
+        throw new Error(
+          toPluginError(
+            "Set clientId in options or use setClientId to initialize."
+          )
+        );
+      }
+
+      return;
+    }
 
     client?.requestAccessToken(overrideConfig);
   };

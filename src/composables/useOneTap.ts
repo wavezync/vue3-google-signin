@@ -195,12 +195,17 @@ export default function useOneTap(
   const isReady = ref(false);
 
   const login = () => {
-    if (!isReady.value)
-      throw new Error(
-        toPluginError(
-          "Set clientId in options or use setClientId to initialize."
-        )
-      );
+    if (!isReady.value) {
+      if (!clientId?.value) {
+        throw new Error(
+          toPluginError(
+            "Set clientId in options or use setClientId to initialize."
+          )
+        );
+      }
+
+      return;
+    }
 
     window.google?.accounts.id.prompt((notification) =>
       onPromptMomentNotification?.(notification)
@@ -209,7 +214,6 @@ export default function useOneTap(
 
   watchEffect((onCleanup) => {
     isReady.value = false;
-    console.log("clientId : ", clientId?.value);
     if (!scriptLoaded.value) return;
     if (!clientId?.value) return;
 

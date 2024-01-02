@@ -1,4 +1,4 @@
-import { type App, type Plugin, ref } from "vue";
+import type { App, Plugin } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleSignInButton from "./components/GoogleSignInButton.vue";
 import useGsiScript from "./composables/useGsiScript";
@@ -25,6 +25,8 @@ import type {
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
 
+import { googleClientIdRef } from "./states";
+
 export interface GoogleSignInPluginOptions {
   /**
    * This field is your application's client ID, which is found and created in the Google Developers Console
@@ -35,12 +37,6 @@ export interface GoogleSignInPluginOptions {
    */
   clientId: string;
 }
-
-const googleClientIdRef = ref<string>();
-
-export const setGoogleClientId = (id: string) => {
-  googleClientIdRef.value = id;
-};
 
 const plugin: Plugin = {
   install(app: App, options?: GoogleSignInPluginOptions) {
@@ -72,6 +68,7 @@ export type {
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 };
+export * from "./methods";
 export * from "./@types/globals";
 
 export default plugin;

@@ -113,12 +113,17 @@ export default function useCodeClient(
   let client: CodeClient | undefined;
 
   const login = () => {
-    if (!isReady.value)
-      throw new Error(
-        toPluginError(
-          "Set clientId in options or use setClientId to initialize."
-        )
-      );
+    if (!isReady.value) {
+      if (!clientId?.value) {
+        throw new Error(
+          toPluginError(
+            "Set clientId in options or use setClientId to initialize."
+          )
+        );
+      }
+
+      return;
+    }
 
     client?.requestCode();
   };
