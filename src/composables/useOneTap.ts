@@ -31,7 +31,7 @@ export interface UseGoogleOneTapLoginOptions {
    * @memberof UseGoogleOneTapLoginOptions
    */
   onPromptMomentNotification?: (
-    promptMomentNotification: PromptMomentNotification
+    promptMomentNotification: PromptMomentNotification,
   ) => void;
 
   /**
@@ -170,7 +170,7 @@ export interface UseOneTapResult {
  * @return {*}  {UseOneTapResult}
  */
 export default function useOneTap(
-  options?: UseGoogleOneTapLoginOptions
+  options?: UseGoogleOneTapLoginOptions,
 ): UseOneTapResult {
   const {
     disableAutomaticPrompt = false,
@@ -208,7 +208,7 @@ export default function useOneTap(
     }
 
     window.google?.accounts.id.prompt((notification) =>
-      onPromptMomentNotification?.(notification)
+      onPromptMomentNotification?.(notification),
     );
   };
 
@@ -259,7 +259,7 @@ export default function useOneTap(
 
     if (shouldAutoLogin) {
       window.google?.accounts.id.prompt((notification) =>
-        onPromptMomentNotification?.(notification)
+        onPromptMomentNotification?.(notification),
       );
     }
 

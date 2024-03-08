@@ -18,7 +18,7 @@ export function hasGrantedAllScopes(
     window.google?.accounts.oauth2.hasGrantedAllScopes(
       tokenResponse,
       firstScope,
-      ...restScopes
+      ...restScopes,
     ) || false
   );
 }
@@ -41,7 +41,7 @@ export function hasGrantedAnyScopes(
     window.google?.accounts.oauth2.hasGrantedAnyScope(
       tokenResponse,
       firstScope,
-      ...restScopes
+      ...restScopes,
     ) || false
   );
 }
@@ -72,7 +72,7 @@ export type ImplicitFlowOptions = Omit<
  * @return {string}
  */
 export function buildCodeRequestRedirectUrl(
-  options: ImplicitFlowOptions
+  options: ImplicitFlowOptions,
 ): string {
   const baseUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
@@ -106,7 +106,7 @@ export function buildCodeRequestRedirectUrl(
   } else {
     queryParams.append(
       "enable_serial_consent",
-      `${options.enable_serial_consent}`
+      `${options.enable_serial_consent}`,
     );
   }
 

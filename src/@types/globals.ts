@@ -23,12 +23,12 @@ declare global {
           renderButton: (
             parent: HTMLElement,
             options: GsiButtonConfiguration,
-            clickHandler?: () => void
+            clickHandler?: () => void,
           ) => void;
           disableAutoSelect: () => void;
           storeCredential: (
             credential: { id: string; password: string },
-            callback?: () => void
+            callback?: () => void,
           ) => void;
           cancel: () => void;
           onGoogleLibraryLoad: () => void;
@@ -37,7 +37,7 @@ declare global {
         oauth2: {
           initTokenClient: (config: TokenClientConfig) => {
             requestAccessToken: (
-              overridableClientConfig?: OverridableTokenClientConfig
+              overridableClientConfig?: OverridableTokenClientConfig,
             ) => void;
           };
           initCodeClient: (config: CodeClientConfig) => CodeClient;

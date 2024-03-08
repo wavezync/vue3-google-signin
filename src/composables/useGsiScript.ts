@@ -38,7 +38,7 @@ watch(
     if (newCount > 0 && !loaded.value && !isLoading.value) {
       initialize();
     }
-  }
+  },
 );
 
 export type UseGsiScriptReturn = {
