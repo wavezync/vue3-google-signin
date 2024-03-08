@@ -44,7 +44,7 @@ const plugin: Plugin = {
   install(app: App, options: GoogleSignInPluginOptions) {
     if (!options) {
       throw new Error(
-        toPluginError(`initialize plugin by passing an options object`)
+        toPluginError(`initialize plugin by passing an options object`),
       );
     }
 

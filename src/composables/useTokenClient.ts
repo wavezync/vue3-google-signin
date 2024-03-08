@@ -92,7 +92,7 @@ export interface UseTokenClientReturn {
  * @return {*}  {UseTokenClientReturn}
  */
 export default function useTokenClient(
-  options: AuthCodeFlowOptions = {}
+  options: AuthCodeFlowOptions = {},
 ): UseTokenClientReturn {
   const { scope = "", onError, onSuccess, ...rest } = options;
 

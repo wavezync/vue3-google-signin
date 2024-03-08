@@ -392,7 +392,7 @@ export interface GsiButtonConfiguration {
 }
 
 export type MomentListener = (
-  promptMomentNotification: PromptMomentNotification
+  promptMomentNotification: PromptMomentNotification,
 ) => void;
 
 export interface RevocationResponse {

@@ -101,7 +101,7 @@ export interface UseCodeClientReturn {
  * @return {*}  {UseCodeClientReturn}
  */
 export default function useCodeClient(
-  options: ImplicitFlowOptions = {}
+  options: ImplicitFlowOptions = {},
 ): UseCodeClientReturn {
   const { scope = "", onError, onSuccess, ...rest } = options;
 
