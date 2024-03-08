@@ -30,4 +30,4 @@ jobs:
           npm run build
       - name: Build docs
         run: |
-          npm run build:docs
+          npm run docs:build
