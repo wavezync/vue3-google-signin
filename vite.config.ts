@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from "url";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import dts from "vite-plugin-dts";
 import typescript2 from "rollup-plugin-typescript2";
 
 // https://vitejs.dev/config/
@@ -23,6 +24,7 @@ export default defineConfig({
         exclude: ["vite.config.ts", "main.ts"],
       },
     }),
+    dts(),
   ],
   resolve: {
     alias: {
