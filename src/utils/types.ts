@@ -11,6 +11,6 @@ export interface DecodedGoogleUser {
   name: string;
   id: string;
   picture: string;
-  issued_at: number;
-  expires_at: number;
+  iat: number;
+  exp: number;
 }

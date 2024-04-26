@@ -41,7 +41,7 @@ export function decodeCredential(credential: string): DecodedGoogleUser {
     name: decodedToken.name,
     picture: decodedToken.picture,
     id: decodedToken.sub,
-    issued_at: decodedToken.iat,
-    expires_at: decodedToken.exp,
+    iat: decodedToken.iat,
+    exp: decodedToken.exp,
   };
 }
