@@ -59,6 +59,10 @@ const SideBar: DefaultTheme.Sidebar = [
     ],
   },
   {
+    text: "Methods",
+    items: [{ text: "setGoogleClientId", link: "/methods/#setgoogleclientid" }],
+  },
+  {
     text: "Helpers",
     items: [
       {
