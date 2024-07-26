@@ -57,12 +57,12 @@ export interface CredentialResponse {
   select_by?: SelectBy;
 
   /**
-   * This field is only defined when user clicks a Sign in with Google button to sign in, and the button's state attribute is specified.
+   * Client ID returned from google
    *
    * @type {string}
    * @memberof CredentialResponse
    */
-  state?: string;
+  clientId?: string;
 }
 
 /**
