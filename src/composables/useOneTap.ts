@@ -219,7 +219,7 @@ export default function useOneTap(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       client_id: clientId!,
       callback: (credentialResponse: CredentialResponse) => {
-        if (!credentialResponse.clientId || !credentialResponse.credential) {
+        if (!credentialResponse.credential) {
           onError?.();
           return;
         }
