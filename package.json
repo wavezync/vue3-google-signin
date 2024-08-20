@@ -1,7 +1,7 @@
 {
   "name": "vue3-google-signin",
   "type": "module",
-  "version": "1.3.4",
+  "version": "2.0.0",
   "description": "Google Sign-in for Vue3 with Google Identity Service",
   "license": "MIT",
   "author": {
@@ -81,5 +81,8 @@
     "vitepress": "^1.0.0-rc.45",
     "vue": "^3.4.21",
     "vue-tsc": "^2.0.6"
+  },
+  "dependencies": {
+    "vite-plugin-dts": "^3.7.3"
   }
 }

@@ -232,7 +232,7 @@ export default function useOneTap(
     window.google?.accounts.id.initialize({
       client_id: clientId.value,
       callback: (credentialResponse: CredentialResponse) => {
-        if (!credentialResponse.clientId || !credentialResponse.credential) {
+        if (!credentialResponse.credential) {
           onError?.();
           return;
         }

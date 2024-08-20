@@ -246,7 +246,7 @@ watchEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     client_id: clientId!.value,
     callback: (credentialResponse: CredentialResponse) => {
-      if (!credentialResponse.clientId || !credentialResponse.credential) {
+      if (!credentialResponse.credential) {
         emits("error");
         return;
       }
