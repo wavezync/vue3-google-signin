@@ -25,7 +25,7 @@ import type {
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
 
-export const PLUGIN_NAME = "GoogleSignInPlugin";
+import { googleClientIdRef } from "./states";
 
 export interface GoogleSignInPluginOptions {
   /**
@@ -38,24 +38,10 @@ export interface GoogleSignInPluginOptions {
   clientId: string;
 }
 
-const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
-
 const plugin: Plugin = {
-  install(app: App, options: GoogleSignInPluginOptions) {
-    if (!options) {
-      throw new Error(
-        toPluginError(`initialize plugin by passing an options object`),
-      );
-    }
-
-    if (
-      !options.clientId ||
-      (options.clientId && options.clientId.trim().length === 0)
-    ) {
-      throw new Error(toPluginError("clientId is required to initialize"));
-    }
-
-    app.provide(GoogleClientIdKey, options.clientId);
+  install(app: App, options?: GoogleSignInPluginOptions) {
+    googleClientIdRef.value = options?.clientId;
+    app.provide(GoogleClientIdKey, googleClientIdRef);
     app.component("GoogleSignInButton", GoogleSignInButton);
   },
 };
@@ -82,6 +68,7 @@ export type {
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 };
+export * from "./methods";
 export * from "./@types/globals";
 
 export default plugin;
