@@ -117,8 +117,8 @@ export default function useCodeClient(
       if (!clientId?.value) {
         throw new Error(
           toPluginError(
-            "Set clientId in options or use setClientId to initialize."
-          )
+            "Set clientId in options or use setClientId to initialize.",
+          ),
         );
       }
 
