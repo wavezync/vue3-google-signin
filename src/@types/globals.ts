@@ -42,12 +42,12 @@ declare global {
           };
           initCodeClient: (config: CodeClientConfig) => CodeClient;
           hasGrantedAnyScope: (
-            tokenRsponse: TokenResponse,
+            tokenResponse: TokenResponse,
             firstScope: string,
             ...restScopes: string[]
           ) => boolean;
           hasGrantedAllScopes: (
-            tokenRsponse: TokenResponse,
+            tokenResponse: TokenResponse,
             firstScope: string,
             ...restScopes: string[]
           ) => boolean;
