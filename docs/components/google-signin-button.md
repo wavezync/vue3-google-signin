@@ -120,7 +120,7 @@ This button renders default Google SignIn Button using Google API.
 ### size
 
 - **Type**: `"large" | "medium" | "small"`
-- **Default**: `small`
+- **Default**: `large`
 - [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#size)
 
   The button size
