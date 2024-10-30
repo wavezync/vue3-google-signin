@@ -67,7 +67,7 @@ This button renders default Google SignIn Button using Google API.
 - **Type**: `string`
 - **Default**: `use`
 - **Allowed**: `"signin" | "signup" | "use"`
-- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#nonce)
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#context)
 
   This field changes the text of the title and messages in the One Tap prompt.
 
@@ -120,7 +120,7 @@ This button renders default Google SignIn Button using Google API.
 ### size
 
 - **Type**: `"large" | "medium" | "small"`
-- **Default**: `small`
+- **Default**: `large`
 - [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#size)
 
   The button size
