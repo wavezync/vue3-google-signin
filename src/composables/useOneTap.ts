@@ -8,7 +8,10 @@ import type {
 } from "@/interfaces/accounts";
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
-import { toPluginError } from "@/utils/logs";
+import {
+  validateInitializeSetup,
+  validateLoginSetup,
+} from "@/utils/validations";
 
 export interface UseGoogleOneTapLoginOptions {
   /**
@@ -195,17 +198,7 @@ export default function useOneTap(
   const isReady = ref(false);
 
   const login = () => {
-    if (!isReady.value) {
-      if (!clientId?.value) {
-        throw new Error(
-          toPluginError(
-            "Set clientId in options or use setClientId to initialize.",
-          ),
-        );
-      }
-
-      return;
-    }
+    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
 
     window.google?.accounts.id.prompt((notification) =>
       onPromptMomentNotification?.(notification),
@@ -214,8 +207,7 @@ export default function useOneTap(
 
   watchEffect((onCleanup) => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
-    if (!clientId?.value) return;
+    if (!validateInitializeSetup(scriptLoaded.value, clientId?.value)) return;
 
     const shouldAutoLogin = !unref(disableAutomaticPrompt);
 
@@ -230,7 +222,7 @@ export default function useOneTap(
     const cancel_on_tap_outside = unref(cancelOnTapOutside);
 
     window.google?.accounts.id.initialize({
-      client_id: clientId.value,
+      client_id: clientId!.value,
       callback: (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) {
           onError?.();

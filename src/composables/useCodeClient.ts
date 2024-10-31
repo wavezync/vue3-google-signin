@@ -8,7 +8,10 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
-import { toPluginError } from "@/utils/logs";
+import {
+  validateInitializeSetup,
+  validateLoginSetup,
+} from "@/utils/validations";
 
 /**
  * On success with implicit flow
@@ -113,25 +116,14 @@ export default function useCodeClient(
   let client: CodeClient | undefined;
 
   const login = () => {
-    if (!isReady.value) {
-      if (!clientId?.value) {
-        throw new Error(
-          toPluginError(
-            "Set clientId in options or use setClientId to initialize.",
-          ),
-        );
-      }
-
-      return;
-    }
+    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
 
     client?.requestCode();
   };
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
-    if (!clientId?.value) return;
+    if (!validateInitializeSetup(scriptLoaded.value, clientId?.value)) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -140,13 +132,13 @@ export default function useCodeClient(
     const computedScopes = `openid email profile ${scopes}`;
 
     codeRequestRedirectUrl.value = buildCodeRequestRedirectUrl({
-      client_id: clientId.value,
+      client_id: clientId!.value,
       scope: computedScopes,
       ...rest,
     });
 
     client = window.google?.accounts.oauth2.initCodeClient({
-      client_id: clientId.value,
+      client_id: clientId!.value,
       scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);

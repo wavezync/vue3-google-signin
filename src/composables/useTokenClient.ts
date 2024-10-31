@@ -6,9 +6,12 @@ import type {
   OverridableTokenClientConfig,
 } from "@/interfaces/oauth2";
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "../utils/symbols";
 import type { MaybeRef } from "@/utils/types";
-import { toPluginError } from "@/utils/logs";
+import { GoogleClientIdKey } from "../utils/symbols";
+import {
+  validateInitializeSetup,
+  validateLoginSetup,
+} from "@/utils/validations";
 
 /**
  * Success response
@@ -103,25 +106,14 @@ export default function useTokenClient(
   let client: TokenClient | undefined;
 
   const login = (overrideConfig?: OverridableTokenClientConfig) => {
-    if (!isReady.value) {
-      if (!clientId?.value) {
-        throw new Error(
-          toPluginError(
-            "Set clientId in options or use setClientId to initialize.",
-          ),
-        );
-      }
-
-      return;
-    }
+    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
 
     client?.requestAccessToken(overrideConfig);
   };
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
-    if (!clientId?.value) return;
+    if (!validateInitializeSetup(scriptLoaded.value, clientId?.value)) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -129,7 +121,7 @@ export default function useTokenClient(
       : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
-      client_id: clientId.value,
+      client_id: clientId!.value,
       scope: `openid email profile ${scopes}`,
       callback: (response: TokenResponse) => {
         if (response.error) return onError?.(response);
