@@ -47,14 +47,22 @@ pnpm add vue3-google-signin
 Setting up the library is very simple. In your application entry point(`main.js` or `main.ts`)
 put the following code.
 
+::: tip
+:bulb: If you wish to dynamically add the `clientId`, you can use the `setGoogleClientId` method in your application.
+:::
+
 ```js
 // rest of the code
 
 import GoogleSignInPlugin from "vue3-google-signin"
 
+// for static clientId
 app.use(GoogleSignInPlugin, {
   clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
 });
+
+// for dynamic clientId
+app.use(GoogleSignInPlugin);
 
 // other config
 
@@ -90,6 +98,10 @@ pnpm add nuxt-vue3-google-signin
 ### Initialize
 
 Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
+
+::: warning
+The feature to dynamically add the `clientId` has not yet been implemented in this library.
+:::
 
 ```ts
 import { defineNuxtConfig } from 'nuxt/config'
