@@ -8,10 +8,7 @@ import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
-import {
-  validateInitializeSetup,
-  validateLoginSetup,
-} from "@/utils/validations";
+import { isClientIdValid, validateInitializeSetup } from "@/utils/validations";
 
 /**
  * On success with implicit flow
@@ -116,7 +113,7 @@ export default function useCodeClient(
   let client: CodeClient | undefined;
 
   const login = () => {
-    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
+    if (!isClientIdValid(isReady.value, clientId?.value)) return;
 
     client?.requestCode();
   };

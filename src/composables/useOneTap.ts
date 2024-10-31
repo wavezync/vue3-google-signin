@@ -8,10 +8,7 @@ import type {
 } from "@/interfaces/accounts";
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "@/utils/symbols";
-import {
-  validateInitializeSetup,
-  validateLoginSetup,
-} from "@/utils/validations";
+import { isClientIdValid, validateInitializeSetup } from "@/utils/validations";
 
 export interface UseGoogleOneTapLoginOptions {
   /**
@@ -198,7 +195,7 @@ export default function useOneTap(
   const isReady = ref(false);
 
   const login = () => {
-    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
+    if (!isClientIdValid(isReady.value, clientId?.value)) return;
 
     window.google?.accounts.id.prompt((notification) =>
       onPromptMomentNotification?.(notification),

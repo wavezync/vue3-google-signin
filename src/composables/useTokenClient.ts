@@ -8,10 +8,7 @@ import type {
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import type { MaybeRef } from "@/utils/types";
 import { GoogleClientIdKey } from "../utils/symbols";
-import {
-  validateInitializeSetup,
-  validateLoginSetup,
-} from "@/utils/validations";
+import { isClientIdValid, validateInitializeSetup } from "@/utils/validations";
 
 /**
  * Success response
@@ -106,7 +103,7 @@ export default function useTokenClient(
   let client: TokenClient | undefined;
 
   const login = (overrideConfig?: OverridableTokenClientConfig) => {
-    if (!validateLoginSetup(isReady.value, clientId?.value)) return;
+    if (!isClientIdValid(isReady.value, clientId?.value)) return;
 
     client?.requestAccessToken(overrideConfig);
   };

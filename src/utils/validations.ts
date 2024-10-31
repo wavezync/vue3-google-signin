@@ -1,19 +1,14 @@
 import { toPluginError } from "./logs";
 
-export const validateLoginSetup = (isReady: boolean, clientId?: string) => {
-  if (!isReady) {
-    if (!clientId) {
-      throw new Error(
-        toPluginError(
-          "Set clientId in options or use setClientId to initialize.",
-        ),
-      );
-    }
+export const isClientIdValid = (isReady: boolean, clientId?: string) => {
+  if (!clientId)
+    throw new Error(
+      toPluginError(
+        "Set clientId in options or use setClientId to initialize.",
+      ),
+    );
 
-    return false;
-  }
-
-  return true;
+  return isReady;
 };
 
 export const validateInitializeSetup = (
