@@ -1,6 +1,6 @@
 import { toPluginError } from "./logs";
 
-export const isClientIdValid = (isReady: boolean, clientId?: string) => {
+export function isClientIdValid(isReady: boolean, clientId?: string) {
   if (!clientId)
     throw new Error(
       toPluginError(
@@ -9,9 +9,11 @@ export const isClientIdValid = (isReady: boolean, clientId?: string) => {
     );
 
   return isReady;
-};
+}
 
-export const validateInitializeSetup = (
+export function validateInitializeSetup(
   isScriptLoad: boolean,
   clientId?: string,
-) => isScriptLoad && !!clientId;
+) {
+  return isScriptLoad && !!clientId;
+}

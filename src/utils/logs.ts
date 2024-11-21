@@ -1,3 +1,5 @@
-import { PLUGIN_NAME } from "@/constants";
+import { PLUGIN_NAME } from "@/constant";
 
-export const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
+export function toPluginError(err: string) {
+  return `[${PLUGIN_NAME}]: ${err}`;
+}

@@ -5,7 +5,7 @@ import useCodeClient from "./composables/useCodeClient";
 import { ref } from "vue";
 import useTokenClient from "./composables/useTokenClient";
 import useOneTap from "./composables/useOneTap";
-import { setGoogleClientId } from "@/methods";
+import setGoogleClientId from "./methods/setGoogleClientId";
 
 const scope = ref("");
 

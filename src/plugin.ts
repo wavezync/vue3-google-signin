@@ -5,6 +5,7 @@ import useGsiScript from "./composables/useGsiScript";
 import useCodeClient from "./composables/useCodeClient";
 import useOneTap from "./composables/useOneTap";
 import useTokenClient from "./composables/useTokenClient";
+import setGoogleClientId from "./methods/setGoogleClientId";
 
 import type {
   ImplicitFlowOptions,
@@ -25,7 +26,7 @@ import type {
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
 
-import { googleClientIdRef } from "./states";
+import { googleClientIdRef } from "./store";
 
 export interface GoogleSignInPluginOptions {
   /**
@@ -52,6 +53,7 @@ export {
   useGsiScript,
   useTokenClient,
   useOneTap,
+  setGoogleClientId,
 };
 
 export * from "./interfaces";
@@ -68,7 +70,6 @@ export type {
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 };
-export * from "./methods";
 export * from "./@types/globals";
 
 export default plugin;
