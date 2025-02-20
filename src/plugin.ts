@@ -5,6 +5,7 @@ import useGsiScript from "./composables/useGsiScript";
 import useCodeClient from "./composables/useCodeClient";
 import useOneTap from "./composables/useOneTap";
 import useTokenClient from "./composables/useTokenClient";
+import setGoogleClientId from "./methods/setGoogleClientId";
 
 import type {
   ImplicitFlowOptions,
@@ -25,7 +26,7 @@ import type {
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
 
-export const PLUGIN_NAME = "GoogleSignInPlugin";
+import { googleClientIdRef } from "./store";
 
 export interface GoogleSignInPluginOptions {
   /**
@@ -38,24 +39,10 @@ export interface GoogleSignInPluginOptions {
   clientId: string;
 }
 
-const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
-
 const plugin: Plugin = {
-  install(app: App, options: GoogleSignInPluginOptions) {
-    if (!options) {
-      throw new Error(
-        toPluginError(`initialize plugin by passing an options object`),
-      );
-    }
-
-    if (
-      !options.clientId ||
-      (options.clientId && options.clientId.trim().length === 0)
-    ) {
-      throw new Error(toPluginError("clientId is required to initialize"));
-    }
-
-    app.provide(GoogleClientIdKey, options.clientId);
+  install(app: App, options?: GoogleSignInPluginOptions) {
+    googleClientIdRef.value = options?.clientId;
+    app.provide(GoogleClientIdKey, googleClientIdRef);
     app.component("GoogleSignInButton", GoogleSignInButton);
   },
 };
@@ -66,6 +53,7 @@ export {
   useGsiScript,
   useTokenClient,
   useOneTap,
+  setGoogleClientId,
 };
 
 export * from "./interfaces";
