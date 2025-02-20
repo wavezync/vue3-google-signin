@@ -214,6 +214,8 @@ export interface IdConfiguration {
    * @memberof IdConfiguration
    */
   itp_support?: boolean;
+
+  use_fedcm_for_prompt?: boolean;
 }
 
 /**
@@ -225,58 +227,11 @@ export interface IdConfiguration {
  */
 export interface PromptMomentNotification {
   /**
-   * Is this notification for a display moment?
-   *
-   * @memberof PromptMomentNotification
-   */
-  isDisplayMoment: () => boolean;
-
-  /**
-   * Is this notification for a display moment, and the UI is displayed?
-   *
-   * @memberof PromptMomentNotification
-   */
-  isDisplayed: () => boolean;
-
-  /**
-   * Is this notification for a display moment, and the UI isn't displayed?
-   *
-   * @memberof PromptMomentNotification
-   */
-  isNotDisplayed: () => boolean;
-
-  /**
-   * The detailed reason why the UI isn't displayed
-   *
-   * @memberof PromptMomentNotification
-   */
-  getNotDisplayedReason: () =>
-    | "browser_not_supported"
-    | "invalid_client"
-    | "missing_client_id"
-    | "opt_out_or_no_session"
-    | "secure_http_required"
-    | "suppressed_by_user"
-    | "unregistered_origin"
-    | "unknown_reason";
-
-  /**
    * Is this notification for a skipped moment?
    *
    * @memberof PromptMomentNotification
    */
   isSkippedMoment: () => boolean;
-
-  /**
-   * The detailed reason for the skipped moment.
-   *
-   * @memberof PromptMomentNotification
-   */
-  getSkippedReason: () =>
-    | "auto_cancel"
-    | "user_cancel"
-    | "tap_outside"
-    | "issuing_failed";
 
   /**
    * Is this notification for a dismissed moment?

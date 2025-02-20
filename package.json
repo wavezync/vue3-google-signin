@@ -1,7 +1,7 @@
 {
   "name": "vue3-google-signin",
   "type": "module",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Google Sign-in for Vue3 with Google Identity Service",
   "license": "MIT",
   "author": {
@@ -25,9 +25,9 @@
   "module": "./dist/index.es.js",
   "exports": {
     ".": {
+      "types": "./dist/plugin.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "types": "./dist/plugin.d.ts"
+      "require": "./dist/index.umd.js"
     }
   },
   "types": "./dist/plugin.d.ts",
@@ -66,8 +66,8 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.7.2",
-    "@types/node": "^20.11.25",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.11",
+    "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
@@ -76,11 +76,11 @@
     "prettier": "^3.2.5",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.71.1",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.5",
+    "typescript": "^5.5.3",
+    "vite": "^6.1.1",
+    "vite-plugin-dts": "^3.7.3",
     "vitepress": "^1.0.0-rc.45",
-    "vue": "^3.4.21",
-    "vue-tsc": "^2.0.6",
-    "vite-plugin-dts": "^3.7.3"
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.2"
   }
 }

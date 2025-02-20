@@ -267,6 +267,7 @@ watchEffect(() => {
     prompt_parent_id: props.promptParentId,
     state_cookie_domain: props.stateCookieDomain,
     ux_mode: props.uxMode,
+    use_fedcm_for_prompt: true,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

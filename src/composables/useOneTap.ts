@@ -240,6 +240,7 @@ export default function useOneTap(
       prompt_parent_id,
       state_cookie_domain,
       cancel_on_tap_outside,
+      use_fedcm_for_prompt: true,
     });
 
     isReady.value = true;
