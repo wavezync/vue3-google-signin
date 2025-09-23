@@ -3,7 +3,7 @@ import pkg from "../../package.json";
 
 const TITLE = "Vue3 Google Sign-in";
 const DESCRIPTION = "Google Sign-in for Vue3 Apps";
-const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.wavezync.com/cover.jpg";
+const SOCIAL_PREVIEW_URL = "https://vue3-google-signin.wavezync.com/og-image.jpg";
 
 const SideBar: DefaultTheme.Sidebar = [
   {
