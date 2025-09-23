@@ -198,7 +198,7 @@ interface GoogleSignInButtonProps {
   locale?: string;
 }
 
-const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
+const buttonContainerHeight = { large: "40px", medium: "32px", small: "20px" };
 
 const props = defineProps<GoogleSignInButtonProps>();
 const emits = defineEmits<{
@@ -233,16 +233,18 @@ const emits = defineEmits<{
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
 }>();
 
-const clientId = inject<string>(GoogleClientIdKey);
+const clientId = inject(GoogleClientIdKey);
 const targetElement = ref<HTMLElement | null>(null);
+const isReady = ref(false);
 const { scriptLoaded } = useGsiScript();
 
 watchEffect(() => {
   if (!scriptLoaded.value) return;
+  if (clientId?.value) isReady.value = true;
 
   window.google?.accounts.id.initialize({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    client_id: clientId!,
+    client_id: clientId!.value,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.credential) {
         emits("error");
@@ -295,8 +297,17 @@ onUnmounted(() => {
 });
 
 const height = computed(() => buttonContainerHeight[props.size || "large"]);
+const pointerEvents = computed(() => (isReady.value ? "initial" : "none"));
 </script>
 
 <template>
-  <div ref="targetElement" :style="{ display: 'inline-flex', height }"></div>
+  <div
+    ref="targetElement"
+    :style="{
+      display: 'inline-flex',
+      verticalAlign: 'top',
+      height,
+      pointerEvents,
+    }"
+  ></div>
 </template>

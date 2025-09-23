@@ -38,9 +38,13 @@ put the following code.
 
 import GoogleSignInPlugin from "vue3-google-signin"
 
+// for static clientId
 app.use(GoogleSignInPlugin, {
   clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
 });
+
+// for dynamic clientId
+app.use(GoogleSignInPlugin);
 
 // other config
 
@@ -74,6 +78,8 @@ pnpm add nuxt-vue3-google-signin
 ### Initialize
 
 Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
+
+_The feature to dynamically add the `clientId` has not yet been implemented in this library._
 
 ```ts
 import { defineNuxtConfig } from 'nuxt/config'

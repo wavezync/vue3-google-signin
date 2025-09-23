@@ -1,3 +1,3 @@
-import type { InjectionKey } from "vue";
+import type { InjectionKey, Ref } from "vue";
 
-export const GoogleClientIdKey = Symbol() as InjectionKey<string>;
+export const GoogleClientIdKey = Symbol() as InjectionKey<Ref<string>>;
