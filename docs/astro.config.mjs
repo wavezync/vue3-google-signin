@@ -22,17 +22,35 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Vue3 Google Sign-in",
-      description: "Google Sign-in for Vue3 apps",
+      description:
+        "Sign in with Google, One Tap and Google OAuth2 for Vue 3 and Nuxt, built on Google Identity Services.",
       logo: { src: "./src/assets/logo.svg" },
       favicon: "/favicon.ico",
       social: [{ icon: "github", label: "GitHub", href: GITHUB }],
       editLink: { baseUrl: `${GITHUB}/edit/main/docs/` },
       customCss: ["./src/styles/custom.css"],
+      components: { Hero: "./src/components/Hero.astro" },
       head: [
         meta({ property: "og:image", content: `${SITE}/og-image.jpg` }),
+        meta({ property: "og:image:width", content: "1200" }),
+        meta({ property: "og:image:height", content: "630" }),
+        meta({
+          property: "og:image:alt",
+          content:
+            "Vue3 Google Sign-in: Google OAuth2 strategies simplified for Vue 3",
+        }),
         meta({ name: "twitter:site", content: "@wavezync" }),
         meta({ name: "keywords", content: pkg.keywords.join(",") }),
-        meta({ name: "theme-color", content: "#ffffff" }),
+        meta({
+          name: "theme-color",
+          content: "#ffffff",
+          media: "(prefers-color-scheme: light)",
+        }),
+        meta({
+          name: "theme-color",
+          content: "#17181c",
+          media: "(prefers-color-scheme: dark)",
+        }),
         link({
           rel: "apple-touch-icon",
           sizes: "180x180",

@@ -37,29 +37,21 @@
   cursor: not-allowed;
 }
 
-/* Home hero, after the VitePress home: brand-colored name, glowing logo */
-.hero h1 {
-  background: linear-gradient(
-    120deg,
-    var(--sl-color-accent) 30%,
-    var(--sl-color-blue)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: -0.02em;
+/* Home page (Starlight marks it data-has-hero) */
+/* The hero's ring runs off the page edge; clip it at the full-width panel */
+[data-has-hero] .content-panel {
+  overflow-x: clip;
 }
-.hero > img {
-  filter: drop-shadow(
-    0 0 3rem color-mix(in srgb, var(--sl-color-accent) 45%, transparent)
-  );
+[data-has-hero] .sl-markdown-content h2 {
+  margin-top: clamp(4rem, 10vh, 7rem);
+  font-family: "Outfit Variable", var(--__sl-font);
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
-
-/* Live demo on the home page */
-.live-panel {
-  max-width: 44rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 1rem;
-  background: var(--sl-color-black);
+[data-has-hero] .sl-markdown-content h2 + p {
+  max-width: 52ch;
+  font-size: 1.125rem;
+  color: var(--sl-color-gray-2);
 }

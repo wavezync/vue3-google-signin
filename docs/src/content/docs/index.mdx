@@ -1,16 +1,25 @@
 ---
 title: Vue3 Google Sign-in
-description: Google sign-in for Vue 3. The Sign in with Google button, One Tap, and OAuth2 token and code flows.
+description: Add Sign in with Google, One Tap and Google OAuth2 to Vue 3 and Nuxt apps with one component and three composables, built on Google Identity Services.
 template: splash
 head:
   - tag: title
-    content: Vue3 Google Sign-in
+    content: "Vue3 Google Sign-in: Google login and One Tap for Vue 3"
+  - tag: meta
+    attrs:
+      property: og:title
+      content: "Vue3 Google Sign-in: Google login and One Tap for Vue 3"
+  - tag: meta
+    attrs:
+      property: og:type
+      content: website
+  - tag: script
+    attrs:
+      type: application/ld+json
+    content: '{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"vue3-google-signin","alternateName":"Vue3 Google Sign-in","description":"Add Sign in with Google, One Tap and Google OAuth2 to Vue 3 and Nuxt apps with one component and three composables, built on Google Identity Services.","url":"https://vue3-google-signin.wavezync.com/","codeRepository":"https://github.com/wavezync/vue3-google-signin","programmingLanguage":["TypeScript","Vue"],"runtimePlatform":"Vue 3","license":"https://opensource.org/licenses/MIT","image":"https://vue3-google-signin.wavezync.com/og-image.jpg","author":{"@type":"Person","name":"Kasun Vithanage","url":"https://kasvith.me"},"keywords":"Vue 3, Google Sign-In, Google One Tap, Google Identity Services, OAuth2, Nuxt"}'
 hero:
-  title: Vue3 Google Sign-in
-  tagline: Google OAuth2 strategies simplified for Vue 3. Add the Sign in with Google button, One Tap, or your own login button in a few lines.
-  image:
-    file: ../../assets/logo.svg
-    alt: ""
+  title: Google <span style="white-space:nowrap">sign-in</span> for Vue 3.
+  tagline: Google's sign-in button, One Tap and OAuth2 token and code flows, as one Vue component and three composables.
   actions:
     - text: Get Started
       link: /guide/
@@ -21,125 +30,32 @@ hero:
       variant: minimal
 ---
 
-import {
-  Card,
-  CardGrid,
-  Code,
-  LinkCard,
-  TabItem,
-  Tabs,
-} from "@astrojs/starlight/components";
-import LiveDemo from "../../components/LiveDemo.vue";
+import FlowExplorer from "../../components/FlowExplorer.astro";
+import Features from "../../components/Features.astro";
+import UsedBy from "../../components/UsedBy.astro";
+import GetStarted from "../../components/GetStarted.astro";
 
-<CardGrid>
-  <Card title="Minimal configuration" icon="setting">
-    Register the plugin with your client ID and start using it. A [Nuxt
-    module](/guide/#with-nuxt) handles setup for Nuxt apps.
-  </Card>
-  <Card title="Google Identity Services" icon="approve-check">
-    Built on Google's current sign-in library, with One Tap using FedCM.
-  </Card>
-  <Card title="Vue composables" icon="puzzle">
-    `useOneTap`, `useTokenClient` and `useCodeClient` cover One Tap and custom
-    login buttons.
-  </Card>
-  <Card title="Built-in component" icon="seti:vue">
-    `GoogleSignInButton` renders Google's official button and emits Vue events.
-  </Card>
-</CardGrid>
+## Pick how users sign in
 
-## Try it live
+Each flow is a few lines of Vue. Switch tabs to compare the code and what your
+app gets back.
 
-<div class="live-panel not-content">
-  <LiveDemo client:only="vue" />
-</div>
+<FlowExplorer />
+
+## Built for real apps
+
+It handles the parts around Google's script, so your own code stays small.
+
+<Features />
 
 ## Used by
 
 [Hundreds of projects on GitHub](https://github.com/wavezync/vue3-google-signin/network/dependents)
-sign users in with vue3-google-signin, including:
+sign users in with vue3-google-signin, including these.
+[Add yours](https://github.com/wavezync/vue3-google-signin/edit/main/docs/src/content/docs/index.mdx).
 
-<CardGrid>
-  <LinkCard
-    title="Jiten"
-    description="A Japanese immersion-learning platform."
-    href="https://jiten.moe"
-  />
-  <LinkCard
-    title="ApiVault"
-    description="A directory of public APIs."
-    href="https://apivault.dev"
-  />
-  <LinkCard
-    title="DistApp"
-    description="A self-hostable alternative to App Center for distributing app builds."
-    href="https://distapp.app"
-  />
-  <LinkCard
-    title="Peredelano Afisha"
-    description="Open-source community events listings."
-    href="https://github.com/openworld-community/ows-events"
-  />
-</CardGrid>
+<UsedBy />
 
-Using it in your project?
-[Add it here](https://github.com/wavezync/vue3-google-signin/edit/main/docs/src/content/docs/index.mdx).
+## Get started
 
-## Quick start
-
-<Tabs syncKey="pkg">
-<TabItem label="npm">
-
-```sh
-npm install vue3-google-signin
-```
-
-</TabItem>
-<TabItem label="pnpm">
-
-```sh
-pnpm add vue3-google-signin
-```
-
-</TabItem>
-<TabItem label="yarn">
-
-```sh
-yarn add vue3-google-signin
-```
-
-</TabItem>
-</Tabs>
-
-```ts title="main.ts"
-import { createApp } from "vue";
-import GoogleSignInPlugin from "vue3-google-signin";
-import App from "./App.vue";
-
-createApp(App)
-  .use(GoogleSignInPlugin, {
-    clientId: "YOUR_CLIENT_ID.apps.googleusercontent.com",
-  })
-  .mount("#app");
-```
-
-```vue title="LoginButton.vue"
-<script setup lang="ts">
-import {
-  GoogleSignInButton,
-  decodeCredential,
-  type CredentialResponse,
-} from "vue3-google-signin";
-
-function onSuccess({ credential }: CredentialResponse) {
-  const user = decodeCredential(credential);
-  console.log(`Signed in as ${user.email}`);
-}
-</script>
-
-<template>
-  <GoogleSignInButton @success="onSuccess" />
-</template>
-```
-
-Continue with the [guide](/guide/) for One Tap, custom buttons and Nuxt.
+<GetStarted />

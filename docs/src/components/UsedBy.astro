@@ -1,0 +1,52 @@
+---
+// Picked from GitHub's dependents graph: active projects that call the library
+const projects = [
+  ["Jiten", "Japanese immersion learning", "https://jiten.moe"],
+  ["ApiVault", "A directory of public APIs", "https://apivault.dev"],
+  ["DistApp", "Self-hosted app distribution", "https://distapp.app"],
+  ["Peredelano Afisha", "Community events", "https://github.com/openworld-community/ows-events"],
+];
+---
+
+<ul class="used-by not-content">
+  {
+    projects.map(([name, what, href]) => (
+      <li>
+        <a href={href}>{name}</a>
+        <span>{what}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .used-by {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem 2rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: grid;
+    gap: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+  a {
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    color: var(--sl-color-white);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--sl-color-accent-high);
+  }
+  span {
+    color: var(--sl-color-gray-3);
+  }
+</style>

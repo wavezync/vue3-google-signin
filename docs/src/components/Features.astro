@@ -1,0 +1,129 @@
+---
+import { Code } from "@astrojs/starlight/components";
+---
+
+<div class="bento not-content">
+  <article class="wide">
+    <h3>Works with Nuxt and SSR</h3>
+    <p>
+      Components and composables render on the server. Google's script loads
+      once the page reaches the browser.
+    </p>
+    <Code
+      lang="ts"
+      title="nuxt.config.ts"
+      code={`export default defineNuxtConfig({
+  modules: ["nuxt-vue3-google-signin"],
+  googleSignIn: { clientId: "YOUR_CLIENT_ID" },
+});`}
+    />
+  </article>
+  <article class="size">
+    <h3>Small</h3>
+    <p class="figure">4.3 kB</p>
+    <p>gzipped, with Vue as its only peer dependency.</p>
+  </article>
+  <article>
+    <h3>Typed callbacks</h3>
+    <p>Every option and response is typed, so your editor knows the fields.</p>
+    <Code
+      lang="ts"
+      frame="none"
+      code={`useTokenClient({
+  onSuccess: ({ access_token, scope }) => {},
+});`}
+    />
+  </article>
+  <article>
+    <h3>Client ID from your server</h3>
+    <p>Pass a ref and set it when your config arrives.</p>
+    <Code
+      lang="ts"
+      frame="none"
+      code={`const clientId = ref<string>();
+app.use(GoogleSignInPlugin, { clientId });`}
+    />
+  </article>
+  <article>
+    <h3>Knows when the popup closes</h3>
+    <p>Re-enable your button when the user closes Google's popup.</p>
+    <Code
+      lang="ts"
+      frame="none"
+      code={`onNonOAuthError: ({ type }) => {
+  // "popup_closed"
+},`}
+    />
+  </article>
+</div>
+
+<style>
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  article {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+  }
+  .wide {
+    grid-column: span 4;
+  }
+  h3 {
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sl-color-white);
+  }
+  p {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+  article :global(.expressive-code) {
+    margin-top: auto;
+  }
+  .size {
+    justify-content: flex-start;
+  }
+  .figure {
+    margin-top: auto;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--sl-color-accent-high);
+  }
+
+  @media (max-width: 60rem) {
+    .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    article,
+    .wide {
+      grid-column: span 1;
+    }
+    .wide {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 36rem) {
+    .bento {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .wide {
+      grid-column: span 1;
+    }
+  }
+</style>

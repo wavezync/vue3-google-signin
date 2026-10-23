@@ -1,0 +1,404 @@
+---
+import { Code } from "@astrojs/starlight/components";
+
+interface Flow {
+  id: string;
+  label: string;
+  api: string;
+  summary: string;
+  file: string;
+  code: string;
+  mark: number;
+  receiver: string;
+  /** Example of what the callback gets */
+  response: [key: string, value: string | number][];
+  note: string;
+  link: { href: string; text: string };
+}
+
+const flows: Flow[] = [
+  {
+    id: "button",
+    label: "Sign-in button",
+    api: "GoogleSignInButton",
+    summary:
+      "Google's own button. Users pick an account and you get an ID token that says who they are.",
+    file: "LoginButton.vue",
+    code: `<script setup>
+import { ref } from "vue";
+import {
+  GoogleSignInButton,
+  decodeCredential,
+} from "vue3-google-signin";
+
+const user = ref(null);
+const onSuccess = ({ credential }) => {
+  user.value = decodeCredential(credential);
+};
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+  <p v-if="user">Signed in as {{ user.email }}</p>
+</template>`,
+    mark: 15,
+    receiver: "@success",
+    response: [
+      ["credential", "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVhYz…"],
+      ["select_by", "btn"],
+    ],
+    note: "Decode it for the user's name, email and picture, and verify it on your server.",
+    link: { href: "/guide/google-signin-button/", text: "Button guide" },
+  },
+  {
+    id: "one-tap",
+    label: "One Tap",
+    api: "useOneTap",
+    summary:
+      "Google's prompt in the corner of the page. Returning users sign in with one tap, no button needed.",
+    file: "App.vue",
+    code: `<script setup>
+import { useOneTap } from "vue3-google-signin";
+
+useOneTap({
+  onSuccess: ({ credential }) => {
+    // Send the credential to your server to sign the user in
+  },
+});
+</script>`,
+    mark: 5,
+    receiver: "onSuccess",
+    response: [
+      ["credential", "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVhYz…"],
+      ["select_by", "user"],
+    ],
+    note: "The same ID token as the button. Add autoSelect to skip the tap for returning users.",
+    link: { href: "/guide/one-tap-login/", text: "One Tap guide" },
+  },
+  {
+    id: "token",
+    label: "Access token",
+    api: "useTokenClient",
+    summary:
+      "Your own button opens Google's consent popup. You get an access token to call Google APIs from the browser.",
+    file: "DriveButton.vue",
+    code: `<script setup>
+import { useTokenClient } from "vue3-google-signin";
+
+const { isReady, login } = useTokenClient({
+  scope: "https://www.googleapis.com/auth/drive.readonly",
+  onSuccess: ({ access_token }) => {
+    // Call the Google Drive API with the token
+  },
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">
+    Connect Google Drive
+  </button>
+</template>`,
+    mark: 6,
+    receiver: "onSuccess",
+    response: [
+      ["access_token", "ya29.a0AeDClZBx7Kq…"],
+      ["token_type", "Bearer"],
+      ["expires_in", 3599],
+      [
+        "scope",
+        "email profile openid https://www.googleapis.com/auth/drive.readonly",
+      ],
+    ],
+    note: "The token lasts about an hour, and users can untick scopes, so check what they granted.",
+    link: {
+      href: "/guide/creating-custom-buttons/#with-usetokenclient",
+      text: "Custom buttons guide",
+    },
+  },
+  {
+    id: "code",
+    label: "Auth code",
+    api: "useCodeClient",
+    summary:
+      "Your own button again, but Google returns a one-time code. Your server exchanges it for access and refresh tokens.",
+    file: "CalendarSync.vue",
+    code: `<script setup>
+import { useCodeClient } from "vue3-google-signin";
+
+const { isReady, login } = useCodeClient({
+  scope: "https://www.googleapis.com/auth/calendar.readonly",
+  onSuccess: ({ code }) => {
+    // Your server swaps the code for tokens
+    fetch("/api/google", { method: "POST", body: code });
+  },
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">
+    Sync my calendar
+  </button>
+</template>`,
+    mark: 6,
+    receiver: "onSuccess",
+    response: [
+      ["code", "4/0AeaYSHDqvN8…"],
+      [
+        "scope",
+        "email profile openid https://www.googleapis.com/auth/calendar.readonly",
+      ],
+    ],
+    note: "The refresh token stays on your server, so it can act for the user while they're away.",
+    link: {
+      href: "/guide/creating-custom-buttons/#verify-code-on-the-backend",
+      text: "Exchange the code",
+    },
+  },
+];
+---
+
+<flow-explorer class="not-content">
+  <div class="tabs" role="tablist" aria-label="Sign-in flows">
+    {
+      flows.map((flow, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`flow-tab-${flow.id}`}
+          aria-controls={`flow-${flow.id}`}
+          aria-selected={i === 0 ? "true" : "false"}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          <span class="label">{flow.label}</span>
+          <code class="api">{flow.api}</code>
+        </button>
+      ))
+    }
+  </div>
+  {
+    flows.map((flow, i) => (
+      <div
+        class="panel"
+        role="tabpanel"
+        id={`flow-${flow.id}`}
+        aria-labelledby={`flow-tab-${flow.id}`}
+        hidden={i !== 0}
+      >
+        <div class="source">
+          <p class="summary">{flow.summary}</p>
+          <Code code={flow.code} lang="vue" title={flow.file} mark={flow.mark} />
+        </div>
+        <div class="result">
+          <p class="receiver">
+            <code>{flow.receiver}</code> receives
+          </p>
+          <code class="response">
+              <span class="line">{"{"}</span>
+              {flow.response.map(([key, value], n) => (
+                <span class="line field" style={`--n: ${n}`}><span class="key">{key}</span>: {typeof value === "number" ? <span class="num">{value}</span> : <span class="str">"{value.split("/").map((part, j) => <>{j > 0 && <>/<wbr /></>}{part}</>)}"</span>},</span>
+              ))}
+              <span class="line">{"}"}</span>
+            </code>
+          <p class="note">
+            {flow.note} <a href={flow.link.href}>{flow.link.text}</a>
+          </p>
+        </div>
+      </div>
+    ))
+  }
+</flow-explorer>
+
+<script>
+  // Tabs per the ARIA tabs pattern. Panels are server-rendered, so every
+  // flow's code is in the HTML; showing a panel replays its response.
+  class FlowExplorer extends HTMLElement {
+    connectedCallback() {
+      const tabs = [
+        ...this.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+      ];
+      const select = (tab: HTMLButtonElement) => {
+        for (const t of tabs) {
+          const selected = t === tab;
+          t.setAttribute("aria-selected", String(selected));
+          t.tabIndex = selected ? 0 : -1;
+          const panel = document.getElementById(
+            t.getAttribute("aria-controls")!,
+          );
+          if (panel) panel.hidden = !selected;
+        }
+      };
+      tabs.forEach((tab, i) => {
+        tab.addEventListener("click", () => select(tab));
+        tab.addEventListener("keydown", (event) => {
+          const keys: Record<string, number> = {
+            ArrowRight: i + 1,
+            ArrowLeft: i - 1,
+            Home: 0,
+            End: tabs.length - 1,
+          };
+          if (!(event.key in keys)) return;
+          event.preventDefault();
+          const next = tabs[(keys[event.key] + tabs.length) % tabs.length];
+          select(next);
+          next.focus();
+        });
+      });
+    }
+  }
+  customElements.define("flow-explorer", FlowExplorer);
+</script>
+
+<style>
+  flow-explorer {
+    display: block;
+    margin-top: 2rem;
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+  }
+  [role="tab"] {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.85rem;
+    background: none;
+    color: var(--sl-color-gray-2);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+  [role="tab"]:hover {
+    color: var(--sl-color-white);
+  }
+  [role="tab"][aria-selected="true"] {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+  [role="tab"]:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+  .label {
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .api {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-3);
+  }
+  [aria-selected="true"] .api {
+    color: var(--sl-color-accent-high);
+  }
+
+  .panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    margin-top: 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+    overflow: hidden;
+  }
+  .panel[hidden] {
+    display: none;
+  }
+  .source {
+    padding: 1.5rem;
+  }
+  .summary {
+    margin: 0 0 1rem;
+    color: var(--sl-color-gray-2);
+  }
+  .result {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-inline-start: 1px solid var(--sl-color-gray-5);
+  }
+  .receiver,
+  .note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-3);
+  }
+  .note {
+    margin-top: auto;
+  }
+  .receiver code {
+    font-family: var(--__sl-font-mono);
+    color: var(--sl-color-accent-high);
+  }
+  .note a {
+    color: var(--sl-color-accent);
+  }
+
+  .response {
+    display: grid;
+    padding: 1rem 1.1rem;
+    border-radius: 0.75rem;
+    background: var(--sl-color-black);
+    font-family: var(--__sl-font-mono);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-3);
+  }
+  .field {
+    padding-inline-start: 2ch;
+    text-indent: -2ch;
+    margin-inline-start: 2ch;
+    overflow-wrap: break-word;
+  }
+  .key {
+    color: var(--sl-color-white);
+  }
+  .str {
+    color: var(--sl-color-accent-high);
+  }
+  .num {
+    color: var(--sl-color-blue);
+  }
+
+  /* A response streams in, field by field, whenever its tab opens */
+  @media (prefers-reduced-motion: no-preference) {
+    .field {
+      animation: stream 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      animation-delay: calc(var(--n) * 110ms + 120ms);
+    }
+  }
+  @keyframes stream {
+    from {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0.4;
+    }
+  }
+
+  @media (max-width: 52rem) {
+    .panel {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .result {
+      border-inline-start: 0;
+      border-top: 1px solid var(--sl-color-gray-5);
+    }
+  }
+  @media (max-width: 36rem) {
+    .tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

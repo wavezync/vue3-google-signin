@@ -15,17 +15,19 @@ const failed = ref(false);
 const dark = ref(false);
 
 // Match Google's button to Starlight's theme, including later toggles.
+// Browser-only, so the demo also renders on the server.
+let themeObserver: MutationObserver | undefined;
 const syncTheme = () => {
   dark.value = document.documentElement.dataset.theme === "dark";
 };
-const themeObserver = new MutationObserver(syncTheme);
 onMounted(() => {
   syncTheme();
+  themeObserver = new MutationObserver(syncTheme);
   themeObserver.observe(document.documentElement, {
     attributeFilter: ["data-theme"],
   });
 });
-onUnmounted(() => themeObserver.disconnect());
+onUnmounted(() => themeObserver?.disconnect());
 
 const token = computed(() => credential.value ?? EXAMPLE_TOKEN);
 const segments = computed(() => token.value.split("."));
@@ -263,29 +265,32 @@ dd {
   font-size: 0.82rem;
 }
 
-/* The one orchestrated moment: a fresh token reveals segment by segment. */
+/* The page's one orchestrated moment: the token lights up segment by
+   segment, then decodes into the user. Replays when a real token arrives,
+   since both blocks are keyed by the token. */
 @media (prefers-reduced-motion: no-preference) {
-  .signed .jwt span {
-    animation: reveal 0.5s ease-out both;
+  .jwt span {
+    animation: lit 0.5s ease-out 0.4s both;
   }
-  .signed .jwt .p {
-    animation-delay: 0.25s;
+  .jwt .p {
+    animation-delay: 0.85s;
   }
-  .signed .jwt .s {
-    animation-delay: 0.5s;
+  .jwt .s {
+    animation-delay: 1.3s;
   }
-  .signed .claims {
-    animation: reveal 0.5s ease-out 0.75s both;
+  .claims {
+    animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 1.8s both;
   }
 }
-@keyframes reveal {
+@keyframes lit {
+  from {
+    color: var(--sl-color-gray-5);
+  }
+}
+@keyframes rise {
   from {
     opacity: 0;
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    filter: none;
+    transform: translateY(10px);
   }
 }
 </style>
