@@ -19,10 +19,6 @@ const link = (/** @type {Record<string, string>} */ attrs) => ({
 
 export default defineConfig({
   site: SITE,
-  // Emit guide/one-tap-login.html etc. Cloudflare Pages serves it at
-  // /guide/one-tap-login and 308s the old VitePress .html URLs there.
-  build: { format: "file" },
-  trailingSlash: "never",
   integrations: [
     starlight({
       title: "Vue3 Google Sign-in",
