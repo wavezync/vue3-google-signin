@@ -1,6 +1,7 @@
 ---
 import { Code } from "@astrojs/starlight/components";
 import LineIcon from "./LineIcon.astro";
+import LiveDemo from "./LiveDemo.vue";
 import type { IconName } from "./icons";
 
 interface Flow {
@@ -17,6 +18,8 @@ interface Flow {
   receiver: string;
   /** Example of what the callback gets */
   response: [key: string, value: string | number][];
+  /** Show Google's real button here instead of the example response */
+  live?: boolean;
   note: string;
   link: { href: string; text: string };
 }
@@ -50,6 +53,7 @@ const onSuccess = ({ credential }) => {
 </template>`,
     mark: 15,
     receiver: "@success",
+    live: true,
     response: [
       ["credential", "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVhYz…"],
       ["select_by", "btn"],
@@ -225,6 +229,11 @@ const { isReady, login } = useCodeClient({
           <p class="receiver">
             <code>{flow.receiver}</code> receives
           </p>
+          {flow.live ? (
+            // Hydrates only when scrolled into view, so Google's script
+            // stays off the first paint
+            <LiveDemo client:visible />
+          ) : (
           <code class="response">
               <span class="line">{"{"}</span>
               {flow.response.map(([key, value], n) => (
@@ -232,6 +241,7 @@ const { isReady, login } = useCodeClient({
               ))}
               <span class="line">{"}"}</span>
             </code>
+          )}
           <p class="note">
             {flow.note} <a href={flow.link.href}>{flow.link.text}</a>
           </p>
@@ -243,7 +253,8 @@ const { isReady, login } = useCodeClient({
 
 <script>
   // Tabs per the ARIA tabs pattern. Panels are server-rendered, so every
-  // flow's code is in the HTML; showing a panel replays its response.
+  // flow's code is in the HTML; showing a panel replays its response. The
+  // sign-in button's panel holds the live demo.
   class FlowExplorer extends HTMLElement {
     connectedCallback() {
       const tabs = [

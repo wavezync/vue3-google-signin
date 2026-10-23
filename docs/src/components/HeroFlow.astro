@@ -1,0 +1,266 @@
+---
+// The hero's illustration: what happens when someone signs in, from the
+// button to the decoded user. Plain HTML and CSS, so the hero loads without
+// Google's script; the live button sits in the flow explorer further down.
+import LineIcon from "./LineIcon.astro";
+---
+
+<ol class="flow" aria-label="How a sign-in reaches your app">
+  <li class="step" style="--i: 0">
+    <p class="label"><LineIcon name="vue" size={16} />Your Vue app</p>
+    <code class="code"
+      ><span class="punct">&lt;</span><span class="tag">GoogleSignInButton</span
+      > <span class="attr">@success</span>=<span class="str">"onSuccess"</span>
+      <span class="punct">/&gt;</span></code
+    >
+  </li>
+  <li class="link" style="--i: 0"><span>user clicks</span></li>
+  <li class="step" style="--i: 1">
+    <p class="label"><LineIcon name="user" size={16} />Google</p>
+    <div class="account">
+      <span class="avatar">AL</span>
+      <span class="who">
+        <strong>Ada Lovelace</strong>
+        <span>ada@example.com</span>
+      </span>
+      <span class="continue">Continue</span>
+    </div>
+  </li>
+  <li class="link" style="--i: 1"><span><code>onSuccess(&#123; credential &#125;)</code></span></li>
+  <li class="step" style="--i: 2">
+    <p class="label"><LineIcon name="token" size={16} />ID token</p>
+    <code class="jwt"
+      ><span class="h">eyJhbGciOiJSUzI1NiIsImtpZCI6…</span><span class="dot">.</span
+      ><span class="p">eyJpc3MiOiJhY2NvdW50cy5nb29nbGU…</span><span class="dot"
+        >.</span
+      ><span class="s">c2lnbmF0dXJl…</span></code
+    >
+  </li>
+  <li class="link" style="--i: 2"><span><code>decodeCredential()</code></span></li>
+  <li class="step user" style="--i: 3">
+    <p class="label"><LineIcon name="shield" size={16} />Signed in</p>
+    <div class="account">
+      <span class="avatar">AL</span>
+      <span class="who">
+        <strong>Ada Lovelace</strong>
+        <span>ada@example.com</span>
+      </span>
+      <span class="verified">verified</span>
+    </div>
+  </li>
+</ol>
+
+<style>
+  .flow {
+    --line: color-mix(in srgb, var(--sl-color-gray-4) 70%, transparent);
+    width: 100%;
+    max-width: 30rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .step {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.85rem 1rem 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--sl-color-gray-4) 55%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--sl-color-black) 80%, transparent);
+    backdrop-filter: blur(16px);
+  }
+  .user {
+    border-color: color-mix(in srgb, var(--sl-color-accent) 55%, transparent);
+  }
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-3);
+  }
+  .label :global(svg) {
+    color: var(--sl-color-gray-2);
+  }
+  .label :global(.seg-h) {
+    stroke: var(--sl-color-purple);
+  }
+  .label :global(.seg-p) {
+    stroke: var(--sl-color-accent);
+  }
+  .label :global(.seg-s) {
+    stroke: var(--sl-color-blue);
+  }
+
+  /* A labelled connector between two steps */
+  .link {
+    position: relative;
+    height: 2.4rem;
+    margin: 0 0 0 1.55rem;
+    border-left: 1.5px solid var(--line);
+  }
+  .link span {
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    translate: 0 -50%;
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+    white-space: nowrap;
+  }
+  .link code {
+    font-family: var(--__sl-font-mono);
+    color: var(--sl-color-gray-2);
+  }
+
+  .code,
+  .jwt {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.85rem;
+  }
+  .code {
+    color: #d6deeb;
+  }
+  .punct {
+    color: #7fdbca;
+  }
+  .tag {
+    color: #82aaff;
+  }
+  .attr {
+    color: #c5e478;
+  }
+  .str {
+    color: #ecc48d;
+  }
+  :root[data-theme="light"] .code {
+    color: #403f53;
+  }
+  :root[data-theme="light"] .punct {
+    color: #8844ae;
+  }
+  :root[data-theme="light"] .tag {
+    color: #4876d6;
+  }
+  :root[data-theme="light"] .attr {
+    color: #3b61b0;
+  }
+  :root[data-theme="light"] .str {
+    color: #984e4d;
+  }
+
+  .account {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .who {
+    display: grid;
+    min-width: 0;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: var(--sl-color-gray-3);
+  }
+  .who strong {
+    font-size: 0.92rem;
+    color: var(--sl-color-white);
+  }
+  .continue,
+  .verified {
+    margin-inline-start: auto;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  .continue {
+    border: 1px solid var(--sl-color-gray-4);
+    color: var(--sl-color-gray-2);
+  }
+  .verified {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+  }
+
+  .jwt {
+    display: block;
+    line-height: 1.55;
+    word-break: break-all;
+  }
+  .h {
+    color: var(--sl-color-purple);
+  }
+  .p {
+    color: var(--sl-color-accent);
+  }
+  .s {
+    color: var(--sl-color-blue);
+  }
+  .dot {
+    color: var(--sl-color-gray-3);
+  }
+
+  /* The page's one orchestrated moment: each step arrives in order, the
+     connectors draw down to it, and the token lights up before it decodes */
+  @media (prefers-reduced-motion: no-preference) {
+    .step {
+      animation: arrive 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      animation-delay: calc(var(--i) * 0.45s + 0.15s);
+    }
+    .link {
+      transform-origin: top;
+      animation: draw 0.3s ease-out both;
+      animation-delay: calc(var(--i) * 0.45s + 0.45s);
+    }
+    .link span {
+      animation: fade 0.3s ease-out both;
+      animation-delay: calc(var(--i) * 0.45s + 0.55s);
+    }
+    .jwt span {
+      animation: lit 0.4s ease-out both;
+    }
+    .jwt .h {
+      animation-delay: 1.15s;
+    }
+    .jwt .p {
+      animation-delay: 1.35s;
+    }
+    .jwt .s {
+      animation-delay: 1.55s;
+    }
+  }
+  @keyframes arrive {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @keyframes draw {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes lit {
+    from {
+      color: var(--sl-color-gray-5);
+    }
+  }
+</style>

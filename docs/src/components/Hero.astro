@@ -4,12 +4,12 @@ import "@fontsource-variable/outfit/wght.css";
 // Preloaded below, so the headline's font is on its way before the CSS asks
 import outfit from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
 import InstallCommand from "./InstallCommand.astro";
-import LiveDemo from "./LiveDemo.vue";
+import HeroFlow from "./HeroFlow.astro";
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero ?? {};
 
-// The G ring from the logo (src/assets/logo.svg), drawn huge behind the demo
+// The G ring from the logo (src/assets/logo.svg), drawn huge behind the flow
 const ring = [
   ["#ff3d00", "M1085.7 895L887.6 895A602 602 0 0 1 1322.6 511.5L1161.7 796A421 421 0 0 0 1085.7 895Z"],
   ["#ff3d00", "M1426 678.9L1525.8 501.3A602 602 0 0 1 1982 809.8L1835.2 920.3A421 421 0 0 0 1426 678.9Z"],
@@ -42,10 +42,7 @@ const ring = [
     <svg class="ring line" viewBox="700 480 1400 1240" aria-hidden="true">
       {ring.map(([fill, d]) => <path stroke={fill} d={d} />)}
     </svg>
-    <div class="window">
-      <p class="address">your-app.dev/login</p>
-      <LiveDemo client:load />
-    </div>
+    <HeroFlow />
   </div>
 </section>
 
@@ -146,27 +143,6 @@ const ring = [
     opacity: 0.22;
   }
 
-  .window {
-    width: 100%;
-    max-width: 30rem;
-    border: 1px solid color-mix(in srgb, var(--sl-color-gray-4) 60%, transparent);
-    border-radius: 1.25rem;
-    background: color-mix(in srgb, var(--sl-color-black) 78%, transparent);
-    backdrop-filter: blur(18px);
-    overflow: hidden;
-  }
-  .address {
-    margin: 0;
-    padding: 0.6rem 1rem;
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--sl-color-gray-4) 45%, transparent);
-    font-size: 0.8rem;
-    text-align: center;
-    color: var(--sl-color-gray-3);
-  }
-  .window :global(.live) {
-    padding: 1.4rem;
-  }
 
   @media (max-width: 50rem) {
     .hero {
