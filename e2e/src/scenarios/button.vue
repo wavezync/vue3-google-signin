@@ -9,6 +9,9 @@ import { log } from "../log";
     size="medium"
     shape="pill"
     :width="320"
+    login-hint="ada@example.com"
+    use-fedcm-for-button
+    state="header"
     @success="(response) => log('success', response)"
     @error="(response) => log('error', response)"
   />

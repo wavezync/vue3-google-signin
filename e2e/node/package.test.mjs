@@ -81,7 +81,9 @@ test("buildCodeRequestRedirectUrl builds Google's auth code URL", () => {
       scope: "openid email",
       redirect_uri: "https://example.com/callback",
       state: "xyz",
-      hint: "user@example.com",
+      login_hint: "user@example.com",
+      hosted_domain: "example.com", // deprecated name for hd
+      include_granted_scopes: false,
     }),
   );
   assert.equal(
@@ -92,11 +94,12 @@ test("buildCodeRequestRedirectUrl builds Google's auth code URL", () => {
     gsiwebsdk: "3",
     client_id: "abc.apps.googleusercontent.com",
     scope: "openid email",
-    include_granted_scopes: "true",
+    include_granted_scopes: "false",
     access_type: "offline",
     response_type: "code",
     prompt: "consent",
-    hint: "user@example.com",
+    login_hint: "user@example.com",
+    hd: "example.com",
     redirect_uri: "https://example.com/callback",
     select_account: "false",
     enable_serial_consent: "false",

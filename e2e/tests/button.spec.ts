@@ -9,8 +9,10 @@ test("renders Google's button with the plugin's client ID and props", async ({
   const [init] = await calls(page, "id.initialize");
   expect(init.args[0]).toMatchObject({
     client_id: CLIENT_ID,
-    use_fedcm_for_prompt: true,
+    login_hint: "ada@example.com",
+    use_fedcm_for_button: true,
   });
+  expect(init.args[0]).not.toHaveProperty("use_fedcm_for_prompt");
   const [render] = await calls(page, "id.renderButton");
   expect(render.args).toEqual([
     "[div]",
@@ -19,6 +21,7 @@ test("renders Google's button with the plugin's client ID and props", async ({
       size: "medium",
       shape: "pill",
       width: "320",
+      state: "header",
     }),
   ]);
   expect(await calls(page, "id.prompt")).toHaveLength(0);

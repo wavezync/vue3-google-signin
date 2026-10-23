@@ -10,8 +10,10 @@ test("prompts automatically with the given options", async ({ page }) => {
     auto_select: true,
     cancel_on_tap_outside: false,
     context: "signin",
-    use_fedcm_for_prompt: true,
+    login_hint: "ada@example.com",
+    color_scheme: "dark",
   });
+  expect(init.args[0]).not.toHaveProperty("use_fedcm_for_prompt");
 });
 
 test("reports success, errors and prompt moments", async ({ page }) => {

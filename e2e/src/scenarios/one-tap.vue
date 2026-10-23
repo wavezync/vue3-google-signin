@@ -6,6 +6,8 @@ useOneTap({
   autoSelect: true,
   cancelOnTapOutside: false,
   context: "signin",
+  loginHint: "ada@example.com",
+  colorScheme: "dark",
   onSuccess: (response) => log("success", response),
   onError: (response) => log("error", response),
   onPromptMomentNotification: (n) => log("prompt", n.getMomentType()),

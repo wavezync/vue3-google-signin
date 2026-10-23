@@ -128,6 +128,71 @@ interface GoogleSignInButtonProps {
   itpSupport?: boolean;
 
   /**
+   * Skips account selection when you already know which user should sign in: an email address or the `sub` field of an ID token.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#login_hint
+   * @memberof GoogleSignInButtonProps
+   */
+  loginHint?: string;
+
+  /**
+   * Limits account selection to a Google Workspace domain, or `*` for any Workspace account.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#hd
+   * @memberof GoogleSignInButtonProps
+   */
+  hd?: string;
+
+  /**
+   * Color scheme of the One Tap prompt. Defaults to the user's system setting.
+   *
+   * @type {"default" | "light" | "dark"}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#color_scheme
+   * @memberof GoogleSignInButtonProps
+   */
+  colorScheme?: "default" | "light" | "dark";
+
+  /**
+   * Extra claims to include in the ID token, such as `"auth_time, amr"`.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#essential_claims
+   * @memberof GoogleSignInButtonProps
+   */
+  essentialClaims?: string;
+
+  /**
+   * Use the FedCM button flow on browsers that support it.
+   *
+   * @type {boolean}
+   * @default false
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#use_fedcm_for_button
+   * @memberof GoogleSignInButtonProps
+   */
+  useFedcmForButton?: boolean;
+
+  /**
+   * With the FedCM button flow, sign returning users in without showing the account chooser.
+   *
+   * @type {boolean}
+   * @default false
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#button_auto_select
+   * @memberof GoogleSignInButtonProps
+   */
+  buttonAutoSelect?: boolean;
+
+  /**
+   * Returned as `state` in the credential response, to tell several buttons apart.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#state
+   * @memberof GoogleSignInButtonProps
+   */
+  state?: string;
+
+  /**
    * The button type: icon, or standard button.
    *
    * @type {("standard" | "icon")}
@@ -277,7 +342,12 @@ watchEffect(() => {
     prompt_parent_id: props.promptParentId,
     state_cookie_domain: props.stateCookieDomain,
     ux_mode: props.uxMode,
-    use_fedcm_for_prompt: true,
+    login_hint: props.loginHint,
+    hd: props.hd,
+    color_scheme: props.colorScheme,
+    essential_claims: props.essentialClaims,
+    use_fedcm_for_button: props.useFedcmForButton,
+    button_auto_select: props.buttonAutoSelect,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -290,6 +360,7 @@ watchEffect(() => {
     logo_alignment: props.logoAlignment,
     width: props.width?.toString(),
     locale: props.locale,
+    state: props.state,
   });
 
   if (props.oneTap)
