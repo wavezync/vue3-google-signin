@@ -1,4 +1,4 @@
-name: NPM Package
+name: Publish to npm
 
 on:
   release:
@@ -9,19 +9,19 @@ permissions:
   id-token: write # npm provenance
 
 jobs:
-  publish-npm:
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: .node-version
           registry-url: https://registry.npmjs.org/
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm build
+      # Ship only what passes the same tests as CI
+      - run: pnpm --filter e2e test
       - run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
