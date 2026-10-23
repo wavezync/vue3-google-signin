@@ -64,8 +64,7 @@ the plugin's, use the new `clientId` option.
   `CredentialSuccessResponse`, whose `credential` is always a string, so
   `decodeCredential(credential)` type-checks without a non-null assertion.
 - The plugin's `clientId` can be a ref, and every composable and the button
-  take their own `clientId`. See
-  [Setting the client ID later](/guide/#setting-the-client-id-later).
+  take their own `clientId`. See [Dynamic Client ID](/guide/dynamic-client-id/).
 - The plugin's `locale` option loads Google's script in your language.
 - New Google options: `loginHint`, `hd`, `colorScheme` and `essentialClaims`
   on One Tap and the button; `useFedcmForButton`, `buttonAutoSelect` and

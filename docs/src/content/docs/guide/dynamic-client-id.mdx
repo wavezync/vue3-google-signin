@@ -1,0 +1,122 @@
+---
+title: Dynamic Client ID
+description: Set the Google client ID after your app starts, change it later, or give each component its own.
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+Usually the client ID is a constant in `main.ts`. Sometimes it isn't known when
+the app starts:
+
+- Your server sends it with the rest of your config, so one build runs in every
+  environment.
+- Each customer of a multi-tenant app has their own Google project.
+- One page signs users in with one Google project and calls APIs with another.
+
+From v3 the client ID can be a ref, set whenever it arrives, and each
+composable or button can bring its own.
+
+## Set it after startup
+
+<Steps>
+
+1. Install the plugin with an empty ref.
+
+   ```ts title="main.ts"
+   import { createApp, ref } from "vue";
+   import GoogleSignInPlugin from "vue3-google-signin";
+   import App from "./App.vue";
+
+   const clientId = ref<string>();
+
+   createApp(App).use(GoogleSignInPlugin, { clientId }).mount("#app");
+   ```
+
+2. Set the ref when the client ID arrives.
+
+   ```ts title="main.ts"
+   fetch("/api/config")
+     .then((response) => response.json())
+     .then((config) => (clientId.value = config.googleClientId));
+   ```
+
+3. That's it. Components that rendered before the ID arrived initialize as soon
+   as it's set.
+
+</Steps>
+
+Until then, nothing talks to Google: `GoogleSignInButton` stays empty and every
+composable's `isReady` stays `false`.
+Use `isReady` to disable your own buttons in the meantime:
+
+```vue title="LoginButton.vue"
+<script setup lang="ts">
+import { useTokenClient } from "vue3-google-signin";
+
+const { isReady, login } = useTokenClient({
+  onSuccess: ({ access_token }) => console.log(access_token),
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">Sign in with Google</button>
+</template>
+```
+
+## Change it later
+
+Setting the ref again re-initializes every button and composable with the new
+client ID. With `useOneTap`, the prompt shows again for the new ID unless
+`disableAutomaticPrompt` is set.
+
+```ts
+clientId.value = tenant.googleClientId;
+```
+
+## Give a component its own client ID
+
+Every composable takes a `clientId` option, and `GoogleSignInButton` a
+`client-id` prop. They override the plugin's client ID for that component only.
+The option also accepts a ref or computed, so it follows changes.
+
+```vue title="TenantLogin.vue"
+<script setup lang="ts">
+import { computed } from "vue";
+import { GoogleSignInButton, useOneTap } from "vue3-google-signin";
+import { signIn } from "./auth";
+import { useTenant } from "./tenant";
+
+const tenant = useTenant();
+
+useOneTap({
+  clientId: computed(() => tenant.value.googleClientId),
+  onSuccess: ({ credential }) => signIn(credential),
+});
+</script>
+
+<template>
+  <GoogleSignInButton
+    :client-id="tenant.googleClientId"
+    @success="({ credential }) => signIn(credential)"
+  />
+</template>
+```
+
+If every component brings its own client ID, install the plugin without
+options:
+
+```ts title="main.ts"
+app.use(GoogleSignInPlugin);
+```
+
+:::note
+A component's own `clientId` wins while it has a value. Leave it empty and the
+component falls back to the plugin's.
+:::
+
+## A missing client ID
+
+Passing `clientId` as `undefined` or an empty string, usually because an
+environment variable isn't set, logs a warning instead of throwing. The rest
+of your app keeps working and sign-in stays off until a client ID arrives, so
+you no longer need a placeholder ID or a conditional `app.use`.

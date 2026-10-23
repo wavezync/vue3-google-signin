@@ -88,6 +88,7 @@ export default defineConfig({
               label: "Creating Custom Buttons",
               slug: "guide/creating-custom-buttons",
             },
+            { label: "Dynamic Client ID", slug: "guide/dynamic-client-id" },
             { label: "Using with Electron", slug: "guide/using-with-electron" },
             { label: "FAQ", slug: "guide/faq" },
             { label: "Migrating to v3", slug: "guide/migrating-to-v3" },

@@ -62,7 +62,7 @@ report this for `GoogleSignInButton` or One Tap.
 ## My client ID comes from my server
 
 Pass a ref to the plugin and set it when it arrives. See
-[Setting the client ID later](/guide/#setting-the-client-id-later).
+[Dynamic Client ID](/guide/dynamic-client-id/).
 
 ## The button shows another language for a moment
 
