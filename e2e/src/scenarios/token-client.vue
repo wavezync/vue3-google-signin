@@ -9,6 +9,7 @@ const { isReady, login } = useTokenClient({
   prompt: "consent",
   onSuccess: (response) => log("success", response),
   onError: (response) => log("error", response),
+  onNonOAuthError: (error) => log("nonOAuthError", error),
 });
 const addScope = () => {
   scope.value = [...scope.value, "https://www.googleapis.com/auth/calendar"];

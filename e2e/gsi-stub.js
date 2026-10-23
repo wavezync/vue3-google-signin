@@ -79,6 +79,8 @@
     credential: (response) => idConfig.callback(response),
     promptMoment: (notification) => promptListener?.(notification),
     tokenResponse: (response) => tokenConfig.callback(response),
+    tokenError: (error) => tokenConfig.error_callback(error),
     codeResponse: (response) => codeConfig.callback(response),
+    codeError: (error) => codeConfig.error_callback(error),
   };
 })();

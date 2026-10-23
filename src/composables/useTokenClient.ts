@@ -4,6 +4,7 @@ import type {
   TokenClient,
   TokenResponse,
   OverridableTokenClientConfig,
+  NonOAuthError,
 } from "@/interfaces/oauth2";
 import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
 import { GoogleClientIdKey } from "../utils/symbols";
@@ -30,11 +31,11 @@ export type TokenClientErrorResponse = Pick<
  *
  * @export
  * @interface UseTokenClientOptions
- * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback">)}
+ * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback" | "error_callback">)}
  */
 export interface UseTokenClientOptions extends Omit<
   TokenClientConfig,
-  "client_id" | "scope" | "callback"
+  "client_id" | "scope" | "callback" | "error_callback"
 > {
   /**
    * On success callback
@@ -49,6 +50,15 @@ export interface UseTokenClientOptions extends Omit<
    * @memberof UseTokenClientOptions
    */
   onError?: (errorResponse: TokenClientErrorResponse) => void;
+
+  /**
+   * Called when the flow ends without an OAuth response,
+   * for example when the user closes the popup or it can't be opened
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+   * @memberof UseTokenClientOptions
+   */
+  onNonOAuthError?: (error: NonOAuthError) => void;
 
   /**
    * Authorization scopes
@@ -103,7 +113,7 @@ export interface UseTokenClientReturn {
 export default function useTokenClient(
   options: UseTokenClientOptions = {},
 ): UseTokenClientReturn {
-  const { scope = "", onError, onSuccess, ...rest } = options;
+  const { scope = "", onError, onSuccess, onNonOAuthError, ...rest } = options;
 
   const { scriptLoaded } = useGsiScript();
   const clientId = inject<string>(GoogleClientIdKey);
@@ -128,6 +138,7 @@ export default function useTokenClient(
 
         onSuccess?.(response);
       },
+      error_callback: onNonOAuthError,
       ...rest,
     });
 

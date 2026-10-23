@@ -7,6 +7,7 @@ const { isReady, login, codeRequestRedirectUrl } = useCodeClient({
   state: "e2e-state",
   onSuccess: (response) => log("success", response),
   onError: (response) => log("error", response),
+  onNonOAuthError: (error) => log("nonOAuthError", error),
 });
 </script>
 

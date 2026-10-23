@@ -8,6 +8,22 @@ export type ErrorCode =
   | "temporarily_unavailable";
 
 /**
+ * An error that isn't an OAuth response, passed to `error_callback`
+ *
+ * @export
+ * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+ * @interface NonOAuthError
+ */
+export interface NonOAuthError {
+  /**
+   * - `popup_failed_to_open`: the popup window couldn't be opened
+   * - `popup_closed`: the popup was closed before an OAuth response was returned
+   * - `unknown`: any other error
+   */
+  type: "popup_failed_to_open" | "popup_closed" | "unknown";
+}
+
+/**
  * CodeResponse from Google
  *
  * @export
@@ -129,6 +145,13 @@ export interface CodeClientConfig {
    * @memberof CodeClientConfig
    */
   select_account?: boolean;
+
+  /**
+   * Optional. Handles errors that aren't OAuth responses, such as the popup being closed.
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeClientConfig
+   */
+  error_callback?: (error: NonOAuthError) => void;
 }
 
 export interface CodeClient {
@@ -222,6 +245,13 @@ export interface TokenClientConfig {
    * request and the authorization server's response.
    */
   state?: string;
+
+  /**
+   * Optional. Handles errors that aren't OAuth responses, such as the popup being closed.
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+   */
+  error_callback?: (error: NonOAuthError) => void;
 }
 
 export interface OverridableTokenClientConfig {

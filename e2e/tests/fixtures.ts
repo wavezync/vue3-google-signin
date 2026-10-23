@@ -15,7 +15,9 @@ declare global {
       credential(response: object): void;
       promptMoment(notification: object): void;
       tokenResponse(response: object): void;
+      tokenError(error: object): void;
       codeResponse(response: object): void;
+      codeError(error: object): void;
     };
     __events?: Event[];
     __gsiLoads?: number;
