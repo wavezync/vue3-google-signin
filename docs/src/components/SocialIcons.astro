@@ -1,0 +1,65 @@
+---
+// Starlight renders this in the docs header's right-hand group, so the docs
+// get the same top-level links as the home page's nav.
+import Default from "@astrojs/starlight/components/SocialIcons.astro";
+import { currentLink, navLinks, wavezync } from "./nav-links";
+
+const current = currentLink(Astro.url.pathname);
+---
+
+<nav class="docs-links" aria-label="Docs">
+  {
+    navLinks.map((link) => (
+      <a href={link.href} aria-current={link === current ? "page" : undefined}>
+        {link.text}
+      </a>
+    ))
+  }
+  <a class="by" href={wavezync.href}>
+    <img src="/wavezync.png" width="16" height="16" alt="" />
+    {wavezync.text}
+  </a>
+</nav>
+<Default />
+
+<style>
+  .docs-links {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+  }
+  a {
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  a:hover {
+    background: color-mix(in srgb, var(--sl-color-white) 8%, transparent);
+    color: var(--sl-color-white);
+  }
+  a[aria-current="page"] {
+    background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+    color: var(--sl-color-accent-high);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 1px;
+  }
+  .by {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  /* The phone menu already lists every section in its sidebar */
+  :global(.mobile-preferences) .docs-links {
+    display: none;
+  }
+  @media (max-width: 72rem) {
+    .docs-links {
+      display: none;
+    }
+  }
+</style>

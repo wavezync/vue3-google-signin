@@ -5,14 +5,9 @@ import Search from "@astrojs/starlight/components/Search.astro";
 import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
 import SocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
 import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
+import { navLinks, wavezync } from "./nav-links";
 
 const isHome = Boolean(Astro.locals.starlightRoute.entry.data.hero);
-const links = [
-  ["Guide", "/guide/"],
-  ["Components", "/components/google-signin-button/"],
-  ["Composables", "/composables/use-one-tap/"],
-  ["FAQ", "/guide/faq/"],
-];
 ---
 
 {
@@ -22,12 +17,12 @@ const links = [
         <SiteTitle />
       </div>
       <nav aria-label="Docs">
-        {links.map(([text, href]) => (
-          <a href={href}>{text}</a>
+        {navLinks.map((link) => (
+          <a href={link.href}>{link.text}</a>
         ))}
-        <a class="by" href="https://wavezync.com">
+        <a class="by" href={wavezync.href}>
           <img src="/wavezync.png" width="16" height="16" alt="" />
-          WaveZync
+          {wavezync.text}
         </a>
       </nav>
       <div class="end">

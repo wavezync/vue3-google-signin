@@ -33,6 +33,7 @@ export default defineConfig({
         Footer: "./src/components/Footer.astro",
         Header: "./src/components/Header.astro",
         Hero: "./src/components/Hero.astro",
+        SocialIcons: "./src/components/SocialIcons.astro",
       },
       head: [
         meta({ property: "og:image", content: `${SITE}/og-image.jpg` }),
