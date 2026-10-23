@@ -30,6 +30,7 @@ export default defineConfig({
       editLink: { baseUrl: `${GITHUB}/edit/main/docs/` },
       customCss: ["./src/styles/custom.css"],
       components: {
+        Footer: "./src/components/Footer.astro",
         Header: "./src/components/Header.astro",
         Hero: "./src/components/Hero.astro",
       },

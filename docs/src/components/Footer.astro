@@ -1,0 +1,28 @@
+---
+// Starlight's footer, plus the license and copyright line every page had on
+// the old VitePress site.
+import Default from "@astrojs/starlight/components/Footer.astro";
+---
+
+<Default />
+<p class="legal">
+  Released under the MIT License. Copyright © 2022-present{" "}
+  <a href="https://wavezync.com">WaveZync</a>.
+</p>
+
+<style>
+  .legal {
+    margin: 2.5rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+    text-align: center;
+    color: var(--sl-color-gray-3);
+  }
+  .legal a {
+    color: var(--sl-color-gray-2);
+  }
+  .legal a:hover {
+    color: var(--sl-color-white);
+  }
+</style>

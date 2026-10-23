@@ -25,6 +25,10 @@ const links = [
         {links.map(([text, href]) => (
           <a href={href}>{text}</a>
         ))}
+        <a class="by" href="https://wavezync.com">
+          <img src="/wavezync.png" width="16" height="16" alt="" />
+          WaveZync
+        </a>
       </nav>
       <div class="end">
         <Search />
@@ -95,6 +99,11 @@ const links = [
     transition:
       color 0.15s,
       background-color 0.15s;
+  }
+  .by {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
   }
   nav a:hover {
     background: color-mix(in srgb, var(--sl-color-white) 8%, transparent);

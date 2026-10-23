@@ -1,0 +1,98 @@
+<aside class="made-by not-content" aria-label="About WaveZync">
+  <img src="/wavezync.png" width="56" height="56" alt="" />
+  <div class="copy">
+    <p class="title">Made by WaveZync</p>
+    <p>
+      WaveZync builds digital products for businesses. We maintain
+      vue3-google-signin in the open, free under the MIT License.
+    </p>
+  </div>
+  <div class="links">
+    <a class="primary" href="https://wavezync.com">Visit WaveZync</a>
+    <a href="https://github.com/wavezync">WaveZync on GitHub</a>
+  </div>
+</aside>
+
+<style>
+  .made-by {
+    --wave: #1e6bff;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.25rem 1.75rem;
+    margin-top: clamp(4rem, 10vh, 6rem);
+    padding: 1.75rem 2rem;
+    border: 1px solid
+      color-mix(in srgb, var(--wave) 35%, var(--sl-color-gray-5));
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(
+        circle at 2.5rem 50%,
+        color-mix(in srgb, var(--wave) 22%, transparent),
+        transparent 22rem
+      ),
+      color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+  }
+  img {
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--wave) 55%, transparent));
+  }
+  .copy {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .title {
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--sl-color-white);
+  }
+  .copy p:not(.title) {
+    margin: 0;
+    max-width: 52ch;
+    color: var(--sl-color-gray-2);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1.2rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--sl-color-white);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .links a:hover {
+    border-color: var(--sl-color-gray-3);
+  }
+  .links .primary {
+    border-color: transparent;
+    background: var(--sl-color-white);
+    color: var(--sl-color-black);
+  }
+  .links .primary:hover {
+    background: color-mix(in srgb, var(--wave) 25%, var(--sl-color-white));
+  }
+  .links a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 50rem) {
+    .made-by {
+      grid-template-columns: auto minmax(0, 1fr);
+      padding: 1.5rem;
+    }
+    .links {
+      grid-column: span 2;
+    }
+  }
+</style>
