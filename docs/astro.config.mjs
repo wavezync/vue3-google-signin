@@ -19,8 +19,8 @@ const link = (/** @type {Record<string, string>} */ attrs) => ({
 
 export default defineConfig({
   site: SITE,
-  // Emit guide/one-tap-login.html etc. so Vercel's cleanUrls keeps the old
-  // VitePress .html links working (they 308 to the extensionless URL).
+  // Emit guide/one-tap-login.html etc. Cloudflare Pages serves it at
+  // /guide/one-tap-login and 308s the old VitePress .html URLs there.
   build: { format: "file" },
   trailingSlash: "never",
   integrations: [

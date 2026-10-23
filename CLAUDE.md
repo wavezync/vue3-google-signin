@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs + landing site: https://vue3-google-signin.wavezync.com, built from `docs/` (a pnpm workspace package) with Astro + Starlight and deployed on Vercel (`vercel.json`).
+`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs + landing site: https://vue3-google-signin.wavezync.com, built from `docs/` (a pnpm workspace package) with Astro + Starlight and deployed on Cloudflare Pages (build settings live in the Cloudflare dashboard: `pnpm docs:build`, output `docs/dist`, `PNPM_VERSION` env var set to the pinned pnpm).
 
 ## Commands
 
@@ -35,7 +35,7 @@ There is no test suite. CI (`.github/workflows/build.yaml`) runs `lint`, `format
 - **GIS typings are hand-written**: `src/interfaces/{accounts,oauth2}.ts` hold the GIS config/response types, and `src/@types/globals.ts` augments `Window.google`. Add new GIS options in those files first, then thread them through the composable/component.
 - `src/utils/` holds public helpers (`decodeCredential`, `idRevoke`, `hasGrantedAllScopes`/`hasGrantedAnyScopes`, `revokeAccessToken`, `buildCodeRequestRedirectUrl`) plus the `MaybeRef` type.
 - **Docs site** (`docs/`): Starlight pages live in `docs/src/content/docs/`; the custom landing page is `docs/src/pages/index.astro` (with `docs/src/components/LiveDemo.vue`). `docs/astro.config.mjs` aliases `vue3-google-signin` and `@/` to the library source, so demos run against `src/`, not `dist/`. The plugin is installed for every Vue island via `docs/src/vue-app.ts` (Astro `appEntrypoint`), reading `VITE_GOOGLE_CLIENT_ID` from the repo-root `.env`. Files in `docs/src/examples/` are both shown as code (`?raw` + `<Code>`) and rendered as live demos (`client:only="vue"`, since GIS is browser-only).
-- Astro emits `.html` files (`build.format: "file"`) and Vercel's `cleanUrls` redirects the old VitePress `.html` URLs, so keep page slugs stable.
+- Astro emits `.html` files (`build.format: "file"`) which Cloudflare Pages serves without the extension (old VitePress `.html` URLs 308 to it), so keep page slugs stable.
 
 ## Conventions
 
