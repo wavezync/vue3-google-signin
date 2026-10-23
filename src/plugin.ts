@@ -7,8 +7,11 @@ import useOneTap from "./composables/useOneTap";
 import useTokenClient from "./composables/useTokenClient";
 
 import type {
-  ImplicitFlowOptions,
+  UseCodeClientOptions,
   UseCodeClientReturn,
+  CodeClientErrorResponse,
+  CodeClientSuccessResponse,
+  ImplicitFlowOptions,
   ImplicitFlowErrorResponse,
   ImplicitFlowSuccessResponse,
 } from "./composables/useCodeClient";
@@ -19,8 +22,11 @@ import type {
 } from "./composables/useOneTap";
 
 import type {
-  AuthCodeFlowOptions,
+  UseTokenClientOptions,
   UseTokenClientReturn,
+  TokenClientErrorResponse,
+  TokenClientSuccessResponse,
+  AuthCodeFlowOptions,
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 } from "./composables/useTokenClient";
@@ -71,14 +77,21 @@ export {
 export * from "./interfaces";
 export * from "./utils";
 export type {
-  ImplicitFlowOptions,
-  AuthCodeFlowOptions,
+  UseCodeClientOptions,
   UseCodeClientReturn as UseCodeClientResult,
+  CodeClientErrorResponse,
+  CodeClientSuccessResponse,
   UseGoogleOneTapLoginOptions,
   UseOneTapResult as UseOneTapResponse,
+  UseTokenClientOptions,
   UseTokenClientReturn as UseTokenClientResult,
+  TokenClientErrorResponse,
+  TokenClientSuccessResponse,
+  // Deprecated: the old names had the two flows swapped
+  ImplicitFlowOptions,
   ImplicitFlowErrorResponse,
   ImplicitFlowSuccessResponse,
+  AuthCodeFlowOptions,
   AuthCodeFlowErrorResponse,
   AuthCodeFlowSuccessResponse,
 };

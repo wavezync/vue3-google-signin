@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {
   useCodeClient,
-  type ImplicitFlowSuccessResponse,
-  type ImplicitFlowErrorResponse,
+  type CodeClientSuccessResponse,
+  type CodeClientErrorResponse,
 } from "vue3-google-signin";
 
-const handleOnSuccess = async (response: ImplicitFlowSuccessResponse) => {
+const handleOnSuccess = async (response: CodeClientSuccessResponse) => {
   // send code to a backend server to verify it.
   console.log("Code: ", response.code);
 
@@ -18,7 +18,7 @@ const handleOnSuccess = async (response: ImplicitFlowSuccessResponse) => {
   });
 };
 
-const handleOnError = (errorResponse: ImplicitFlowErrorResponse) => {
+const handleOnError = (errorResponse: CodeClientErrorResponse) => {
   console.log("Error: ", errorResponse);
 };
 

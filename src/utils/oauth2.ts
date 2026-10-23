@@ -59,20 +59,20 @@ export function revokeAccessToken(accessToken: string, done?: () => void) {
   });
 }
 
-export type ImplicitFlowOptions = Omit<
+export type CodeRequestRedirectUrlOptions = Omit<
   CodeClientConfig,
   "redirect" | "callback" | "ux_mode"
 >;
 
 /**
- * Get the OAuth2 redirect URL for login with implicit flow
+ * Get the OAuth2 redirect URL for the authorization code flow
  *
  * @export
- * @param {ImplicitFlowOptions} options
+ * @param {CodeRequestRedirectUrlOptions} options
  * @return {string}
  */
 export function buildCodeRequestRedirectUrl(
-  options: ImplicitFlowOptions,
+  options: CodeRequestRedirectUrlOptions,
 ): string {
   const baseUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 

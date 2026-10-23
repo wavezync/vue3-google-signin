@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import {
   useTokenClient,
-  type AuthCodeFlowSuccessResponse,
-  type AuthCodeFlowErrorResponse,
+  type TokenClientSuccessResponse,
+  type TokenClientErrorResponse,
 } from "vue3-google-signin";
 
-const handleOnSuccess = (response: AuthCodeFlowSuccessResponse) => {
+const handleOnSuccess = (response: TokenClientSuccessResponse) => {
   console.log("Access Token: ", response.access_token);
 };
 
-const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
+const handleOnError = (errorResponse: TokenClientErrorResponse) => {
   console.log("Error: ", errorResponse);
 };
 

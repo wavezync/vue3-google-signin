@@ -10,55 +10,62 @@ import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
 
 /**
- * On success with implicit flow
+ * Successful code response
  */
-export type ImplicitFlowSuccessResponse = Omit<
+export type CodeClientSuccessResponse = Omit<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * On error with implicit flow
+ * Code response with an OAuth error
  */
-export type ImplicitFlowErrorResponse = Pick<
+export type CodeClientErrorResponse = Pick<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * Options for Implicit flow
+ * Options for `useCodeClient`
  *
  * @export
- * @interface ImplicitFlowOptions
+ * @interface UseCodeClientOptions
  * @extends {(Omit<CodeClientConfig, "client_id" | "scope" | "callback">)}
  */
-export interface ImplicitFlowOptions extends Omit<
+export interface UseCodeClientOptions extends Omit<
   CodeClientConfig,
   "client_id" | "scope" | "callback"
 > {
   /**
    * On success callback
    *
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
-  onSuccess?: (response: ImplicitFlowSuccessResponse) => void;
+  onSuccess?: (response: CodeClientSuccessResponse) => void;
 
   /**
    * On error callback
    *
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
-  onError?: (errorResponse: ImplicitFlowErrorResponse) => void;
+  onError?: (errorResponse: CodeClientErrorResponse) => void;
 
   /**
    * Authorization scopes
    *
    * @type {(MaybeRef<string> | MaybeRef<string[]>)}
    * @see https://developers.google.com/identity/protocols/oauth2/scopes
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
 }
+
+/** @deprecated Renamed to {@link UseCodeClientOptions}. */
+export type ImplicitFlowOptions = UseCodeClientOptions;
+/** @deprecated Renamed to {@link CodeClientSuccessResponse}. */
+export type ImplicitFlowSuccessResponse = CodeClientSuccessResponse;
+/** @deprecated Renamed to {@link CodeClientErrorResponse}. */
+export type ImplicitFlowErrorResponse = CodeClientErrorResponse;
 
 /**
  * Result of composable
@@ -93,17 +100,17 @@ export interface UseCodeClientReturn {
 }
 
 /**
- * Initiate login with implicit flow using code client. Return values of the composable can be used
+ * Initiate login with the authorization code flow using a code client. Return values of the composable can be used
  * to trigger the login flow and determine the readiness of the client.
  * It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
  *
  * @export
- * @param {ImplicitFlowOptions} [options={}]
+ * @param {UseCodeClientOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-code-model
  * @return {*}  {UseCodeClientReturn}
  */
 export default function useCodeClient(
-  options: ImplicitFlowOptions = {},
+  options: UseCodeClientOptions = {},
 ): UseCodeClientReturn {
   const { scope = "", onError, onSuccess, ...rest } = options;
 
