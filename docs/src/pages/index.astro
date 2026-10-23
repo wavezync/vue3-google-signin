@@ -1,0 +1,530 @@
+---
+import { Code } from "@astrojs/starlight/components";
+import LiveDemo from "../components/LiveDemo.vue";
+import logo from "../assets/logo.svg?url";
+
+const GITHUB = "https://github.com/wavezync/vue3-google-signin";
+const NPM = "https://www.npmjs.com/package/vue3-google-signin";
+const title = "Vue3 Google Sign-in";
+const description =
+  "Google sign-in for Vue 3: the Sign in with Google button, One Tap, and OAuth2 token and code flows.";
+
+const installs = [
+  { label: "npm", command: "npm install vue3-google-signin" },
+  { label: "pnpm", command: "pnpm add vue3-google-signin" },
+  { label: "yarn", command: "yarn add vue3-google-signin" },
+];
+
+const mainTs = `import { createApp } from "vue";
+import GoogleSignInPlugin from "vue3-google-signin";
+import App from "./App.vue";
+
+createApp(App)
+  .use(GoogleSignInPlugin, {
+    clientId: "YOUR_CLIENT_ID.apps.googleusercontent.com",
+  })
+  .mount("#app");`;
+
+const loginVue = `<script setup lang="ts">
+import {
+  GoogleSignInButton,
+  decodeCredential,
+  type CredentialResponse,
+} from "vue3-google-signin";
+
+function onSuccess({ credential }: CredentialResponse) {
+  const user = decodeCredential(credential);
+  console.log(\`Signed in as \${user.email}\`);
+}
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>`;
+
+const apis = [
+  {
+    name: "<GoogleSignInButton>",
+    href: "/guide/google-signin-button",
+    text: "Google's own Sign in with Google button, rendered for you and wired to Vue events.",
+  },
+  {
+    name: "useOneTap()",
+    href: "/guide/one-tap-login",
+    text: "The One Tap prompt, shown when the page loads or when you call login().",
+  },
+  {
+    name: "useTokenClient()",
+    href: "/composables/use-token-client",
+    text: "Your own button that gets an access token for calling Google APIs from the browser.",
+  },
+  {
+    name: "useCodeClient()",
+    href: "/composables/use-code-client",
+    text: "Your own button that gets an authorization code for your backend to exchange.",
+  },
+  {
+    name: "decodeCredential()",
+    href: "/helpers/account",
+    text: "Reads the name, email and picture from the ID token Google returns.",
+  },
+  {
+    name: "nuxt-vue3-google-signin",
+    href: "/guide#with-nuxt",
+    text: "Nuxt module that installs the plugin and registers the component for you.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.site} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.site} />
+    <meta property="og:image" content={new URL("/og-image.jpg", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@wavezync" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap"
+    />
+    <!-- Follow the docs' theme choice (Starlight stores it), else the OS. -->
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem("starlight-theme");
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a href="/" class="brand">
+        <img src={logo} alt="" width="32" height="32" />
+        <span>Vue3 Google Sign-in</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="/guide">Docs</a>
+        <a href={GITHUB}>GitHub</a>
+        <a href={NPM}>npm</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="wrap hero">
+        <div class="pitch">
+          <h1>Google <span class="nowrap">sign-in</span> for Vue&nbsp;3</h1>
+          <p class="lede">
+            A component and a handful of composables over Google Identity
+            Services: the Sign in with Google button, One Tap, and OAuth2 token
+            and code flows. Fully typed, under 4&nbsp;kB gzipped.
+          </p>
+
+          <div class="install" data-install>
+            <div class="tabs" role="tablist" aria-label="Package manager">
+              {
+                installs.map((item, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={i === 0 ? "true" : "false"}
+                    data-command={item.command}
+                  >
+                    {item.label}
+                  </button>
+                ))
+              }
+            </div>
+            <div class="command">
+              <code data-command-out>{installs[0].command}</code>
+              <button type="button" class="copy" data-copy>Copy</button>
+              <span class="sr-only" aria-live="polite" data-copy-status></span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a class="button primary" href="/guide">Read the guide</a>
+            <a class="button" href={GITHUB}>View on GitHub</a>
+          </div>
+        </div>
+
+        <div class="panel">
+          <LiveDemo client:only="vue" />
+        </div>
+      </section>
+
+      <section class="wrap setup" aria-labelledby="setup-title">
+        <h2 id="setup-title">Set up in two files</h2>
+        <p class="section-lede">
+          Register the plugin with your client ID, then drop the button
+          wherever people sign in.
+        </p>
+        <div class="files">
+          <Code code={mainTs} lang="ts" title="main.ts" />
+          <Code code={loginVue} lang="vue" title="LoginButton.vue" />
+        </div>
+      </section>
+
+      <section class="wrap apis" aria-labelledby="apis-title">
+        <h2 id="apis-title">One component, a few composables</h2>
+        <dl>
+          {
+            apis.map((api) => (
+              <div class="row">
+                <dt>
+                  <a href={api.href}>{api.name}</a>
+                </dt>
+                <dd>{api.text}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+    </main>
+
+    <footer class="wrap bottom">
+      <p>MIT licensed. Built by <a href="https://wavezync.com">WaveZync</a>.</p>
+      <nav aria-label="Footer">
+        <a href="/guide">Docs</a>
+        <a href={GITHUB}>GitHub</a>
+        <a href={NPM}>npm</a>
+      </nav>
+    </footer>
+
+    <script>
+      const root = document.querySelector<HTMLElement>("[data-install]");
+      const out = root?.querySelector<HTMLElement>("[data-command-out]");
+      const status = root?.querySelector<HTMLElement>("[data-copy-status]");
+      const copy = root?.querySelector<HTMLButtonElement>("[data-copy]");
+      const tabs = [
+        ...(root?.querySelectorAll<HTMLButtonElement>("[role=tab]") ?? []),
+      ];
+
+      const select = (tab: HTMLButtonElement) => {
+        tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+        if (out) out.textContent = tab.dataset.command ?? "";
+      };
+      tabs.forEach((tab, i) => {
+        tab.addEventListener("click", () => select(tab));
+        tab.addEventListener("keydown", (e) => {
+          const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+          if (!step) return;
+          const next = tabs[(i + step + tabs.length) % tabs.length];
+          next.focus();
+          select(next);
+        });
+      });
+
+      copy?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(out?.textContent ?? "");
+          copy.textContent = "Copied";
+          if (status) status.textContent = "Install command copied";
+        } catch {
+          copy.textContent = "Press Ctrl+C";
+        }
+        setTimeout(() => (copy.textContent = "Copy"), 1600);
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #f6f8fa;
+    --surface: #ffffff;
+    --well: #eef2f6;
+    --text: #0f2233;
+    --muted: #5a6b7b;
+    --rule: #d9e1e8;
+    --leaf: #1f8a55;
+    --violet: #6d4bd8;
+    --sky: #1d6fb8;
+    --sans: "Schibsted Grotesk", system-ui, sans-serif;
+    --mono: "Fragment Mono", ui-monospace, monospace;
+    /* Starlight's code blocks read these; map them onto this page's tokens */
+    --sl-color-gray-5: var(--rule);
+    --sl-color-gray-6: var(--well);
+    --sl-color-gray-7: var(--surface);
+    --sl-color-black: var(--surface);
+    --sl-color-text: var(--text);
+    --sl-color-accent: var(--leaf);
+    --sl-color-accent-high: var(--leaf);
+    --sl-text-code: 0.86rem;
+    --sl-line-height: 1.65;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --paper: #0f2233;
+    --surface: #142b40;
+    --well: #0b1a28;
+    --text: #e4ecf3;
+    --muted: #93a4b5;
+    --rule: #22405b;
+    --leaf: #45c486;
+    --violet: #a38cf5;
+    --sky: #6cb4f0;
+    color-scheme: dark;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+
+<style>
+  .wrap {
+    width: min(1120px, 100% - 2rem);
+    margin-inline: auto;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.25rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    gap: 1.25rem;
+  }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  nav a:hover {
+    color: var(--text);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    padding-block: clamp(2.5rem, 8vw, 6rem) clamp(3rem, 8vw, 6rem);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .lede {
+    max-width: 34em;
+    margin: 1.25rem 0 2rem;
+    color: var(--muted);
+    font-size: 1.15rem;
+  }
+
+  .install {
+    max-width: 30rem;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  .tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.4rem 0.4rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tabs button {
+    padding: 0.35rem 0.75rem 0.45rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] {
+    border-bottom-color: var(--leaf);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .command {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0.6rem 0.8rem 1rem;
+  }
+  .command code {
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+  }
+  .copy {
+    flex: none;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .button {
+    padding: 0.7rem 1.15rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .button.primary {
+    border-color: var(--leaf);
+    background: var(--leaf);
+    color: var(--paper);
+  }
+  .button:hover {
+    border-color: var(--text);
+  }
+  .button.primary:hover {
+    filter: brightness(1.08);
+  }
+
+  .panel {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: 0 24px 60px -32px rgb(15 34 51 / 0.35);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .section-lede {
+    max-width: 36em;
+    margin: 0.6rem 0 1.75rem;
+    color: var(--muted);
+  }
+  .setup,
+  .apis {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    border-top: 1px solid var(--rule);
+  }
+  .files {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .apis dl {
+    margin: 1.75rem 0 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(12rem, 18rem) 1fr;
+    gap: 0.4rem 2rem;
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+  .row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .row dt a {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--leaf);
+    text-decoration: none;
+  }
+  .row dt a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .row dd {
+    margin: 0;
+    max-width: 40em;
+    color: var(--muted);
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 2rem 3rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .bottom p {
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .hero,
+    .files,
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
