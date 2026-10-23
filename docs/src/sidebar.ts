@@ -15,6 +15,7 @@ export const sidebar = [
       { label: "Using with Electron", slug: "guide/using-with-electron" },
       { label: "FAQ", slug: "guide/faq" },
       { label: "Migrating to v3", slug: "guide/migrating-to-v3" },
+      { label: "Changelog", slug: "changelog" },
     ],
   },
   {
