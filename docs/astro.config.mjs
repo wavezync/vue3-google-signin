@@ -36,13 +36,13 @@ export default defineConfig({
         SocialIcons: "./src/components/SocialIcons.astro",
       },
       head: [
-        meta({ property: "og:image", content: `${SITE}/og-image.jpg` }),
+        meta({ property: "og:image", content: `${SITE}/og.jpg` }),
         meta({ property: "og:image:width", content: "1200" }),
         meta({ property: "og:image:height", content: "630" }),
         meta({
           property: "og:image:alt",
           content:
-            "Vue3 Google Sign-in: Google OAuth2 strategies simplified for Vue 3",
+            "Vue3 Google Sign-in: Google's sign-in button, One Tap and OAuth2 for Vue 3 and Nuxt",
         }),
         meta({ name: "twitter:site", content: "@wavezync" }),
         meta({ name: "keywords", content: pkg.keywords.join(",") }),
