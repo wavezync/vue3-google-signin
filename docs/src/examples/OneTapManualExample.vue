@@ -13,6 +13,6 @@ const { isReady, login } = useOneTap({
 
 <template>
   <button :disabled="!isReady" @click="() => login()">
-    Trigger One Tap Login Manually
+    Sign in with One Tap
   </button>
 </template>

@@ -30,5 +30,7 @@ const { isReady, login } = useCodeClient({
 </script>
 
 <template>
-  <button :disabled="!isReady" @click="() => login()">Login with Google</button>
+  <button :disabled="!isReady" @click="() => login()">
+    Sign in with Google
+  </button>
 </template>

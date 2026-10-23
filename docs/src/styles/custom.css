@@ -10,31 +10,84 @@
   --sl-color-accent-high: #0d3d25;
 }
 
-/* Live demo container */
+/* Live demos in the guides, on a dot-grid stage */
 .demo {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  padding: 1.5rem;
+  align-items: center;
+  gap: 1rem;
+  min-height: 9rem;
+  padding: 2rem 1.5rem;
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
-  /* Google's button iframe is light; a dark color-scheme paints a white box around it */
+  border-radius: 1rem;
+  background-color: var(--sl-color-black);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--sl-color-gray-4) 45%, transparent) 1px,
+    transparent 1.4px
+  );
+  background-size: 18px 18px;
+  /* Google's button iframe is light; a dark color-scheme paints a box around it */
   color-scheme: light;
 }
+
+/* Custom buttons in the demos follow Google's branding guidelines:
+   https://developers.google.com/identity/branding-guidelines */
 .demo button {
-  padding: 0.6rem 1rem;
-  border: 0;
-  border-radius: 0.4rem;
-  background: var(--sl-color-accent);
-  color: var(--sl-color-white);
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 16px 0 12px;
+  border: 1px solid #747775;
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: #1f1f1f;
+  font:
+    500 14px/20px Roboto,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  letter-spacing: 0.25px;
   cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.demo button::before {
+  content: "";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
 }
 .demo button:hover:not(:disabled) {
-  filter: brightness(1.1);
+  background-color: #f8f9fa;
+  box-shadow:
+    0 1px 2px 0 rgb(60 64 67 / 0.3),
+    0 1px 3px 1px rgb(60 64 67 / 0.15);
+}
+.demo button:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
 }
 .demo button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  cursor: default;
+  opacity: 0.55;
+}
+:root[data-theme="dark"] .demo button {
+  border-color: #8e918f;
+  background-color: #131314;
+  color: #e3e3e3;
+}
+:root[data-theme="dark"] .demo button:hover:not(:disabled) {
+  background-color: #1e1f20;
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.5),
+    0 1px 3px 1px rgb(0 0 0 / 0.3);
 }
 
 /* Home page (Starlight marks it data-has-hero) */
@@ -62,4 +115,31 @@
   max-width: 52ch;
   font-size: 1.125rem;
   color: var(--sl-color-gray-2);
+}
+
+/* Tables in docs pages, styled like the component reference lists */
+.sl-markdown-content table:not(:where(.not-content *)) {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  vertical-align: top;
+}
+.sl-markdown-content tr:last-child > td:not(:where(.not-content *)) {
+  border-bottom: 0;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+  background: color-mix(in srgb, var(--sl-color-gray-6) 70%, transparent);
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-2);
+}
+.sl-markdown-content td:first-child > code:not(:where(.not-content *)) {
+  color: var(--sl-color-accent-high);
+  font-weight: 600;
 }

@@ -34,6 +34,6 @@ const signIn = () => {
 
 <template>
   <button :disabled="!isReady || pending" @click="signIn">
-    Login with Google
+    Sign in with Google
   </button>
 </template>
