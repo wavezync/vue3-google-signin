@@ -1,6 +1,6 @@
 ---
 title: OAuth2 Helpers
-description: Helpers for the google.accounts.oauth2 namespace.
+description: hasGrantedAllScopes and hasGrantedAnyScopes check which OAuth2 scopes a user granted, and revokeAccessToken revokes an access token.
 ---
 
 This contains helpers for `google.accounts.oauth2` [namespace](https://developers.google.com/identity/oauth2/web/reference/js-reference).

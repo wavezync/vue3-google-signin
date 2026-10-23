@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Answers to common questions about scopes, tokens, One Tap, SSR and more.
+description: Answers about extra OAuth2 scopes, verifying users on your server, custom nonces, closed popups, One Tap not showing, and Nuxt and SSR.
 ---
 
 ## Which one should I use?

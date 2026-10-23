@@ -16,7 +16,7 @@ We do not cover how to handle the response. That depends on your platform and it
 
 ## Obtain a login session URL
 
-Use [`useCodeClient`](/composables/use-code-client) for this. It returns `codeRequestRedirectUrl`, which you can open in the system browser.
+Use [`useCodeClient`](/composables/use-code-client/) for this. It returns `codeRequestRedirectUrl`, which you can open in the system browser.
 
 Here is an example with Electron:
 

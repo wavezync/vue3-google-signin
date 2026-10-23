@@ -1,6 +1,6 @@
 ---
 title: Migrating to v3
-description: What changed in vue3-google-signin 3.0 and how to update.
+description: How to update a vue3-google-signin v2 app to v3. Covers the removed UMD build, renamed types, redirect URL parameters, plugin install changes and new features.
 ---
 
 Most apps update without code changes. Read on if you use the type names, the
