@@ -28,4 +28,5 @@ coverage
 *.sln
 *.sw?
 
-docs/.vitepress/cache
+# astro
+.astro

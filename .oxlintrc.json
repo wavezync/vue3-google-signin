@@ -19,5 +19,5 @@
     "browser": true,
     "builtin": true
   },
-  "ignorePatterns": ["dist", "docs"]
+  "ignorePatterns": ["dist", "docs/dist", "docs/.astro"]
 }

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs site: https://vue3-google-signin.wavezync.com (built from `docs/` with VitePress).
+`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs + landing site: https://vue3-google-signin.wavezync.com, built from `docs/` (a pnpm workspace package) with Astro + Starlight and deployed on Vercel (`vercel.json`).
 
 ## Commands
 
@@ -16,7 +16,7 @@ pnpm build        # vue-tsc --noEmit, then tsdown (also runs publint + attw on t
 pnpm typecheck    # vue-tsc --noEmit only
 pnpm lint         # oxlint (.oxlintrc.json); lint:fix to autofix
 pnpm format       # oxfmt (.oxfmtrc.json); format:check in CI
-pnpm docs:dev     # VitePress docs on :3001
+pnpm docs:dev     # Astro dev server on :3001 (port matches the dev client ID's allowed origin)
 pnpm docs:build
 ```
 
@@ -34,10 +34,12 @@ There is no test suite. CI (`.github/workflows/build.yaml`) runs `lint`, `format
 - **Option type names are swapped relative to OAuth semantics.** `useCodeClient` takes `ImplicitFlowOptions` and `useTokenClient` takes `AuthCodeFlowOptions`. These names are public API, so don't rename them casually.
 - **GIS typings are hand-written**: `src/interfaces/{accounts,oauth2}.ts` hold the GIS config/response types, and `src/@types/globals.ts` augments `Window.google`. Add new GIS options in those files first, then thread them through the composable/component.
 - `src/utils/` holds public helpers (`decodeCredential`, `idRevoke`, `hasGrantedAllScopes`/`hasGrantedAnyScopes`, `revokeAccessToken`, `buildCodeRequestRedirectUrl`) plus the `MaybeRef` type.
-- The `@/` alias points to `src/` in both the root and docs Vite configs, so docs demos (`docs/**/demo/*.vue`) import the live source, not `dist/`. Docs read `.env` from the repo root (`envDir: ".."`).
+- **Docs site** (`docs/`): Starlight pages live in `docs/src/content/docs/`; the custom landing page is `docs/src/pages/index.astro` (with `docs/src/components/LiveDemo.vue`). `docs/astro.config.mjs` aliases `vue3-google-signin` and `@/` to the library source, so demos run against `src/`, not `dist/`. The plugin is installed for every Vue island via `docs/src/vue-app.ts` (Astro `appEntrypoint`), reading `VITE_GOOGLE_CLIENT_ID` from the repo-root `.env`. Files in `docs/src/examples/` are both shown as code (`?raw` + `<Code>`) and rendered as live demos (`client:only="vue"`, since GIS is browser-only).
+- Astro emits `.html` files (`build.format: "file"`) and Vercel's `cleanUrls` redirects the old VitePress `.html` URLs, so keep page slugs stable.
 
 ## Conventions
 
 - Formatting is oxfmt with `printWidth: 80` (Prettier-compatible). Prefix unused vars/args with `_`.
 - Public options/props carry JSDoc with `@see` links to the matching GIS reference anchor. Follow that when adding fields.
-- When the public API changes, update the matching page under `docs/` (`composables/`, `components/`, `helpers/`, `guide/`).
+- When the public API changes, update the matching page under `docs/src/content/docs/` (`composables/`, `components/`, `helpers/`, `guide/`).
+- In MDX, put fenced code inside `<TabItem>` at column 0 with blank lines around it; indented fences get collapsed by oxfmt.

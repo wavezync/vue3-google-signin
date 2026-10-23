@@ -54,14 +54,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && tsdown",
-    "docs:serve": "vitepress serve docs",
     "typecheck": "vue-tsc --noEmit",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "docs:dev": "vitepress dev docs --port 3001",
-    "docs:build": "vitepress build docs",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
     "format": "oxfmt",
-    "format:check": "oxfmt --check"
+    "format:check": "oxfmt --check",
+    "docs:preview": "pnpm --filter docs preview"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
@@ -71,12 +71,10 @@
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
     "publint": "^0.3.25",
-    "sass": "^1.71.1",
     "tsdown": "^0.23.1",
     "typescript": "^6.0.3",
     "unplugin-vue": "^8.0.0",
     "vite": "^8.3.5",
-    "vitepress": "^1.0.0-rc.45",
     "vue": "^3.5.44",
     "vue-tsc": "^3.3.13"
   },

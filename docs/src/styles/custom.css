@@ -1,0 +1,38 @@
+/* Brand accent (Vue green) for Starlight */
+:root {
+  --sl-color-accent-low: #0b3a26;
+  --sl-color-accent: #2fa36b;
+  --sl-color-accent-high: #b6f0d1;
+}
+:root[data-theme="light"] {
+  --sl-color-accent-low: #c9f2dc;
+  --sl-color-accent: #1f8a55;
+  --sl-color-accent-high: #0d3d25;
+}
+
+/* Live demo container */
+.demo {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  /* Google's button iframe is light; a dark color-scheme paints a white box around it */
+  color-scheme: light;
+}
+.demo button {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: var(--sl-color-accent);
+  color: var(--sl-color-white);
+  font-weight: 600;
+  cursor: pointer;
+}
+.demo button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.demo button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
