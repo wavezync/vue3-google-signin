@@ -88,15 +88,22 @@ import LineIcon from "./LineIcon.astro";
       <ol class="log">
         <li><i></i><code>clientId = ref()</code><span>waiting</span></li>
         <li class="ok">
-          <i></i><code>fetch("/api/config")</code><span>200</span>
+          <i></i><code>clientId.value = acme</code><span>ready</span>
         </li>
-        <li class="ok"><i></i><code>clientId.value = "…"</code><span>set</span></li>
+        <li class="ok">
+          <i></i><code>clientId.value = globex</code><span>switched</span>
+        </li>
         <li class="ok"><i></i><code>isReady</code><span>true</span></li>
       </ol>
     </div>
     <div class="text">
-      <h3><LineIcon name="cloudDown" size={20} />Client ID from your server</h3>
-      <p>Pass a ref. Sign-in waits until it has a value.</p>
+      <h3>
+        <LineIcon name="cloudDown" size={20} />Dynamic, multi-tenant client IDs
+      </h3>
+      <p>
+        Set the client ID from your server, switch it per tenant, or give each
+        component its own. <a href="/guide/dynamic-client-id/">See how</a>
+      </p>
     </div>
   </article>
 
@@ -252,6 +259,9 @@ import LineIcon from "./LineIcon.astro";
     margin: 0;
     font-size: 0.95rem;
     color: var(--sl-color-gray-3);
+  }
+  .text a {
+    color: var(--sl-color-accent);
   }
   .text code {
     font-family: var(--__sl-font-mono);
@@ -453,7 +463,7 @@ import LineIcon from "./LineIcon.astro";
     display: grid;
     gap: 0.6rem;
     width: 100%;
-    max-width: 17rem;
+    max-width: 19rem;
     margin: 0;
     padding: 0;
     list-style: none;
