@@ -62,6 +62,15 @@ test("components and composables render on the server", async () => {
   assert.equal(globalThis.window, undefined);
 });
 
+test("decodeCredential works without a window", () => {
+  const payload = Buffer.from(
+    JSON.stringify({ sub: "42", name: "Zoë Ñúñez", email: "z@example.com" }),
+  ).toString("base64url");
+  const user = esm.decodeCredential(`h.${payload}.s`);
+  assert.equal(user.id, "42");
+  assert.equal(user.name, "Zoë Ñúñez");
+});
+
 test("buildCodeRequestRedirectUrl builds Google's auth code URL", () => {
   const url = new URL(
     esm.buildCodeRequestRedirectUrl({
