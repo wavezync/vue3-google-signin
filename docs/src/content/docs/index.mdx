@@ -1,0 +1,113 @@
+---
+title: Vue3 Google Sign-in
+description: Google sign-in for Vue 3. The Sign in with Google button, One Tap, and OAuth2 token and code flows.
+template: splash
+head:
+  - tag: title
+    content: Vue3 Google Sign-in
+hero:
+  title: Vue3 Google Sign-in
+  tagline: Google OAuth2 strategies simplified for Vue 3. Add the Sign in with Google button, One Tap, or your own login button in a few lines.
+  image:
+    file: ../../assets/logo.svg
+    alt: ""
+  actions:
+    - text: Get Started
+      link: /guide/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/wavezync/vue3-google-signin
+      icon: external
+      variant: minimal
+---
+
+import {
+  Card,
+  CardGrid,
+  Code,
+  TabItem,
+  Tabs,
+} from "@astrojs/starlight/components";
+import LiveDemo from "../../components/LiveDemo.vue";
+
+<CardGrid>
+  <Card title="Minimal configuration" icon="setting">
+    Register the plugin with your client ID and start using it. A [Nuxt
+    module](/guide/#with-nuxt) handles setup for Nuxt apps.
+  </Card>
+  <Card title="Google Identity Services" icon="approve-check">
+    Built on Google's current sign-in library, with One Tap using FedCM.
+  </Card>
+  <Card title="Vue composables" icon="puzzle">
+    `useOneTap`, `useTokenClient` and `useCodeClient` cover One Tap and custom
+    login buttons.
+  </Card>
+  <Card title="Built-in component" icon="seti:vue">
+    `GoogleSignInButton` renders Google's official button and emits Vue events.
+  </Card>
+</CardGrid>
+
+## Try it live
+
+<div class="live-panel not-content">
+  <LiveDemo client:only="vue" />
+</div>
+
+## Quick start
+
+<Tabs syncKey="pkg">
+<TabItem label="npm">
+
+```sh
+npm install vue3-google-signin
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add vue3-google-signin
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```sh
+yarn add vue3-google-signin
+```
+
+</TabItem>
+</Tabs>
+
+```ts title="main.ts"
+import { createApp } from "vue";
+import GoogleSignInPlugin from "vue3-google-signin";
+import App from "./App.vue";
+
+createApp(App)
+  .use(GoogleSignInPlugin, {
+    clientId: "YOUR_CLIENT_ID.apps.googleusercontent.com",
+  })
+  .mount("#app");
+```
+
+```vue title="LoginButton.vue"
+<script setup lang="ts">
+import {
+  GoogleSignInButton,
+  decodeCredential,
+  type CredentialResponse,
+} from "vue3-google-signin";
+
+function onSuccess({ credential }: CredentialResponse) {
+  const user = decodeCredential(credential);
+  console.log(`Signed in as ${user.email}`);
+}
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>
+```
+
+Continue with the [guide](/guide/) for One Tap, custom buttons and Nuxt.

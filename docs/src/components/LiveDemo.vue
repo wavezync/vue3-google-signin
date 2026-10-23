@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import {
   GoogleSignInButton,
   decodeCredential,
@@ -14,9 +14,18 @@ const credential = ref<string | null>(null);
 const failed = ref(false);
 const dark = ref(false);
 
-onMounted(() => {
+// Match Google's button to Starlight's theme, including later toggles.
+const syncTheme = () => {
   dark.value = document.documentElement.dataset.theme === "dark";
+};
+const themeObserver = new MutationObserver(syncTheme);
+onMounted(() => {
+  syncTheme();
+  themeObserver.observe(document.documentElement, {
+    attributeFilter: ["data-theme"],
+  });
 });
+onUnmounted(() => themeObserver.disconnect());
 
 const token = computed(() => credential.value ?? EXAMPLE_TOKEN);
 const segments = computed(() => token.value.split("."));
@@ -113,6 +122,14 @@ const signOut = () => {
 
 <style scoped>
 .live {
+  --text: var(--sl-color-white);
+  --muted: var(--sl-color-gray-3);
+  --leaf: var(--sl-color-accent);
+  --violet: var(--sl-color-purple);
+  --sky: var(--sl-color-blue);
+  --well: var(--sl-color-gray-6);
+  --paper: var(--sl-color-black);
+  --mono: var(--__sl-font-mono);
   display: grid;
   gap: 1.25rem;
 }

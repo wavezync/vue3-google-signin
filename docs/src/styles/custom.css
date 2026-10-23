@@ -36,3 +36,30 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Home hero, after the VitePress home: brand-colored name, glowing logo */
+.hero h1 {
+  background: linear-gradient(
+    120deg,
+    var(--sl-color-accent) 30%,
+    var(--sl-color-blue)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.02em;
+}
+.hero > img {
+  filter: drop-shadow(
+    0 0 3rem color-mix(in srgb, var(--sl-color-accent) 45%, transparent)
+  );
+}
+
+/* Live demo on the home page */
+.live-panel {
+  max-width: 44rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 1rem;
+  background: var(--sl-color-black);
+}
