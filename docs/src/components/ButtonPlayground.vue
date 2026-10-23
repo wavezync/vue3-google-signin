@@ -48,17 +48,35 @@ const signedIn = ref("");
 const kebab = (key: string) =>
   key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
-const code = computed(() => {
-  const attrs = (Object.keys(DEFAULTS) as Choice[])
+// [prefix, name, value]: prefix is ":" or "@" for bound props and events
+type Attr = [string, string, string];
+const attrs = computed<Attr[]>(() => {
+  const list: Attr[] = (Object.keys(DEFAULTS) as Choice[])
     .filter((key) => state[key] !== DEFAULTS[key])
-    .map((key) => `${kebab(key)}="${state[key]}"`);
-  if (width.value > AUTO_WIDTH) attrs.push(`:width="${width.value}"`);
-  if (locale.value) attrs.push(`locale="${locale.value}"`);
-  attrs.push('@success="onSuccess"');
-  return attrs.length > 1
-    ? `<GoogleSignInButton\n  ${attrs.join("\n  ")}\n/>`
-    : `<GoogleSignInButton ${attrs[0]} />`;
+    .map((key) => ["", kebab(key), state[key]]);
+  if (width.value > AUTO_WIDTH) list.push([":", "width", String(width.value)]);
+  if (locale.value) list.push(["", "locale", locale.value]);
+  list.push(["@", "success", "onSuccess"]);
+  return list;
 });
+
+// Tokens colored like Starlight's code blocks
+const tokens = computed(() => {
+  const many = attrs.value.length > 1;
+  const out: [string, string][] = [
+    ["punct", "<"],
+    ["tag", "GoogleSignInButton"],
+  ];
+  for (const [prefix, name, value] of attrs.value) {
+    out.push(["plain", many ? "\n  " : " "]);
+    if (prefix) out.push(["plain", prefix]);
+    out.push(["attr", name], ["plain", "="], ["quote", '"']);
+    out.push([prefix ? "plain" : "string", value], ["quote", '"']);
+  }
+  out.push(["plain", many ? "\n" : " "], ["punct", "/>"]);
+  return out;
+});
+const code = computed(() => tokens.value.map(([, text]) => text).join(""));
 
 const copied = ref(false);
 const copy = async () => {
@@ -143,7 +161,11 @@ const onSuccess = ({ credential }: CredentialSuccessResponse) => {
     </div>
 
     <div class="code">
-      <pre><code>{{ code }}</code></pre>
+      <pre><code><span
+        v-for="([kind, text], i) in tokens"
+        :key="i"
+        :class="kind"
+      >{{ text }}</span></code></pre>
       <button type="button" class="copy" @click="copy">
         {{ copied ? "Copied" : "Copy" }}
       </button>
@@ -296,7 +318,44 @@ input:focus-visible {
 .code {
   position: relative;
   border-top: 1px solid var(--sl-color-gray-5);
-  background: var(--sl-color-black);
+  background: var(--sl-color-gray-6);
+}
+/* Night Owl, as in Starlight's code blocks */
+.punct {
+  color: #7fdbca;
+}
+.tag {
+  color: #caece6;
+}
+.attr {
+  color: #c5e478;
+}
+.plain {
+  color: #d6deeb;
+}
+.quote {
+  color: #d9f5dd;
+}
+.string {
+  color: #ecc48d;
+}
+:global(:root[data-theme="light"]) .punct {
+  color: #8844ae;
+}
+:global(:root[data-theme="light"]) .tag {
+  color: #4876d6;
+}
+:global(:root[data-theme="light"]) .attr {
+  color: #3b61b0;
+}
+:global(:root[data-theme="light"]) .plain {
+  color: #403f53;
+}
+:global(:root[data-theme="light"]) .quote {
+  color: #111111;
+}
+:global(:root[data-theme="light"]) .string {
+  color: #984e4d;
 }
 .code pre {
   margin: 0;

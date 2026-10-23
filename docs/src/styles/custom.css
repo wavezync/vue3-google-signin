@@ -143,3 +143,88 @@
   color: var(--sl-color-accent-high);
   font-weight: 600;
 }
+
+/* Dropdowns: every native <select> gets a styled menu where the browser
+   supports customizable selects; other browsers keep their own menu */
+@supports (appearance: base-select) {
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+  ::picker(select) {
+    min-width: 10rem;
+    margin-block: 0.4rem;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 90%, transparent);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 18px 40px -14px rgb(0 0 0 / 0.5);
+    color: var(--sl-color-gray-2);
+    opacity: 0;
+    translate: 0 -4px;
+    transition:
+      opacity 0.15s,
+      translate 0.15s,
+      overlay 0.15s allow-discrete,
+      display 0.15s allow-discrete;
+  }
+  select:open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  @starting-style {
+    select:open::picker(select) {
+      opacity: 0;
+      translate: 0 -4px;
+    }
+  }
+  option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 0.55rem;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+  }
+  option:hover,
+  option:focus-visible {
+    outline: none;
+    background: color-mix(in srgb, var(--sl-color-white) 9%, transparent);
+    color: var(--sl-color-white);
+  }
+  option:checked {
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+  }
+  option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+  }
+  /* A thin chevron instead of the default triangle; it flips when open */
+  select::picker-icon {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    align-self: center;
+    margin-inline-start: auto;
+    padding-inline-start: 0;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    color: var(--sl-color-gray-3);
+    rotate: 45deg;
+    translate: 0 -0.15rem;
+    transition:
+      rotate 0.2s,
+      translate 0.2s;
+  }
+  select:open::picker-icon {
+    rotate: 225deg;
+    translate: 0 0.1rem;
+  }
+  /* Starlight's theme switcher already draws its own icons */
+  starlight-theme-select select::picker-icon {
+    display: none;
+  }
+}
