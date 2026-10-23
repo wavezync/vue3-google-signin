@@ -7,7 +7,7 @@ useOneTap({
   cancelOnTapOutside: false,
   context: "signin",
   onSuccess: (response) => log("success", response),
-  onError: () => log("error"),
+  onError: (response) => log("error", response),
   onPromptMomentNotification: (n) => log("prompt", n.getMomentType()),
 });
 </script>

@@ -38,7 +38,7 @@ export interface UseGoogleOneTapLoginOptions {
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onError?: () => void;
+  onError?: (credentialResponse: CredentialResponse) => void;
 
   /**
    * Callback to run on prompt moment

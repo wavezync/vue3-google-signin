@@ -26,7 +26,7 @@ test("reports success, errors and prompt moments", async ({ page }) => {
   expect(await events(page)).toEqual([
     { event: "prompt", payload: "skipped" },
     { event: "success", payload: { credential: "h.p.s", select_by: "auto" } },
-    { event: "error" },
+    { event: "error", payload: { select_by: "auto" } },
   ]);
 });
 

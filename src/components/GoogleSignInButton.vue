@@ -209,9 +209,10 @@ const emits = defineEmits<{
   (e: "success", response: CredentialResponse): void;
 
   /**
-   * When an error occures this will be emitted
+   * Emitted when Google responds without a credential
+   * @arg {CredentialResponse} response - The response from google
    */
-  (e: "error"): void;
+  (e: "error", response: CredentialResponse): void;
 
   /**
    * When `intermediateIframeCloseCallback` activates this will be emitted
@@ -245,7 +246,7 @@ watchEffect(() => {
     client_id: clientId!,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.credential) {
-        emits("error");
+        emits("error", credentialResponse);
         return;
       }
 

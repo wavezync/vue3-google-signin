@@ -36,11 +36,15 @@ test("emits success with Google's credential response", async ({ page }) => {
   expect(await events(page)).toEqual([{ event: "success", payload: response }]);
 });
 
-test("emits error when Google returns no credential", async ({ page }) => {
+test("emits error with Google's response when there is no credential", async ({
+  page,
+}) => {
   await open(page, "button");
   await expect(page.getByTestId("gsi-button")).toBeVisible();
   await page.evaluate(() => window.__gsi.credential({ select_by: "btn" }));
-  expect(await events(page)).toEqual([{ event: "error" }]);
+  expect(await events(page)).toEqual([
+    { event: "error", payload: { select_by: "btn" } },
+  ]);
 });
 
 test("one-tap prompts, forwards prompt moments and cancels on unmount", async ({

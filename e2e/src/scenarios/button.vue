@@ -10,6 +10,6 @@ import { log } from "../log";
     shape="pill"
     :width="320"
     @success="(response) => log('success', response)"
-    @error="() => log('error')"
+    @error="(response) => log('error', response)"
   />
 </template>

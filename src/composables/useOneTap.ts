@@ -18,11 +18,11 @@ export interface UseGoogleOneTapLoginOptions {
   onSuccess?: (credentialResponse: CredentialResponse) => void;
 
   /**
-   * Callback to run on error
+   * Called when Google responds without a credential
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onError?: () => void;
+  onError?: (credentialResponse: CredentialResponse) => void;
 
   /**
    * Callback to run on prompt moment
@@ -220,7 +220,7 @@ export default function useOneTap(
       client_id: clientId!,
       callback: (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) {
-          onError?.();
+          onError?.(credentialResponse);
           return;
         }
         onSuccess?.(credentialResponse);

@@ -169,9 +169,10 @@ On successful login, this will be emitted
 
 ### @error
 
-When an error occurs this will be emitted
+Emitted when Google responds without a credential. Receives that response, so you can log `select_by` or `state`.
 
-- **Arguments**: `{}`
+- **Arguments**: `CredentialResponse`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse)
 
 ### @intermediateIframeCloseCallback
 
