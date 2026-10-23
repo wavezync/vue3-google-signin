@@ -60,6 +60,9 @@ the plugin's, use the new `clientId` option.
 - `onNonOAuthError` on `useTokenClient` and `useCodeClient` reports a closed or
   blocked popup.
 - The button's `@error` and `useOneTap`'s `onError` receive Google's response.
+- The button's `@success` and `useOneTap`'s `onSuccess` receive a
+  `CredentialSuccessResponse`, whose `credential` is always a string, so
+  `decodeCredential(credential)` type-checks without a non-null assertion.
 - The plugin's `clientId` can be a ref, and every composable and the button
   take their own `clientId`. See
   [Setting the client ID later](/guide/#setting-the-client-id-later).

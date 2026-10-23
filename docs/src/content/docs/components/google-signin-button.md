@@ -223,7 +223,7 @@ This button renders default Google SignIn Button using Google API.
 
 ### @success
 
-- **Arguments**: `{credential: string; select_by: string; clientId: string}`
+- **Arguments**: `CredentialSuccessResponse`, a `CredentialResponse` whose `credential` (the ID token) is always set
 - [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse)
 
 On successful login, this will be emitted

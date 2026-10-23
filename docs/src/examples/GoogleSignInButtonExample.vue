@@ -2,17 +2,18 @@
 import {
   GoogleSignInButton,
   type CredentialResponse,
+  type CredentialSuccessResponse,
 } from "vue3-google-signin";
 
 // handle success event
-const handleLoginSuccess = (response: CredentialResponse) => {
-  const { credential } = response;
-  console.log("Access Token", credential);
+const handleLoginSuccess = ({ credential }: CredentialSuccessResponse) => {
+  // An ID token (JWT). Send it to your server and verify it there.
+  console.log("ID token", credential);
 };
 
 // handle an error event
-const handleLoginError = () => {
-  console.error("Login failed");
+const handleLoginError = (response: CredentialResponse) => {
+  console.error("Google returned no credential", response);
 };
 </script>
 

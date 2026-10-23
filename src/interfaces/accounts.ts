@@ -66,6 +66,16 @@ export interface CredentialResponse {
 }
 
 /**
+ * The credential response passed to success callbacks, which only run when
+ * Google returned an ID token
+ *
+ * @export
+ */
+export type CredentialSuccessResponse = CredentialResponse & {
+  credential: string;
+};
+
+/**
  * Native credential response
  *
  * @export

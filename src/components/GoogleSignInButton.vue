@@ -5,6 +5,7 @@
 import type {
   Context,
   CredentialResponse,
+  CredentialSuccessResponse,
   NativeCallbackResponse,
   PromptMomentNotification,
   UxMode,
@@ -279,9 +280,9 @@ const props = defineProps<GoogleSignInButtonProps>();
 const emits = defineEmits<{
   /**
    * On successful login, this will be emitted
-   * @arg {CredentialResponse} response - The response from google
+   * @arg {CredentialSuccessResponse} response - The response from google, with its ID token
    */
-  (e: "success", response: CredentialResponse): void;
+  (e: "success", response: CredentialSuccessResponse): void;
 
   /**
    * Emitted when Google responds without a credential
@@ -320,12 +321,13 @@ watchEffect(() => {
   window.google?.accounts.id.initialize({
     client_id,
     callback: (credentialResponse: CredentialResponse) => {
-      if (!credentialResponse.credential) {
+      const { credential } = credentialResponse;
+      if (!credential) {
         emits("error", credentialResponse);
         return;
       }
 
-      emits("success", credentialResponse);
+      emits("success", { ...credentialResponse, credential });
     },
     allowed_parent_origin: props.allowedParentOrigin,
     auto_select: props.autoSelect,

@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import type { CredentialResponse } from "vue3-google-signin";
-import { GoogleSignInButton, decodeCredential } from "vue3-google-signin";
+import {
+  GoogleSignInButton,
+  decodeCredential,
+  type CredentialResponse,
+  type CredentialSuccessResponse,
+} from "vue3-google-signin";
 
-const handleSignInSuccess = (response: CredentialResponse) => {
-  const { credential } = response;
-  const decodedCredential = decodeCredential(credential);
-  console.log("User:", decodedCredential);
+const handleSignInSuccess = ({ credential }: CredentialSuccessResponse) => {
+  const user = decodeCredential(credential);
+  console.log("User:", user);
 };
 
-const handleSignInError = () => {
-  console.error("Signin Failed");
+const handleSignInError = (response: CredentialResponse) => {
+  console.error("Google returned no credential", response);
 };
 </script>
 

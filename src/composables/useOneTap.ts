@@ -3,6 +3,7 @@ import useGsiScript from "./useGsiScript";
 import type {
   Context,
   CredentialResponse,
+  CredentialSuccessResponse,
   NativeCallbackResponse,
   PromptMomentNotification,
 } from "@/interfaces/accounts";
@@ -24,7 +25,7 @@ export interface UseGoogleOneTapLoginOptions {
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onSuccess?: (credentialResponse: CredentialResponse) => void;
+  onSuccess?: (credentialResponse: CredentialSuccessResponse) => void;
 
   /**
    * Called when Google responds without a credential
@@ -273,11 +274,12 @@ export default function useOneTap(
     window.google?.accounts.id.initialize({
       client_id,
       callback: (credentialResponse: CredentialResponse) => {
-        if (!credentialResponse.credential) {
+        const { credential } = credentialResponse;
+        if (!credential) {
           onError?.(credentialResponse);
           return;
         }
-        onSuccess?.(credentialResponse);
+        onSuccess?.({ ...credentialResponse, credential });
       },
       native_callback: (response: NativeCallbackResponse) => {
         onNativeCallback?.(response);
