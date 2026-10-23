@@ -37,7 +37,8 @@ Both composables return `isReady` and `login`:
   Use it to disable the button until then, or however suits your application.
 - `login` is a _method_ that starts the login flow with Google.
 
-The example below disables the button until the API has loaded, then starts the login flow from the button's `@click` event.
+The example below disables the button until the API has loaded and while Google's popup is open.
+If the user closes the popup, or the browser blocks it, `onNonOAuthError` re-enables the button.
 
 <Code code={tokenClient} lang="vue" />
 

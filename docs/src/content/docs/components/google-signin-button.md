@@ -10,6 +10,12 @@ This button renders default Google SignIn Button using Google API.
 
 ## Props
 
+### client-id
+
+- **Type**: `string`
+
+  Client ID for this button. Overrides the one given to the plugin.
+
 ### one-tap
 
 - **Type**: `boolean`
@@ -157,6 +163,61 @@ This button renders default Google SignIn Button using Google API.
 
   The pre-set locale of the button text. If it's not set, the browser's default locale or the Google session user’s preference is used.
   Therefore, different users might see different versions of localized buttons, and possibly with different sizes.
+
+  While the button loads, Google shows a placeholder in the script's language. Set the plugin's
+  [`locale` option](/guide/faq/#the-button-shows-another-language-for-a-moment) too, so both match.
+
+### login-hint
+
+- **Type**: `string`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#login_hint)
+
+  Skips account selection when you already know which user should sign in: an email address or the `sub` field of an ID token.
+
+### hd
+
+- **Type**: `string`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#hd)
+
+  Limits account selection to a Google Workspace domain, or `*` for any Workspace account.
+
+### use-fedcm-for-button
+
+- **Type**: `boolean`
+- **Default**: `false`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#use_fedcm_for_button)
+
+  Use the FedCM button flow on browsers that support it.
+
+### button-auto-select
+
+- **Type**: `boolean`
+- **Default**: `false`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#button_auto_select)
+
+  With the FedCM button flow, sign returning users in without showing the account chooser.
+
+### state
+
+- **Type**: `string`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#state)
+
+  Returned as `state` in the credential response, so you can tell several buttons apart.
+
+### color-scheme
+
+- **Type**: `string`
+- **Allowed**: `"default" | "light" | "dark"`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#color_scheme)
+
+  Color scheme of the One Tap prompt shown with `one-tap`. Defaults to the system setting.
+
+### essential-claims
+
+- **Type**: `string`
+- [Read More](https://developers.google.com/identity/gsi/web/reference/js-reference#essential_claims)
+
+  Extra claims to include in the ID token, such as `"auth_time, amr"`.
 
 ## Events
 

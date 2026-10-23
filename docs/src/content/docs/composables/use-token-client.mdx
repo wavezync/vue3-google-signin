@@ -16,60 +16,30 @@ It also provides callbacks such as `onSuccess` and `onError` that can be used to
 
 ## Options
 
-```ts
-/**
- * Auth Code Flow Options
- *
- * @export
- * @interface AuthCodeFlowOptions
- * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback">)}
- */
-export interface AuthCodeFlowOptions extends Omit<
-  TokenClientConfig,
-  "client_id" | "scope" | "callback"
-> {
-  /**
-   * On success callback
-   *
-   * @memberof AuthCodeFlowOptions
-   */
-  onSuccess?: (response: AuthCodeFlowSuccessResponse) => void;
+Every option is optional. Apart from the callbacks, options are passed to
+Google's [`TokenClientConfig`](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig).
 
-  /**
-   * On error callback
-   *
-   * @memberof AuthCodeFlowOptions
-   */
-  onError?: (errorResponse: AuthCodeFlowErrorResponse) => void;
+| Option                   | Type                                             | Description                                                                                                                                                                |
+| ------------------------ | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clientId`               | `MaybeRef<string>`                               | Client ID for this client. Overrides the plugin's.                                                                                                                         |
+| `scope`                  | `MaybeRef<string \| string[]>`                   | [Scopes](https://developers.google.com/identity/protocols/oauth2/scopes) to request, on top of `openid email profile`. Changing a ref re-creates the client.               |
+| `onSuccess`              | `(response: TokenClientSuccessResponse) => void` | Called with the [token response](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenResponse): `access_token`, `expires_in`, `scope` and so on. |
+| `onError`                | `(response: TokenClientErrorResponse) => void`   | Called with an [OAuth error](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenResponse): `error`, `error_description`, `error_uri`.           |
+| `onNonOAuthError`        | `(error: NonOAuthError) => void`                 | Called when the flow ends without an OAuth response. `error.type` is `popup_closed`, `popup_failed_to_open` or `unknown`. Use it to re-enable your button.                 |
+| `include_granted_scopes` | `boolean`                                        | Keep scopes the user already granted when you ask for more. Default `true`.                                                                                                |
+| `login_hint`             | `string`                                         | Skip account selection for a known user: their email address or ID token `sub`.                                                                                            |
+| `hd`                     | `string`                                         | Limit accounts to a Google Workspace domain.                                                                                                                               |
+| `state`                  | `string`                                         | Returned unchanged in the response.                                                                                                                                        |
+| `prompt`                 | `"" \| "none" \| "consent" \| "select_account"`  | What to show the user. Default `select_account`.                                                                                                                           |
 
-  /**
-   * Authorization scopes
-   *
-   * @type {(MaybeRef<string> | MaybeRef<string[]>)}
-   * @see https://developers.google.com/identity/protocols/oauth2/scopes
-   * @memberof ImplicitFlowOptions
-   */
-  scope?: MaybeRef<string> | MaybeRef<string[]>;
-}
-```
+:::note
+`hint`, `hosted_domain` and `enable_serial_consent` are deprecated. Use
+`login_hint` and `hd`; the consent flags no longer do anything.
+:::
 
 ## Returns
 
-```ts
-export interface UseTokenClientReturn {
-  /**
-   * Is script ready to be used?
-   *
-   * @type {Readonly<Ref<boolean>>}
-   * @memberof UseTokenClientReturn
-   */
-  isReady: Readonly<Ref<boolean>>;
-
-  /**
-   * Invoke login flow. You can provide a `OverridableTokenClientConfig` to override the login flow options.
-   *
-   * @memberof UseTokenClientReturn
-   */
-  login: (overrideConfig?: OverridableTokenClientConfig) => void | undefined;
-}
-```
+| Property  | Type                                                 | Description                                                                                                                                                                                                                                   |
+| --------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isReady` | `Readonly<Ref<boolean>>`                             | `true` once the client is created.                                                                                                                                                                                                            |
+| `login`   | `(overrides?: OverridableTokenClientConfig) => void` | Opens Google's popup. [`overrides`](https://developers.google.com/identity/oauth2/web/reference/js-reference#OverridableTokenClientConfig) can change `scope`, `prompt`, `login_hint`, `state` and `include_granted_scopes` for this request. |
