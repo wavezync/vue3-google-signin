@@ -446,7 +446,6 @@ export interface RevocationResponse {
    * @type {*}
    * @memberof RevocationResponse
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   successful: any;
 
   /**
@@ -455,7 +454,6 @@ export interface RevocationResponse {
    * @type {*}
    * @memberof RevocationResponse
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
 }
 
