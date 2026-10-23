@@ -74,6 +74,13 @@ language with the plugin's `locale` option:
 app.use(GoogleSignInPlugin, { clientId, locale: "en" });
 ```
 
+## Google's button is cut off
+
+Google draws the button in an iframe slightly wider than its container. CSS
+that limits iframes, such as `iframe { max-width: 100% }` in a reset or a
+content stylesheet, clips its right edge. Exclude the button's container from
+that rule, or set `max-width: none` on iframes inside it.
+
 ## One Tap doesn't show up
 
 - One Tap runs on the browser's FedCM API. After a user closes the prompt, the
