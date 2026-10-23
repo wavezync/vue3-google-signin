@@ -1,32 +1,11 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import { getUsage } from "./usage";
 
-// Usage data, fetched by hand in October 2026: npm's downloads API (both
-// packages), the repo's stargazers with dates, and GitHub's dependents graph.
-// ponytail: static on purpose so builds don't depend on those services;
-// refresh it now and then.
-const downloads: [month: string, core: number, nuxt: number][] = [
-  ["2025-10", 35623, 19646],
-  ["2025-11", 32936, 18368],
-  ["2025-12", 33449, 18513],
-  ["2026-01", 32302, 15997],
-  ["2026-02", 34308, 15933],
-  ["2026-03", 43416, 21373],
-  ["2026-04", 42250, 19453],
-  ["2026-05", 37113, 18208],
-  ["2026-06", 36989, 18315],
-  ["2026-07", 36154, 16627],
-  ["2026-08", 34732, 16779],
-  ["2026-09", 39443, 18424],
-];
-// Cumulative stars at the end of each month, July 2022 to October 2026
-const stars = [
-  29, 39, 43, 45, 50, 51, 61, 65, 73, 78, 79, 82, 86, 88, 93, 100, 103, 107,
-  113, 117, 125, 127, 131, 132, 139, 144, 149, 154, 158, 161, 165, 167, 168,
-  173, 173, 175, 176, 176, 179, 181, 184, 185, 185, 185, 185, 186, 186, 187,
-  187, 187, 187, 187,
-];
-const starsFrom = new Date(Date.UTC(2022, 6));
+// Downloads and stars are fetched at build time (see usage.ts). Dependents and
+// projects have no API, so they're kept by hand: GitHub's dependents graph as
+// of October 2026, and active projects picked from it.
+const { downloads, stars, starsFrom, starCount } = await getUsage();
 const dependents = { core: 545, nuxt: 299 };
 
 const projects = [
@@ -47,9 +26,14 @@ const monthName = (key: string, style: "short" | "long") =>
   });
 const host = (href: string) => new URL(href).hostname;
 
-// Downloads: stacked columns on one axis, 0 to 75K
-const AXIS_MAX = 75000;
-const ticks = [0, 25000, 50000, 75000];
+// Downloads: stacked columns on one axis, at most four steps above zero
+const peak = Math.max(...downloads.map(([, core, nuxt]) => core + nuxt));
+const step =
+  [5000, 10000, 20000, 25000, 50000, 100000, 200000, 250000, 500000].find(
+    (s) => Math.ceil(peak / s) <= 4,
+  ) ?? 1000000;
+const AXIS_MAX = Math.ceil(peak / step) * step;
+const ticks = Array.from({ length: AXIS_MAX / step + 1 }, (_, i) => i * step);
 const pct = (n: number) => `${((n / AXIS_MAX) * 100).toFixed(2)}%`;
 const latest = downloads.at(-1)!;
 const latestTotal = latest[1] + latest[2];
@@ -60,7 +44,7 @@ const sparkPoints = stars
   .map((value, i) => `${((i / (stars.length - 1)) * 100).toFixed(2)},${(40 - (value / starsMax) * 36).toFixed(2)}`)
   .join(" ");
 const starMonth = (i: number) => {
-  const d = new Date(starsFrom);
+  const d = new Date(`${starsFrom}-01T00:00:00Z`);
   d.setUTCMonth(d.getUTCMonth() + i);
   return d.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 };
@@ -127,8 +111,8 @@ const starMonth = (i: number) => {
 
     <figure class="card">
       <figcaption>GitHub stars</figcaption>
-      <p class="hero">{starsMax}</p>
-      <p class="sub">since July 2022</p>
+      <p class="hero">{starCount}</p>
+      <p class="sub">since {monthName(starsFrom, "long")}</p>
       <div class="spark">
         <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
           <polyline points={sparkPoints} />
