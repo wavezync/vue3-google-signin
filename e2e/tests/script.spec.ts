@@ -1,3 +1,4 @@
+import type { Route } from "@playwright/test";
 import { GSI_URL, expect, open, test } from "./fixtures";
 
 test("loads Google's script once however many components use it", async ({
@@ -20,4 +21,21 @@ test("reports when the script has loaded", async ({ page }) => {
   await open(page, "script");
   await expect(page.getByTestId("script-loaded")).toHaveText("true");
   await expect(page.getByTestId("script-error")).toHaveText("false");
+});
+
+test("retries a failed load when a component mounts again", async ({
+  page,
+}) => {
+  const fail = (route: Route) => route.abort();
+  await page.route(GSI_URL, fail);
+  await open(page, "script");
+  await expect(page.getByTestId("script-error")).toHaveText("true");
+
+  await page.unroute(GSI_URL, fail);
+  const toggle = page.getByRole("button", { name: "toggle" });
+  await toggle.click();
+  await toggle.click();
+  await expect(page.getByTestId("script-loaded")).toHaveText("true");
+  await expect(page.getByTestId("script-error")).toHaveText("false");
+  await expect(page.locator(`script[src="${GSI_URL}"]`)).toHaveCount(1);
 });
