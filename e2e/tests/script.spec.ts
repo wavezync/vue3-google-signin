@@ -39,3 +39,9 @@ test("retries a failed load when a component mounts again", async ({
   await expect(page.getByTestId("script-error")).toHaveText("false");
   await expect(page.locator(`script[src="${GSI_URL}"]`)).toHaveCount(1);
 });
+
+test("loads the script in the plugin's locale", async ({ page }) => {
+  await open(page, "script", "&locale=fr");
+  await expect(page.getByTestId("script-loaded")).toHaveText("true");
+  await expect(page.locator(`script[src="${GSI_URL}?hl=fr"]`)).toHaveCount(1);
+});

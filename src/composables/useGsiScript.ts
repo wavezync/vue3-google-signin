@@ -3,12 +3,19 @@ import { onMounted, readonly, ref, type Ref } from "vue";
 const loaded = ref(false);
 const error = ref(false);
 let script: HTMLScriptElement | undefined;
+let hl: string | undefined;
+
+/** Sets the language Google's script loads in (the plugin's `locale`). */
+export const setScriptLocale = (locale?: string) => {
+  hl = locale;
+};
 
 // Runs on mount only, so nothing touches the DOM during SSR
 const load = () => {
   if (script) return;
   script = document.createElement("script");
   script.src = "https://accounts.google.com/gsi/client";
+  if (hl) script.src += `?hl=${encodeURIComponent(hl)}`;
   script.async = true;
   script.defer = true;
   script.addEventListener("load", () => {

@@ -2,7 +2,7 @@ import { isRef, type App, type Plugin } from "vue";
 import type { MaybeRef } from "@/utils/types";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleSignInButton from "./components/GoogleSignInButton.vue";
-import useGsiScript from "./composables/useGsiScript";
+import useGsiScript, { setScriptLocale } from "./composables/useGsiScript";
 import useCodeClient from "./composables/useCodeClient";
 import useOneTap from "./composables/useOneTap";
 import useTokenClient from "./composables/useTokenClient";
@@ -45,6 +45,17 @@ export interface GoogleSignInPluginOptions {
    * @memberof GoogleSignInPluginOptions
    */
   clientId?: MaybeRef<string | undefined>;
+
+  /**
+   * Language to load Google's script in, such as `en` or `fr`. It sets the
+   * placeholder Google shows while a button loads and the One Tap prompt's text.
+   * Defaults to the browser's language. Use the button's `locale` prop as well
+   * to set the button itself.
+   *
+   * @type {string}
+   * @memberof GoogleSignInPluginOptions
+   */
+  locale?: string;
 }
 
 const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
@@ -57,6 +68,7 @@ const plugin: Plugin = {
       throw new Error(toPluginError("clientId is required to initialize"));
     }
 
+    setScriptLocale(options.locale);
     app.provide(GoogleClientIdKey, clientId);
     app.component("GoogleSignInButton", GoogleSignInButton);
   },

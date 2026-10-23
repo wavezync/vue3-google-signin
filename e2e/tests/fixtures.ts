@@ -31,7 +31,9 @@ const stub = fileURLToPath(new URL("../gsi-stub.js", import.meta.url));
 /** Every page gets the stubbed Google script instead of the real one. */
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.route(GSI_URL, (route) =>
+    // Match by path so query strings like ?hl= still get the stub
+    const isGsi = (url: URL) => `${url.origin}${url.pathname}` === GSI_URL;
+    await page.route(isGsi, (route) =>
       route.fulfill({ path: stub, contentType: "text/javascript" }),
     );
     await use(page);
