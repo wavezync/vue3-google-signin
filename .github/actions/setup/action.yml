@@ -6,6 +6,10 @@ inputs:
     description: npm registry to authenticate against, for publishing
     required: false
     default: ""
+  cache:
+    description: Package manager whose store to cache, or "" for none (release builds)
+    required: false
+    default: pnpm
 
 runs:
   using: composite
@@ -14,7 +18,7 @@ runs:
     - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version-file: .node-version
-        cache: pnpm
+        cache: ${{ inputs.cache }}
         registry-url: ${{ inputs.registry-url }}
     - name: Install dependencies
       shell: bash

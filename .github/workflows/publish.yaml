@@ -6,7 +6,9 @@ on:
 
 permissions:
   contents: read
-  id-token: write # npm provenance
+  # npm trusted publishing: npm trades GitHub's OIDC token for a short-lived
+  # publish token and adds provenance, so no npm token is stored here
+  id-token: write
 
 jobs:
   publish:
@@ -18,10 +20,11 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           registry-url: https://registry.npmjs.org/
+          # No dependency cache in release builds, as npm recommends
+          cache: ""
       - run: pnpm lint
       - run: pnpm build
       # Ship only what passes the same tests as CI
       - run: pnpm --filter e2e test
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted publishing needs npm 11.5.1+; Node 24 bundles 11.x
+      - run: npm publish
