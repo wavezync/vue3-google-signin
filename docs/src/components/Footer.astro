@@ -1,11 +1,12 @@
 ---
 // Starlight's footer, plus the license and copyright line every page had on
-// the old VitePress site.
+// the old VitePress site. That line ends every page, so astro.config.mjs holds
+// rendering until #footer-legal is parsed.
 import Default from "@astrojs/starlight/components/Footer.astro";
 ---
 
 <Default />
-<p class="legal">
+<p class="legal" id="footer-legal">
   Released under the MIT License. Copyright © 2022-present{" "}
   <a href="https://wavezync.com">WaveZync</a>.
 </p>

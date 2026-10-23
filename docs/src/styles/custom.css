@@ -10,6 +10,16 @@
   --sl-color-accent-high: #0d3d25;
 }
 
+/* Page-to-page view transitions are turned on in astro.config.mjs (head).
+   With reduced motion the new page swaps in without the cross-fade. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* Live demos in the guides, on a dot-grid stage */
 .demo {
   display: flex;

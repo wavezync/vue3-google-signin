@@ -20,6 +20,8 @@ const link = (/** @type {Record<string, string>} */ attrs) => ({
 
 export default defineConfig({
   site: SITE,
+  // Fetch a page when its link is hovered or focused, so the click is instant
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   integrations: [
     starlight({
       title: "Vue3 Google Sign-in",
@@ -37,6 +39,25 @@ export default defineConfig({
         SocialIcons: "./src/components/SocialIcons.astro",
       },
       head: [
+        // Every link is a full page load. A cross-document view transition
+        // keeps the old page on screen until the new one renders, then
+        // cross-fades. The opt-in is inline because Chrome ignores it when it
+        // only arrives in an external stylesheet.
+        { tag: "style", content: "@view-transition{navigation:auto}" },
+        // A page reached from another page of this site waits to render until
+        // it's parsed down to the footer, so it never shows half-drawn (code
+        // blocks wait on a stylesheet in the body). Direct visits still render
+        // as the HTML streams in.
+        {
+          tag: "script",
+          content: `if (window.navigation?.activation?.from) {
+  const expect = document.createElement("link");
+  expect.rel = "expect";
+  expect.href = "#footer-legal";
+  expect.setAttribute("blocking", "render");
+  document.head.append(expect);
+}`,
+        },
         meta({ property: "og:image", content: `${SITE}/og.jpg` }),
         meta({ property: "og:image:width", content: "1200" }),
         meta({ property: "og:image:height", content: "630" }),
