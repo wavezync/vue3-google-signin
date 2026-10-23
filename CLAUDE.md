@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs + landing site: https://vue3-google-signin.wavezync.com, built from `docs/` (a pnpm workspace package) with Astro + Starlight and deployed on Cloudflare Pages (build settings live in the Cloudflare dashboard: `pnpm docs:build`, output `docs/dist`, `PNPM_VERSION` env var set to the pinned pnpm).
+`vue3-google-signin`: a Vue 3 plugin wrapping Google Identity Services (GIS). It ships as a library (ESM `dist/index.js` + CJS `dist/index.cjs`, with `.d.ts`/`.d.cts`) built by tsdown, with `vue` as an external peer dependency. Docs + landing site: https://vue3-google-signin.wavezync.com, built from `docs/` (a pnpm workspace package) with Astro + Starlight and deployed on Cloudflare Workers as static assets (`wrangler.jsonc` at the repo root serves `docs/dist`). Workers Builds deploys from the repo root: build command `pnpm docs:build`, deploy command `npx wrangler deploy`, with build variables `PNPM_VERSION` (the pinned pnpm), `VITE_GOOGLE_CLIENT_ID` and an optional `GITHUB_TOKEN` set in the Worker's Settings > Build. `pnpm docs:deploy` builds and deploys by hand; `pnpm exec wrangler dev` serves the built site in the Workers runtime locally (with `_redirects` and `_headers`).
 
 ## Commands
 
@@ -32,7 +32,7 @@ node --test e2e/node/package.test.mjs            # CJS/ESM/SSR checks only
 - Playwright (installed Chrome, `channel: "chrome"`) drives a Vite fixture app (`e2e/src/App.vue`, one component per `?scenario=` in `e2e/src/scenarios/`). `e2e/tests/fixtures.ts` routes `https://accounts.google.com/gsi/client` to `e2e/gsi-stub.js`, which records every GIS call in `window.__gsi.calls` and lets tests fire Google's callbacks (`credential`, `promptMoment`, `tokenResponse`, `codeResponse`). Scenarios report what the library handed them via `log()` into `window.__events`.
 - Real Google sign-in can't be automated; anything that needs Google's actual UI is out of scope for the suite.
 
-CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, the e2e tests, and `docs:build` on Node 24 LTS (pinned in `.node-version`, also read by Cloudflare Pages), so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
+CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, the e2e tests, and `docs:build` on Node 24 LTS (pinned in `.node-version`, also read by Workers Builds), so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
 
 ## Architecture
 
@@ -50,7 +50,7 @@ CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, the e2
 - The `GoogleSignInButton` page opens with `ButtonPlayground.vue` (the real button, re-rendered as props change) and lists props and events with `ApiList.astro` from `docs/src/components/button-api.ts`; update that file when the component's props or emits change. Demo buttons in the guides (`.demo button` in `custom.css`) follow Google's branding guidelines for custom sign-in buttons.
 - The sidebar lives in `docs/src/sidebar.ts`. `/llms.txt` (page index) and `/llms-full.txt` (every page as Markdown) are endpoints in `docs/src/pages/` that follow it. `llms-full.txt.ts` converts MDX line by line and fails the build on a component it doesn't know, so teach it any new MDX component (live demos with a `client:` directive are skipped).
 - The home page's Used by charts fetch npm downloads and the GitHub star count at build time (`docs/src/components/usage.ts`), with the star history only when the build has a `GITHUB_TOKEN` (GitHub requires auth to list stargazers). Every request falls back to the snapshot in that file, logging `[usage] ...`. Dependent counts and the project list are kept by hand in `UsedBy.astro`.
-- Pages build to directory URLs (`/guide/one-tap-login/`). The old VitePress `.html` URLs are mapped one by one in `docs/public/_redirects` (Cloudflare Pages), so update it when a page is added, renamed or removed. `docs/public/_headers` caches the hashed `/_astro/*` files as immutable.
+- Pages build to directory URLs (`/guide/one-tap-login/`). The old VitePress `.html` URLs are mapped one by one in `docs/public/_redirects` (applied by Workers static assets), so update it when a page is added, renamed or removed. `docs/public/_headers` caches the hashed `/_astro/*` files as immutable.
 - Page-to-page navigation uses cross-document view transitions plus Astro hover prefetch. The `@view-transition` opt-in is an inline `<style>` in `head` (`astro.config.mjs`), since Chrome ignores it from an external stylesheet, and an inline script there holds rendering of in-site navigations until `#footer-legal` (`Footer.astro`) is parsed. Keep that id on the last element of every page.
 
 ## Conventions
