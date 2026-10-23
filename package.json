@@ -12,30 +12,35 @@
   "homepage": "https://vue3-google-signin.wavezync.com",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview --port 5050",
+    "build": "vue-tsc --noEmit && tsdown",
+    "docs:serve": "vitepress serve docs",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "lint:fix": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "docs:dev": "vitepress dev docs --port 3001",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:build": "vitepress build docs"
   },
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.es.js",
-  "exports": {
-    ".": {
-      "types": "./dist/plugin.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
-    }
-  },
-  "types": "./dist/plugin.d.ts",
-  "files": [
-    "dist"
-  ],
-  "peerDependencies": {
-    "vue": "^3"
+  "packageManager": "pnpm@12.15.0",
+  "devDependencies": {
+    "@arethetypeswrong/core": "^0.18.5",
+    "@rushstack/eslint-patch": "^1.7.2",
+    "@types/node": "^22.20.5",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/tsconfig": "^0.9.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "prettier": "^3.2.5",
+    "publint": "^0.3.25",
+    "sass": "^1.71.1",
+    "tsdown": "^0.23.1",
+    "typescript": "^6.0.3",
+    "unplugin-vue": "^8.0.0",
+    "vite": "^8.3.5",
+    "vitepress": "^1.0.0-rc.45",
+    "vue": "^3.5.44",
+    "vue-tsc": "^3.3.13"
   },
   "keywords": [
     "vue3 google signin",
@@ -62,26 +67,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wavezync/vue3-google-signin"
+    "url": "git+https://github.com/wavezync/vue3-google-signin.git"
   },
-  "devDependencies": {
-    "@rushstack/eslint-patch": "^1.7.2",
-    "@types/node": "^22.20.5",
-    "@vitejs/plugin-vue": "^6.0.10",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-typescript": "^13.0.0",
-    "@vue/tsconfig": "^0.9.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.22.0",
-    "prettier": "^3.2.5",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "sass": "^1.71.1",
-    "typescript": "^6.0.3",
-    "vite": "^8.3.5",
-    "vite-plugin-dts": "^3.7.3",
-    "vitepress": "^1.0.0-rc.45",
-    "vue": "^3.5.44",
-    "vue-tsc": "^3.3.13"
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "vue": "^3"
   },
-  "packageManager": "pnpm@12.15.0"
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false
 }
