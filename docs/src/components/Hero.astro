@@ -1,6 +1,8 @@
 ---
 // Replaces Starlight's hero on the home page (the only page with `hero`).
 import "@fontsource-variable/outfit/wght.css";
+// Preloaded below, so the headline's font is on its way before the CSS asks
+import outfit from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
 import InstallCommand from "./InstallCommand.astro";
 import LiveDemo from "./LiveDemo.vue";
 
@@ -15,6 +17,8 @@ const ring = [
   ["#4caf50", "M1839 1269.3L1985.5 1381.7A602 602 0 0 1 978.3 1467.9L1079.7 1291.8A421 421 0 0 0 1839 1269.3Z"],
 ];
 ---
+
+<link rel="preload" href={outfit} as="font" type="font/woff2" crossorigin />
 
 <section class="hero not-content">
   <div class="copy">

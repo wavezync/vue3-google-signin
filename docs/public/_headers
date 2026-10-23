@@ -1,0 +1,4 @@
+# Cloudflare Pages response headers
+# Astro's build output: file names carry a content hash, so cache for good
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
