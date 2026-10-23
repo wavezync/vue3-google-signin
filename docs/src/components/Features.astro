@@ -1,9 +1,11 @@
 ---
 import { Code } from "@astrojs/starlight/components";
+import LineIcon from "./LineIcon.astro";
 ---
 
 <div class="bento not-content">
   <article class="wide">
+    <span class="icon"><LineIcon name="layers" size={22} /></span>
     <h3>Works with Nuxt and SSR</h3>
     <p>
       Components and composables render on the server. Google's script loads
@@ -19,11 +21,13 @@ import { Code } from "@astrojs/starlight/components";
     />
   </article>
   <article class="size">
+    <span class="icon"><LineIcon name="box" size={22} /></span>
     <h3>Small</h3>
     <p class="figure">4.3 kB</p>
     <p>gzipped, with Vue as its only peer dependency.</p>
   </article>
   <article>
+    <span class="icon"><LineIcon name="braces" size={22} /></span>
     <h3>Typed callbacks</h3>
     <p>Every option and response is typed, so your editor knows the fields.</p>
     <Code
@@ -35,6 +39,7 @@ import { Code } from "@astrojs/starlight/components";
     />
   </article>
   <article>
+    <span class="icon"><LineIcon name="cloudDown" size={22} /></span>
     <h3>Client ID from your server</h3>
     <p>Pass a ref and set it when your config arrives.</p>
     <Code
@@ -45,6 +50,7 @@ app.use(GoogleSignInPlugin, { clientId });`}
     />
   </article>
   <article>
+    <span class="icon"><LineIcon name="popupClosed" size={22} /></span>
     <h3>Knows when the popup closes</h3>
     <p>Re-enable your button when the user closes Google's popup.</p>
     <Code
@@ -77,6 +83,17 @@ app.use(GoogleSignInPlugin, { clientId });`}
   }
   .wide {
     grid-column: span 4;
+  }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-accent-high);
   }
   h3 {
     margin: 0;

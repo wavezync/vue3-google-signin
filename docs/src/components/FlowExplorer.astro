@@ -1,10 +1,15 @@
 ---
 import { Code } from "@astrojs/starlight/components";
+import LineIcon from "./LineIcon.astro";
+import type { IconName } from "./icons";
 
 interface Flow {
   id: string;
   label: string;
   api: string;
+  icon: IconName;
+  /** The answer in the decision tree that leads to this flow */
+  when: string;
   summary: string;
   file: string;
   code: string;
@@ -21,6 +26,8 @@ const flows: Flow[] = [
     id: "button",
     label: "Sign-in button",
     api: "GoogleSignInButton",
+    icon: "button",
+    when: "When they click",
     summary:
       "Google's own button. Users pick an account and you get an ID token that says who they are.",
     file: "LoginButton.vue",
@@ -54,6 +61,8 @@ const onSuccess = ({ credential }) => {
     id: "one-tap",
     label: "One Tap",
     api: "useOneTap",
+    icon: "oneTap",
+    when: "On its own",
     summary:
       "Google's prompt in the corner of the page. Returning users sign in with one tap, no button needed.",
     file: "App.vue",
@@ -79,6 +88,8 @@ useOneTap({
     id: "token",
     label: "Access token",
     api: "useTokenClient",
+    icon: "key",
+    when: "In the browser",
     summary:
       "Your own button opens Google's consent popup. You get an access token to call Google APIs from the browser.",
     file: "DriveButton.vue",
@@ -119,6 +130,8 @@ const { isReady, login } = useTokenClient({
     id: "code",
     label: "Auth code",
     api: "useCodeClient",
+    icon: "server",
+    when: "On your server",
     summary:
       "Your own button again, but Google returns a one-time code. Your server exchanges it for access and refresh tokens.",
     file: "CalendarSync.vue",
@@ -158,6 +171,23 @@ const { isReady, login } = useCodeClient({
 ---
 
 <flow-explorer class="not-content">
+  <div class="tree">
+    <p class="q root">What do you need from Google?</p>
+    <svg class="links" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M50 0V6M25 6H75M25 6V12M75 6V12"></path>
+    </svg>
+    <div class="row two">
+      <p class="q">To know who the user is</p>
+      <p class="q">To call Google APIs</p>
+    </div>
+    <svg class="links" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M25 0V6M12.5 6H37.5M12.5 6V12M37.5 6V12M75 0V6M62.5 6H87.5M62.5 6V12M87.5 6V12"></path>
+    </svg>
+    <div class="row four">{flows.map((flow) => <p class="when">{flow.when}</p>)}</div>
+    <svg class="links short" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M12.5 0V12M37.5 0V12M62.5 0V12M87.5 0V12"></path>
+    </svg>
+  </div>
   <div class="tabs" role="tablist" aria-label="Sign-in flows">
     {
       flows.map((flow, i) => (
@@ -169,7 +199,10 @@ const { isReady, login } = useCodeClient({
           aria-selected={i === 0 ? "true" : "false"}
           tabindex={i === 0 ? 0 : -1}
         >
-          <span class="label">{flow.label}</span>
+          <span class="head">
+            <LineIcon name={flow.icon} size={20} />
+            <span class="label">{flow.label}</span>
+          </span>
           <code class="api">{flow.api}</code>
         </button>
       ))
@@ -254,6 +287,57 @@ const { isReady, login } = useCodeClient({
     margin-top: 2rem;
   }
 
+  /* Decision tree whose four answers land on the four tabs */
+  .tree {
+    display: grid;
+    padding-inline: calc(0.3rem + 1px);
+  }
+  .q {
+    justify-self: center;
+    margin: 0;
+    padding: 0.4rem 0.95rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 60%, transparent);
+    font-size: 0.9rem;
+    color: var(--sl-color-white);
+  }
+  .root {
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-weight: 600;
+  }
+  .row {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .when {
+    margin: 0;
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--sl-color-gray-3);
+  }
+  .links {
+    display: block;
+    width: 100%;
+    height: 1.1rem;
+  }
+  .short {
+    height: 0.6rem;
+  }
+  .links path {
+    fill: none;
+    stroke: var(--sl-color-gray-4);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+    vector-effect: non-scaling-stroke;
+  }
+
   .tabs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -288,6 +372,18 @@ const { isReady, login } = useCodeClient({
   [role="tab"]:focus-visible {
     outline: 2px solid var(--sl-color-accent);
     outline-offset: 2px;
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .head svg {
+    flex: none;
+    color: var(--sl-color-gray-3);
+  }
+  [aria-selected="true"] .head svg {
+    color: var(--sl-color-accent-high);
   }
   .label {
     font-family: "Outfit Variable", var(--__sl-font);
@@ -397,6 +493,10 @@ const { isReady, login } = useCodeClient({
     }
   }
   @media (max-width: 36rem) {
+    /* Two-by-two tabs no longer line up with the tree's leaves */
+    .tree {
+      display: none;
+    }
     .tabs {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }

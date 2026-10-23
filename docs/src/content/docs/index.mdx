@@ -30,15 +30,23 @@ hero:
       variant: minimal
 ---
 
+import HowItWorks from "../../components/HowItWorks.astro";
 import FlowExplorer from "../../components/FlowExplorer.astro";
 import Features from "../../components/Features.astro";
 import UsedBy from "../../components/UsedBy.astro";
 import GetStarted from "../../components/GetStarted.astro";
 
+## How sign-in works
+
+Google runs the account picker and consent screens. Your app gets a token and
+decides what to do with it.
+
+<HowItWorks />
+
 ## Pick how users sign in
 
-Each flow is a few lines of Vue. Switch tabs to compare the code and what your
-app gets back.
+Follow the questions to the flow that fits, then compare its code and what your
+app gets back. Each one is a few lines of Vue.
 
 <FlowExplorer />
 
