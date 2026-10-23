@@ -29,7 +29,10 @@ export default defineConfig({
       social: [{ icon: "github", label: "GitHub", href: GITHUB }],
       editLink: { baseUrl: `${GITHUB}/edit/main/docs/` },
       customCss: ["./src/styles/custom.css"],
-      components: { Hero: "./src/components/Hero.astro" },
+      components: {
+        Header: "./src/components/Header.astro",
+        Hero: "./src/components/Hero.astro",
+      },
       head: [
         meta({ property: "og:image", content: `${SITE}/og-image.jpg` }),
         meta({ property: "og:image:width", content: "1200" }),

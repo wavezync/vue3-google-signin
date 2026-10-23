@@ -38,6 +38,14 @@
 }
 
 /* Home page (Starlight marks it data-has-hero) */
+/* Starlight's nav bar becomes a clear strip that holds the floating glass nav */
+[data-has-hero] .header {
+  height: auto;
+  padding: 0.6rem 1rem 0;
+  border-bottom: 0;
+  background: none;
+}
+
 /* The hero's ring runs off the page edge; clip it at the full-width panel */
 [data-has-hero] .content-panel {
   overflow-x: clip;

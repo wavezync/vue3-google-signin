@@ -1,0 +1,138 @@
+---
+// The home page gets a floating glass nav; every other page keeps Starlight's.
+import Default from "@astrojs/starlight/components/Header.astro";
+import Search from "@astrojs/starlight/components/Search.astro";
+import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
+import SocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
+import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
+
+const isHome = Boolean(Astro.locals.starlightRoute.entry.data.hero);
+const links = [
+  ["Guide", "/guide/"],
+  ["Components", "/components/google-signin-button/"],
+  ["Composables", "/composables/use-one-tap/"],
+  ["FAQ", "/guide/faq/"],
+];
+---
+
+{
+  isHome ? (
+    <glass-nav>
+      <div class="title">
+        <SiteTitle />
+      </div>
+      <nav aria-label="Docs">
+        {links.map(([text, href]) => (
+          <a href={href}>{text}</a>
+        ))}
+      </nav>
+      <div class="end">
+        <Search />
+        <div class="extras">
+          <SocialIcons />
+          <ThemeSelect />
+        </div>
+      </div>
+    </glass-nav>
+  ) : (
+    <Default />
+  )
+}
+
+<script>
+  // Firm up the glass once the page scrolls under it
+  class GlassNav extends HTMLElement {
+    connectedCallback() {
+      const update = () => this.toggleAttribute("data-scrolled", scrollY > 8);
+      update();
+      addEventListener("scroll", update, { passive: true });
+    }
+  }
+  customElements.define("glass-nav", GlassNav);
+</script>
+
+<style>
+  glass-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    /* Inner padding lines the logo up with the content column */
+    max-width: calc(var(--sl-content-width) + 2.2rem);
+    height: 3.25rem;
+    margin-inline: auto;
+    padding-inline: 1.1rem 0.5rem;
+    border: 1px solid
+      color-mix(in srgb, var(--sl-color-white) 10%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sl-color-black) 45%, transparent);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    box-shadow: inset 0 1px 0
+      color-mix(in srgb, var(--sl-color-white) 7%, transparent);
+    transition:
+      background-color 0.25s,
+      border-color 0.25s;
+  }
+  glass-nav[data-scrolled] {
+    border-color: color-mix(in srgb, var(--sl-color-white) 14%, transparent);
+    background: color-mix(in srgb, var(--sl-color-black) 70%, transparent);
+  }
+
+  .title {
+    min-width: 0;
+    overflow: clip;
+  }
+  nav {
+    display: flex;
+    gap: 0.125rem;
+  }
+  nav a {
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.925rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    transition:
+      color 0.15s,
+      background-color 0.15s;
+  }
+  nav a:hover {
+    background: color-mix(in srgb, var(--sl-color-white) 8%, transparent);
+    color: var(--sl-color-white);
+  }
+  nav a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 1px;
+  }
+  .end {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-inline-start: auto;
+  }
+  .extras {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  /* Search's own pill, softened to sit on glass */
+  .end :global(button[data-open-modal]) {
+    border-color: color-mix(in srgb, var(--sl-color-white) 12%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sl-color-white) 5%, transparent);
+  }
+
+  @media (max-width: 62rem) {
+    nav {
+      display: none;
+    }
+  }
+  @media (max-width: 50rem) {
+    glass-nav {
+      height: 2.9rem;
+    }
+    .extras {
+      display: none;
+    }
+  }
+</style>
