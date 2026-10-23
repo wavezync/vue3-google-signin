@@ -1,52 +1,205 @@
 ---
-// Picked from GitHub's dependents graph: active projects that call the library
-const projects = [
-  ["Jiten", "Japanese immersion learning", "https://jiten.moe"],
-  ["ApiVault", "A directory of public APIs", "https://apivault.dev"],
-  ["DistApp", "Self-hosted app distribution", "https://distapp.app"],
-  ["Peredelano Afisha", "Community events", "https://github.com/openworld-community/ows-events"],
+import { Icon } from "@astrojs/starlight/components";
+
+// ponytail: hardcoded and rounded down, as of October 2026 (GitHub's
+// dependents graph, npm's downloads API, the repo's stars). Refresh by hand,
+// or fetch at build time if they drift too far.
+const stats = [
+  ["540+", "GitHub repositories depend on it"],
+  ["50k+", "npm downloads a month, with the Nuxt module"],
+  ["180+", "stars on GitHub"],
 ];
+
+// Picked from the dependents graph: active projects that call the library.
+// Monogram colors come from the logo.
+const projects = [
+  {
+    name: "Jiten",
+    what: "Japanese immersion learning",
+    href: "https://jiten.moe",
+    color: "#41b884",
+  },
+  {
+    name: "ApiVault",
+    what: "A directory of public APIs",
+    href: "https://apivault.dev",
+    color: "#5ba8f5",
+  },
+  {
+    name: "DistApp",
+    what: "Self-hosted app distribution",
+    href: "https://distapp.app",
+    color: "#ff6a3d",
+  },
+  {
+    name: "Peredelano Afisha",
+    what: "Community events",
+    href: "https://github.com/openworld-community/ows-events",
+    color: "#ffc107",
+  },
+];
+const host = (href: string) => new URL(href).hostname;
 ---
 
-<ul class="used-by not-content">
-  {
-    projects.map(([name, what, href]) => (
-      <li>
-        <a href={href}>{name}</a>
-        <span>{what}</span>
-      </li>
-    ))
-  }
-</ul>
+<div class="used-by not-content">
+  <dl class="stats">
+    {
+      stats.map(([figure, label]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{figure}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <ul class="projects">
+    {
+      projects.map((project) => (
+        <li>
+          <a href={project.href} style={`--tint: ${project.color}`}>
+            <span class="mono" aria-hidden="true">
+              {project.name[0]}
+            </span>
+            <span class="name">{project.name}</span>
+            <span class="what">{project.what}</span>
+            <span class="domain">
+              {host(project.href)}
+              <Icon name="external" size="0.85em" />
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
 
 <style>
   .used-by {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1.5rem 2rem;
-    margin: 2rem 0 0;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
+  }
+  .stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.4rem 1.6rem;
+  }
+  .stats div + div {
+    border-inline-start: 1px solid var(--sl-color-gray-5);
+  }
+  /* The figure sits above its label, and all figures line up */
+  .stats dd {
+    order: -1;
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sl-color-white);
+  }
+  .stats dt {
+    font-size: 0.92rem;
+    color: var(--sl-color-gray-3);
+  }
+
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
-  li {
+  .projects li {
+    display: flex;
+    margin: 0;
+  }
+  .projects a {
+    flex: 1;
     display: grid;
-    gap: 0.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--sl-color-gray-5);
-  }
-  a {
-    font-family: "Outfit Variable", var(--__sl-font);
-    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem);
-    font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.1;
-    color: var(--sl-color-white);
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
+    color: inherit;
     text-decoration: none;
+    transition: border-color 0.2s;
   }
-  a:hover {
-    color: var(--sl-color-accent-high);
+  .projects a:hover {
+    border-color: color-mix(in srgb, var(--tint) 70%, transparent);
   }
-  span {
+  .projects a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 3px;
+  }
+  .mono {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-bottom: 0.65rem;
+    border-radius: 0.8rem;
+    background: color-mix(in srgb, var(--tint) 18%, transparent);
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--tint);
+  }
+  .name {
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--sl-color-white);
+  }
+  .what {
+    font-size: 0.92rem;
     color: var(--sl-color-gray-3);
+  }
+  .domain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.6rem;
+    font-family: var(--__sl-font-mono);
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-3);
+    overflow-wrap: anywhere;
+  }
+  .projects a:hover .domain {
+    color: var(--sl-color-white);
+  }
+
+  @media (max-width: 60rem) {
+    .projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40rem) {
+    .stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stats div + div {
+      border-inline-start: 0;
+      border-top: 1px solid var(--sl-color-gray-5);
+    }
+    .projects {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>
