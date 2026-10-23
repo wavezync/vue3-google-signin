@@ -1,57 +1,163 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
 
-// ponytail: hardcoded and rounded down, as of October 2026 (GitHub's
-// dependents graph, npm's downloads API, the repo's stars). Refresh by hand,
-// or fetch at build time if they drift too far.
-const stats = [
-  ["540+", "GitHub repositories depend on it"],
-  ["50k+", "npm downloads a month, with the Nuxt module"],
-  ["180+", "stars on GitHub"],
+// Usage data, fetched by hand in October 2026: npm's downloads API (both
+// packages), the repo's stargazers with dates, and GitHub's dependents graph.
+// ponytail: static on purpose so builds don't depend on those services;
+// refresh it now and then.
+const downloads: [month: string, core: number, nuxt: number][] = [
+  ["2025-10", 35623, 19646],
+  ["2025-11", 32936, 18368],
+  ["2025-12", 33449, 18513],
+  ["2026-01", 32302, 15997],
+  ["2026-02", 34308, 15933],
+  ["2026-03", 43416, 21373],
+  ["2026-04", 42250, 19453],
+  ["2026-05", 37113, 18208],
+  ["2026-06", 36989, 18315],
+  ["2026-07", 36154, 16627],
+  ["2026-08", 34732, 16779],
+  ["2026-09", 39443, 18424],
+];
+// Cumulative stars at the end of each month, July 2022 to October 2026
+const stars = [
+  29, 39, 43, 45, 50, 51, 61, 65, 73, 78, 79, 82, 86, 88, 93, 100, 103, 107,
+  113, 117, 125, 127, 131, 132, 139, 144, 149, 154, 158, 161, 165, 167, 168,
+  173, 173, 175, 176, 176, 179, 181, 184, 185, 185, 185, 185, 186, 186, 187,
+  187, 187, 187, 187,
+];
+const starsFrom = new Date(Date.UTC(2022, 6));
+const dependents = { core: 545, nuxt: 299 };
+
+const projects = [
+  { name: "Jiten", what: "Japanese immersion learning", href: "https://jiten.moe", color: "#41b884" },
+  { name: "ApiVault", what: "A directory of public APIs", href: "https://apivault.dev", color: "#5ba8f5" },
+  { name: "DistApp", what: "Self-hosted app distribution", href: "https://distapp.app", color: "#ff6a3d" },
+  { name: "Peredelano Afisha", what: "Community events", href: "https://github.com/openworld-community/ows-events", color: "#ffc107" },
 ];
 
-// Picked from the dependents graph: active projects that call the library.
-// Monogram colors come from the logo.
-const projects = [
-  {
-    name: "Jiten",
-    what: "Japanese immersion learning",
-    href: "https://jiten.moe",
-    color: "#41b884",
-  },
-  {
-    name: "ApiVault",
-    what: "A directory of public APIs",
-    href: "https://apivault.dev",
-    color: "#5ba8f5",
-  },
-  {
-    name: "DistApp",
-    what: "Self-hosted app distribution",
-    href: "https://distapp.app",
-    color: "#ff6a3d",
-  },
-  {
-    name: "Peredelano Afisha",
-    what: "Community events",
-    href: "https://github.com/openworld-community/ows-events",
-    color: "#ffc107",
-  },
-];
+const compact = (n: number) =>
+  n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K` : String(n);
+const full = (n: number) => n.toLocaleString("en-US");
+const monthName = (key: string, style: "short" | "long") =>
+  new Date(`${key}-01T00:00:00Z`).toLocaleString("en-US", {
+    month: style,
+    year: style === "long" ? "numeric" : undefined,
+    timeZone: "UTC",
+  });
 const host = (href: string) => new URL(href).hostname;
+
+// Downloads: stacked columns on one axis, 0 to 75K
+const AXIS_MAX = 75000;
+const ticks = [0, 25000, 50000, 75000];
+const pct = (n: number) => `${((n / AXIS_MAX) * 100).toFixed(2)}%`;
+const latest = downloads.at(-1)!;
+const latestTotal = latest[1] + latest[2];
+
+// Stars: a sparkline in a 100 × 40 box
+const starsMax = stars.at(-1)!;
+const sparkPoints = stars
+  .map((value, i) => `${((i / (stars.length - 1)) * 100).toFixed(2)},${(40 - (value / starsMax) * 36).toFixed(2)}`)
+  .join(" ");
+const starMonth = (i: number) => {
+  const d = new Date(starsFrom);
+  d.setUTCMonth(d.getUTCMonth() + i);
+  return d.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+};
 ---
 
-<div class="used-by not-content">
-  <dl class="stats">
-    {
-      stats.map(([figure, label]) => (
+<usage-charts class="used-by not-content">
+  <div class="figures">
+    <figure class="card downloads">
+      <div class="head">
         <div>
-          <dt>{label}</dt>
-          <dd>{figure}</dd>
+          <figcaption>npm downloads a month</figcaption>
+          <p class="hero">{compact(latestTotal)}</p>
+          <p class="sub">
+            in {monthName(latest[0], "long")}, both packages together
+          </p>
         </div>
-      ))
-    }
-  </dl>
+        <ul class="legend" aria-label="Packages">
+          <li><i class="key core"></i>vue3-google-signin</li>
+          <li><i class="key nuxt"></i>nuxt-vue3-google-signin</li>
+        </ul>
+      </div>
+      <div class="chart">
+        <div class="y-axis" aria-hidden="true">
+          {
+            ticks.map((tick) => (
+              <span style={`bottom: ${pct(tick)}`}>{compact(tick)}</span>
+            ))
+          }
+        </div>
+        <div class="plot">
+          {
+            ticks.map((tick) => (
+              <i class="grid" style={`bottom: ${pct(tick)}`} aria-hidden="true" />
+            ))
+          }
+          {
+            downloads.map(([month, core, nuxt], i) => (
+              <div
+                class:list={["col", { last: i === downloads.length - 1 }]}
+                tabindex="0"
+                role="img"
+                aria-label={`${monthName(month, "long")}: ${full(core)} vue3-google-signin, ${full(nuxt)} Nuxt module, ${full(core + nuxt)} in total`}
+                data-title={monthName(month, "long")}
+                data-tip={JSON.stringify([
+                  [compact(core), "vue3-google-signin", "core"],
+                  [compact(nuxt), "nuxt-vue3-google-signin", "nuxt"],
+                  [compact(core + nuxt), "total", ""],
+                ])}
+              >
+                {i === downloads.length - 1 && (
+                  <span class="cap">{compact(core + nuxt)}</span>
+                )}
+                <span class="seg nuxt" style={`height: ${pct(nuxt)}`} />
+                <span class="seg core" style={`height: ${pct(core)}`} />
+              </div>
+            ))
+          }
+        </div>
+        <div class="x-axis" aria-hidden="true">
+          {downloads.map(([month]) => <span>{monthName(month, "short")}</span>)}
+        </div>
+      </div>
+    </figure>
+
+    <figure class="card">
+      <figcaption>GitHub stars</figcaption>
+      <p class="hero">{starsMax}</p>
+      <p class="sub">since July 2022</p>
+      <div class="spark">
+        <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points={sparkPoints} />
+        </svg>
+        <i class="end" aria-hidden="true"></i>
+        <div class="hits">
+          {
+            stars.map((value, i) => (
+              <span
+                tabindex={i === stars.length - 1 ? 0 : -1}
+                role="img"
+                aria-label={`${starMonth(i)}: ${value} stars`}
+                data-title={starMonth(i)}
+                data-tip={JSON.stringify([[String(value), "stars", ""]])}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </figure>
+
+    <figure class="card">
+      <figcaption>Repositories on GitHub that depend on it</figcaption>
+      <p class="hero">{dependents.core}</p>
+      <p class="sub">plus {dependents.nuxt} through the Nuxt module</p>
+    </figure>
+
+    <div class="tip" hidden></div>
+  </div>
 
   <ul class="projects">
     {
@@ -72,46 +178,332 @@ const host = (href: string) => new URL(href).hostname;
       ))
     }
   </ul>
-</div>
+
+  <details class="numbers">
+    <summary>Show the numbers</summary>
+    <div class="tables">
+      <table>
+        <caption>npm downloads by month</caption>
+        <thead>
+          <tr><th scope="col">Month</th><th scope="col">vue3-google-signin</th><th scope="col">Nuxt module</th><th scope="col">Total</th></tr>
+        </thead>
+        <tbody>
+          {
+            downloads.map(([month, core, nuxt]) => (
+              <tr>
+                <th scope="row">{monthName(month, "long")}</th>
+                <td>{full(core)}</td>
+                <td>{full(nuxt)}</td>
+                <td>{full(core + nuxt)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <table>
+        <caption>GitHub stars at the end of each month</caption>
+        <thead>
+          <tr><th scope="col">Month</th><th scope="col">Stars</th></tr>
+        </thead>
+        <tbody>
+          {
+            stars.map((value, i) => (
+              <tr>
+                <th scope="row">{starMonth(i)}</th>
+                <td>{value}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+</usage-charts>
+
+<script>
+  // One tooltip for every chart mark; values lead, names follow
+  class UsageCharts extends HTMLElement {
+    connectedCallback() {
+      const tip = this.querySelector<HTMLElement>(".tip")!;
+      const host = this.querySelector<HTMLElement>(".figures")!;
+      const show = (mark: HTMLElement) => {
+        const title = document.createElement("p");
+        title.className = "tip-title";
+        title.textContent = mark.dataset.title ?? "";
+        const rows = (JSON.parse(mark.dataset.tip ?? "[]") as string[][]).map(
+          ([value, label, key]) => {
+            const row = document.createElement("p");
+            const keyMark = document.createElement("i");
+            keyMark.className = `tip-key ${key}`;
+            const strong = document.createElement("strong");
+            strong.textContent = value;
+            row.append(keyMark, strong, ` ${label}`);
+            return row;
+          },
+        );
+        tip.replaceChildren(title, ...rows);
+        tip.hidden = false;
+        const box = mark.getBoundingClientRect();
+        const frame = host.getBoundingClientRect();
+        const left = Math.min(
+          Math.max(box.left + box.width / 2 - frame.left - tip.offsetWidth / 2, 0),
+          frame.width - tip.offsetWidth,
+        );
+        tip.style.left = `${left}px`;
+        tip.style.top = `${box.top - frame.top - tip.offsetHeight - 8}px`;
+      };
+      const hide = () => (tip.hidden = true);
+      for (const mark of this.querySelectorAll<HTMLElement>("[data-tip]")) {
+        mark.addEventListener("pointerenter", () => show(mark));
+        mark.addEventListener("focus", () => show(mark));
+        mark.addEventListener("pointerleave", hide);
+        mark.addEventListener("blur", hide);
+      }
+    }
+  }
+  customElements.define("usage-charts", UsageCharts);
+</script>
 
 <style>
+  /* Series colors, validated for both themes (dataviz palette checks) */
   .used-by {
+    --core: #1f8a55;
+    --nuxt: #2a78d6;
+    --spark: #9aa0ab;
     display: grid;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 2rem;
   }
+  :root[data-theme="dark"] .used-by {
+    --core: #2fa36b;
+    --nuxt: #3987e5;
+    --spark: #6b7080;
+  }
 
-  .stats {
+  .figures {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1rem;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
     margin: 0;
+    padding: 1.4rem 1.5rem;
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 1.25rem;
     background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
   }
-  .stats div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 1.4rem 1.6rem;
+  .downloads {
+    grid-row: span 2;
+    gap: 1.25rem;
   }
-  .stats div + div {
-    border-inline-start: 1px solid var(--sl-color-gray-5);
+  figcaption {
+    font-size: 0.92rem;
+    color: var(--sl-color-gray-3);
   }
-  /* The figure sits above its label, and all figures line up */
-  .stats dd {
-    order: -1;
+  .hero {
     margin: 0;
     font-family: "Outfit Variable", var(--__sl-font);
-    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+    font-size: clamp(2.5rem, 1.9rem + 1.8vw, 3.25rem);
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.05;
     letter-spacing: -0.04em;
     color: var(--sl-color-white);
   }
-  .stats dt {
-    font-size: 0.92rem;
+  .sub {
+    margin: 0;
+    font-size: 0.88rem;
     color: var(--sl-color-gray-3);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .legend {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.82rem;
+    color: var(--sl-color-gray-2);
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .key {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 3px;
+  }
+  .core {
+    background: var(--core);
+  }
+  .nuxt {
+    background: var(--nuxt);
+  }
+
+  /* Stacked columns: 22px marks, 2px gap, 4px rounded tops, hairline grid */
+  .chart {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-rows: 11rem auto;
+  }
+  .y-axis {
+    position: relative;
+  }
+  .y-axis span {
+    position: absolute;
+    right: 0.6rem;
+    translate: 0 50%;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--sl-color-gray-3);
+  }
+  .plot {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+  .col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    border-radius: 0.4rem;
+    outline: none;
+  }
+  .col:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--sl-color-accent);
+  }
+  .seg {
+    width: min(22px, 70%);
+    transition: filter 0.15s;
+  }
+  .seg.nuxt {
+    margin-bottom: 2px;
+    border-radius: 4px 4px 0 0;
+  }
+  .col:hover .seg,
+  .col:focus-visible .seg {
+    filter: brightness(1.18);
+  }
+  .cap {
+    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+  }
+  .x-axis {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    padding-top: 0.5rem;
+    font-size: 0.72rem;
+    text-align: center;
+    color: var(--sl-color-gray-3);
+  }
+
+  /* Stars: a sparkline in the de-emphasis gray, latest point in the accent */
+  .spark {
+    position: relative;
+    height: 3.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+  .spark svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .spark polyline {
+    fill: none;
+    stroke: var(--spark);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .end {
+    position: absolute;
+    right: -5px;
+    top: calc(0.75rem + 4 / 40 * (100% - 0.75rem) - 5px);
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--sl-color-black);
+    border-radius: 50%;
+    background: var(--sl-color-accent);
+  }
+  .hits {
+    position: absolute;
+    inset: 0 -4px;
+    display: flex;
+  }
+  .hits span {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tip {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    gap: 0.2rem;
+    min-width: 11rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.7rem;
+    background: var(--sl-color-gray-6);
+    box-shadow: 0 12px 30px -12px rgb(0 0 0 / 0.5);
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-2);
+    pointer-events: none;
+  }
+  .tip[hidden] {
+    display: none;
+  }
+  .tip :global(p) {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+  }
+  .tip :global(.tip-title) {
+    margin-bottom: 0.15rem;
+    color: var(--sl-color-gray-3);
+  }
+  .tip :global(strong) {
+    color: var(--sl-color-white);
+    font-variant-numeric: tabular-nums;
+  }
+  .tip :global(.tip-key) {
+    width: 0.8rem;
+    height: 2px;
+    border-radius: 1px;
+  }
+  .tip :global(.tip-key.core) {
+    background: var(--core);
+  }
+  .tip :global(.tip-key.nuxt) {
+    background: var(--nuxt);
   }
 
   .projects {
@@ -179,27 +571,78 @@ const host = (href: string) => new URL(href).hostname;
     font-family: var(--__sl-font-mono);
     font-size: 0.78rem;
     color: var(--sl-color-gray-3);
-    overflow-wrap: anywhere;
   }
   .projects a:hover .domain {
     color: var(--sl-color-white);
   }
 
+  .numbers summary {
+    width: fit-content;
+    font-size: 0.88rem;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+  }
+  .numbers summary:hover {
+    color: var(--sl-color-white);
+  }
+  .tables {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  caption {
+    padding-bottom: 0.5rem;
+    text-align: start;
+    font-weight: 600;
+    color: var(--sl-color-white);
+  }
+  th,
+  td {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    text-align: end;
+    color: var(--sl-color-gray-2);
+  }
+  th[scope="row"],
+  thead th:first-child {
+    text-align: start;
+  }
+  thead th {
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+  }
+
   @media (max-width: 60rem) {
+    .figures {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .downloads {
+      grid-column: span 2;
+      grid-row: auto;
+    }
     .projects {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (max-width: 40rem) {
-    .stats {
+    .figures,
+    .projects,
+    .tables {
       grid-template-columns: minmax(0, 1fr);
     }
-    .stats div + div {
-      border-inline-start: 0;
-      border-top: 1px solid var(--sl-color-gray-5);
+    .downloads {
+      grid-column: auto;
     }
-    .projects {
-      grid-template-columns: minmax(0, 1fr);
+    .x-axis span:nth-child(even) {
+      visibility: hidden;
     }
   }
 </style>
