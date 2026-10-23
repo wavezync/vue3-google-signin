@@ -272,7 +272,8 @@ interface GoogleSignInButtonProps {
   locale?: string;
 }
 
-const buttonContainerHeight = { large: 40, medium: 32, small: 20 };
+// Reserve the rendered button's height so the page doesn't shift when it loads
+const buttonContainerHeight = { large: "40px", medium: "32px", small: "20px" };
 
 const props = defineProps<GoogleSignInButtonProps>();
 const emits = defineEmits<{

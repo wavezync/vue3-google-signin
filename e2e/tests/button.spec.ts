@@ -27,6 +27,12 @@ test("renders Google's button with the plugin's client ID and props", async ({
   expect(await calls(page, "id.prompt")).toHaveLength(0);
 });
 
+test("reserves the button's height", async ({ page }) => {
+  await open(page, "button");
+  const container = page.getByTestId("gsi-button").locator("..");
+  await expect(container).toHaveCSS("height", "32px");
+});
+
 test("emits success with Google's credential response", async ({ page }) => {
   await open(page, "button");
   await expect(page.getByTestId("gsi-button")).toBeVisible();
