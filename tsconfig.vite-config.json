@@ -1,14 +1,9 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": [
-    "vite.config.*",
-    "tsdown.config.*"
-  ],
+  "include": ["vite.config.*", "tsdown.config.*"],
   "compilerOptions": {
     "composite": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "noEmit": false
   }
 }

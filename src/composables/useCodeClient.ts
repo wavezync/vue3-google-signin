@@ -32,8 +32,10 @@ export type ImplicitFlowErrorResponse = Pick<
  * @interface ImplicitFlowOptions
  * @extends {(Omit<CodeClientConfig, "client_id" | "scope" | "callback">)}
  */
-export interface ImplicitFlowOptions
-  extends Omit<CodeClientConfig, "client_id" | "scope" | "callback"> {
+export interface ImplicitFlowOptions extends Omit<
+  CodeClientConfig,
+  "client_id" | "scope" | "callback"
+> {
   /**
    * On success callback
    *

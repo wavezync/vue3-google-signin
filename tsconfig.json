@@ -1,25 +1,12 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": [
-    "env.d.ts",
-    "src/**/*",
-    "src/**/*.vue"
-  ],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "lib": [
-      "ES2016",
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "typeRoots": [
-      "./src/@types"
-    ],
+    "lib": ["ES2016", "DOM", "DOM.Iterable", "ESNext"],
+    "typeRoots": ["./src/@types"],
     "strict": true,
     "removeComments": false
   },

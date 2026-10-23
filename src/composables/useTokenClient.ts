@@ -32,8 +32,10 @@ export type AuthCodeFlowErrorResponse = Pick<
  * @interface AuthCodeFlowOptions
  * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback">)}
  */
-export interface AuthCodeFlowOptions
-  extends Omit<TokenClientConfig, "client_id" | "scope" | "callback"> {
+export interface AuthCodeFlowOptions extends Omit<
+  TokenClientConfig,
+  "client_id" | "scope" | "callback"
+> {
   /**
    * On success callback
    *

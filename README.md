@@ -36,10 +36,10 @@ put the following code.
 ```js
 // rest of the code
 
-import GoogleSignInPlugin from "vue3-google-signin"
+import GoogleSignInPlugin from "vue3-google-signin";
 
 app.use(GoogleSignInPlugin, {
-  clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
+  clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
 });
 
 // other config
@@ -76,16 +76,14 @@ pnpm add nuxt-vue3-google-signin
 Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
 
 ```ts
-import { defineNuxtConfig } from 'nuxt/config'
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  modules: [
-    'nuxt-vue3-google-signin'
-  ],
+  modules: ["nuxt-vue3-google-signin"],
   googleSignIn: {
-    clientId: 'CLIENT ID OBTAINED FROM GOOGLE API CONSOLE',
-  }
-})
+    clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
+  },
+});
 ```
 
 ## Development
