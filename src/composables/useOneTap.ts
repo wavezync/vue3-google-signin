@@ -6,10 +6,19 @@ import type {
   NativeCallbackResponse,
   PromptMomentNotification,
 } from "@/interfaces/accounts";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "@/utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 
 export interface UseGoogleOneTapLoginOptions {
+  /**
+   * Client ID for this One Tap prompt. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
+
   /**
    * Callback to run on success
    *
@@ -172,6 +181,7 @@ export default function useOneTap(
   options?: UseGoogleOneTapLoginOptions,
 ): UseOneTapResult {
   const {
+    clientId: ownClientId,
     disableAutomaticPrompt = false,
     onSuccess,
     onError,
@@ -190,7 +200,7 @@ export default function useOneTap(
   } = options || {};
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
 
   const login = () =>
@@ -201,7 +211,8 @@ export default function useOneTap(
 
   watchEffect((onCleanup) => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const shouldAutoLogin = !unref(disableAutomaticPrompt);
 
@@ -216,8 +227,7 @@ export default function useOneTap(
     const cancel_on_tap_outside = unref(cancelOnTapOutside);
 
     window.google?.accounts.id.initialize({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       callback: (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) {
           onError?.(credentialResponse);

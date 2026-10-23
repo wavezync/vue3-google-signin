@@ -65,6 +65,28 @@ app.mount("#app");
 
 Now the library is ready to be used.
 
+### Setting the client ID later
+
+If your client ID comes from your server, pass a ref and set it when it
+arrives. Nothing initializes until the ref has a value, and changing it
+re-initializes every composable and button.
+
+```ts title="main.ts"
+import { ref } from "vue";
+import GoogleSignInPlugin from "vue3-google-signin";
+
+const clientId = ref<string>();
+app.use(GoogleSignInPlugin, { clientId });
+
+fetch("/api/config")
+  .then((response) => response.json())
+  .then((config) => (clientId.value = config.googleClientId));
+```
+
+Each composable also takes a `clientId` option, and `GoogleSignInButton` a
+`client-id` prop, which override the plugin's. With those you can install the
+plugin without options.
+
 ## With Nuxt
 
 To use the library with **Nuxt 3**, use the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module.

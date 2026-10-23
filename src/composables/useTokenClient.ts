@@ -6,8 +6,8 @@ import type {
   OverridableTokenClientConfig,
   NonOAuthError,
 } from "@/interfaces/oauth2";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "../utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 
 /**
@@ -68,6 +68,15 @@ export interface UseTokenClientOptions extends Omit<
    * @memberof UseTokenClientOptions
    */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
+
+  /**
+   * Client ID for this token client. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseTokenClientOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
 }
 
 /** @deprecated Renamed to {@link UseTokenClientOptions}. */
@@ -113,16 +122,24 @@ export interface UseTokenClientReturn {
 export default function useTokenClient(
   options: UseTokenClientOptions = {},
 ): UseTokenClientReturn {
-  const { scope = "", onError, onSuccess, onNonOAuthError, ...rest } = options;
+  const {
+    clientId: ownClientId,
+    scope = "",
+    onError,
+    onSuccess,
+    onNonOAuthError,
+    ...rest
+  } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
   let client: TokenClient | undefined;
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -130,8 +147,7 @@ export default function useTokenClient(
       : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: `openid email profile ${scopes}`,
       callback: (response: TokenResponse) => {
         if (response.error) return onError?.(response);

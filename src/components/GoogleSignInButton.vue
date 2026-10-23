@@ -9,11 +9,20 @@ import type {
   PromptMomentNotification,
   UxMode,
 } from "@/interfaces/accounts";
-import { GoogleClientIdKey } from "@/utils/symbols";
-import { inject, ref, watchEffect, onUnmounted, computed } from "vue";
+import { useClientId } from "@/utils/symbols";
+import { ref, toRef, watchEffect, onUnmounted, computed } from "vue";
 import useGsiScript from "@/composables/useGsiScript";
 
 interface GoogleSignInButtonProps {
+  /**
+   * Client ID for this button. Overrides the one given to the plugin.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof GoogleSignInButtonProps
+   */
+  clientId?: string;
+
   /**
    * Use One Tap Login
    *
@@ -234,16 +243,16 @@ const emits = defineEmits<{
   (e: "promptMomentNotification", notification: PromptMomentNotification): void;
 }>();
 
-const clientId = inject<string>(GoogleClientIdKey);
+const clientId = useClientId(toRef(props, "clientId"));
 const targetElement = ref<HTMLElement | null>(null);
 const { scriptLoaded } = useGsiScript();
 
 watchEffect(() => {
-  if (!scriptLoaded.value) return;
+  const client_id = clientId();
+  if (!scriptLoaded.value || !client_id) return;
 
   window.google?.accounts.id.initialize({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    client_id: clientId!,
+    client_id,
     callback: (credentialResponse: CredentialResponse) => {
       if (!credentialResponse.credential) {
         emits("error", credentialResponse);

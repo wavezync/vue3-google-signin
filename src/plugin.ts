@@ -1,4 +1,5 @@
-import type { App, Plugin } from "vue";
+import { isRef, type App, type Plugin } from "vue";
+import type { MaybeRef } from "@/utils/types";
 import { GoogleClientIdKey } from "@/utils/symbols";
 import GoogleSignInButton from "./components/GoogleSignInButton.vue";
 import useGsiScript from "./composables/useGsiScript";
@@ -35,33 +36,28 @@ export const PLUGIN_NAME = "GoogleSignInPlugin";
 
 export interface GoogleSignInPluginOptions {
   /**
-   * This field is your application's client ID, which is found and created in the Google Developers Console
+   * This field is your application's client ID, which is found and created in the Google Developers Console.
+   * Pass a ref to set or change it later, for example after fetching it from your server.
+   * Leave it out to give each composable or button its own `clientId`.
    *
-   * @type {string}
+   * @type {MaybeRef<string>}
    * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
    * @memberof GoogleSignInPluginOptions
    */
-  clientId: string;
+  clientId?: MaybeRef<string | undefined>;
 }
 
 const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
 
 const plugin: Plugin = {
-  install(app: App, options: GoogleSignInPluginOptions) {
-    if (!options) {
-      throw new Error(
-        toPluginError(`initialize plugin by passing an options object`),
-      );
-    }
-
-    if (
-      !options.clientId ||
-      (options.clientId && options.clientId.trim().length === 0)
-    ) {
+  install(app: App, options: GoogleSignInPluginOptions = {}) {
+    const { clientId } = options;
+    // An explicit but empty client ID is usually a missing env variable
+    if ("clientId" in options && !isRef(clientId) && !clientId?.trim()) {
       throw new Error(toPluginError("clientId is required to initialize"));
     }
 
-    app.provide(GoogleClientIdKey, options.clientId);
+    app.provide(GoogleClientIdKey, clientId);
     app.component("GoogleSignInButton", GoogleSignInButton);
   },
 };

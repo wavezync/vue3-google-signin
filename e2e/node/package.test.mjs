@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { createApp, createSSRApp, defineComponent, h } from "vue";
+import { createApp, createSSRApp, defineComponent, h, ref } from "vue";
 import { renderToString } from "vue/server-renderer";
 import * as esm from "vue3-google-signin";
 
@@ -33,12 +33,15 @@ test("import returns the plugin and every named export", () => {
   for (const name of EXPORTS) assert.ok(esm[name], `missing ${name}`);
 });
 
-test("the plugin rejects a missing or blank clientId", () => {
-  assert.throws(() => createApp({}).use(esm.default), /options object/);
-  assert.throws(
-    () => createApp({}).use(esm.default, { clientId: "  " }),
-    /clientId is required/,
-  );
+test("the plugin installs without a clientId but rejects an empty one", () => {
+  createApp({}).use(esm.default);
+  createApp({}).use(esm.default, { clientId: ref() });
+  for (const clientId of [undefined, "", "  "]) {
+    assert.throws(
+      () => createApp({}).use(esm.default, { clientId }),
+      /clientId is required/,
+    );
+  }
 });
 
 test("components and composables render on the server", async () => {

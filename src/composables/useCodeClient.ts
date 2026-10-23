@@ -5,8 +5,8 @@ import type {
   CodeClientConfig,
   NonOAuthError,
 } from "@/interfaces/oauth2";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "@/utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
 
@@ -68,6 +68,15 @@ export interface UseCodeClientOptions extends Omit<
    * @memberof UseCodeClientOptions
    */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
+
+  /**
+   * Client ID for this code client. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseCodeClientOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
 }
 
 /** @deprecated Renamed to {@link UseCodeClientOptions}. */
@@ -122,17 +131,25 @@ export interface UseCodeClientReturn {
 export default function useCodeClient(
   options: UseCodeClientOptions = {},
 ): UseCodeClientReturn {
-  const { scope = "", onError, onSuccess, onNonOAuthError, ...rest } = options;
+  const {
+    clientId: ownClientId,
+    scope = "",
+    onError,
+    onSuccess,
+    onNonOAuthError,
+    ...rest
+  } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
   const codeRequestRedirectUrl = ref<string | null>(null);
   let client: CodeClient | undefined;
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -141,15 +158,13 @@ export default function useCodeClient(
     const computedScopes = `openid email profile ${scopes}`;
 
     codeRequestRedirectUrl.value = buildCodeRequestRedirectUrl({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: computedScopes,
       ...rest,
     });
 
     client = window.google?.accounts.oauth2.initCodeClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);

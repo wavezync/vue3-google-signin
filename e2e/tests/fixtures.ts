@@ -21,6 +21,7 @@ declare global {
     };
     __events?: Event[];
     __gsiLoads?: number;
+    __clientId: { value: string };
     __lib: typeof import("vue3-google-signin");
   }
 }
@@ -37,8 +38,8 @@ export const test = base.extend({
   },
 });
 
-export const open = (page: Page, scenario: string) =>
-  page.goto(`/?scenario=${scenario}`);
+export const open = (page: Page, scenario: string, query = "") =>
+  page.goto(`/?scenario=${scenario}${query}`);
 
 export const calls = (page: Page, name: string) =>
   page.evaluate(
