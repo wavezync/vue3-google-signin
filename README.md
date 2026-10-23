@@ -97,4 +97,5 @@ pnpm dev               # playground (src/App.vue)
 pnpm docs:dev          # docs site
 pnpm lint
 pnpm build             # type-check + library build
+pnpm test              # build, then E2E tests (Playwright uses your installed Chrome)
 ```

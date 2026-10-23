@@ -20,7 +20,19 @@ pnpm docs:dev     # Astro dev server on :3001 (port matches the dev client ID's 
 pnpm docs:build
 ```
 
-There is no test suite. CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, and `docs:build` on Node 24 LTS (pinned in `.node-version`, also read by Cloudflare Pages), so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
+Tests live in the `e2e/` workspace package and run against the **built** `dist/` (via `vue3-google-signin: workspace:*`), so build first; `pnpm test` does both.
+
+```sh
+pnpm test                                        # build, then node:test + Playwright
+pnpm --filter e2e exec playwright test tests/one-tap.spec.ts   # one spec (after pnpm build)
+pnpm --filter e2e exec playwright test -g "cancels the prompt"  # one test by name
+node --test e2e/node/package.test.mjs            # CJS/ESM/SSR checks only
+```
+
+- Playwright (installed Chrome, `channel: "chrome"`) drives a Vite fixture app (`e2e/src/App.vue`, one component per `?scenario=` in `e2e/src/scenarios/`). `e2e/tests/fixtures.ts` routes `https://accounts.google.com/gsi/client` to `e2e/gsi-stub.js`, which records every GIS call in `window.__gsi.calls` and lets tests fire Google's callbacks (`credential`, `promptMoment`, `tokenResponse`, `codeResponse`). Scenarios report what the library handed them via `log()` into `window.__events`.
+- Real Google sign-in can't be automated; anything that needs Google's actual UI is out of scope for the suite.
+
+CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, the e2e tests, and `docs:build` on Node 24 LTS (pinned in `.node-version`, also read by Cloudflare Pages), so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
 
 ## Architecture
 

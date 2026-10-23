@@ -19,5 +19,14 @@
     "browser": true,
     "builtin": true
   },
-  "ignorePatterns": ["dist", "docs/dist", "docs/.astro"]
+  "ignorePatterns": ["dist", "docs/dist", "docs/.astro"],
+  "overrides": [
+    {
+      "files": ["e2e/**"],
+      "rules": {
+        "no-underscore-dangle": "off",
+        "unicorn/consistent-function-scoping": "off"
+      }
+    }
+  ]
 }

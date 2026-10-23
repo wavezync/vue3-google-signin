@@ -31,5 +31,8 @@ jobs:
         run: pnpm format:check
       - name: Build
         run: pnpm build
+      - name: Test
+        # Playwright uses the Chrome preinstalled on GitHub's Ubuntu runners
+        run: pnpm --filter e2e test
       - name: Build docs
         run: pnpm docs:build
