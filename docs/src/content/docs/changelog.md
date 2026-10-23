@@ -12,9 +12,9 @@ Every release, newest first. Upgrading from v2? Start with the
 
 <div class="changelog">
 
-## Unreleased
+## 3.0.0
 
-[Compare with 2.1.1](https://github.com/wavezync/vue3-google-signin/compare/v2.1.1...HEAD)
+Released October 23, 2026. [Compare with 2.1.1](https://github.com/wavezync/vue3-google-signin/compare/v2.1.1...v3.0.0)
 
 ### Breaking changes
 
@@ -40,7 +40,7 @@ Every release, newest first. Upgrading from v2? Start with the
 - **plugin:** Warn instead of throwing on an empty clientId ([69367c4](https://github.com/wavezync/vue3-google-signin/commit/69367c48caac1773995db525c4595f3d33ab34b7))
 
 <details>
-<summary>Documentation (32)</summary>
+<summary>Documentation (33)</summary>
 
 - Add CLAUDE.md and update development setup for pnpm ([bffa8cf](https://github.com/wavezync/vue3-google-signin/commit/bffa8cf04fee80bc3404c7e534c6deca640b4b53))
 - Migrate docs site from VitePress to Astro Starlight ([b434989](https://github.com/wavezync/vue3-google-signin/commit/b4349896ab5a0f76e437a5a7078e512aa0037232))
@@ -74,11 +74,12 @@ Every release, newest first. Upgrading from v2? Start with the
 - Correct CLAUDE.md on use_fedcm_for_prompt ([305b283](https://github.com/wavezync/vue3-google-signin/commit/305b283a912ff0b16076508122a5ff2d17c6c37a))
 - Keep Google's script out of the hero ([c3d0bcc](https://github.com/wavezync/vue3-google-signin/commit/c3d0bcc6a1757db109e079b10bc6cf94dddb489d))
 - Deploy the docs site with Cloudflare Workers static assets ([d7f7703](https://github.com/wavezync/vue3-google-signin/commit/d7f770310f6332414daebea7ac52fd03bc2eddbb))
+- Generate the changelog with git-cliff and show it on a timeline ([b776a70](https://github.com/wavezync/vue3-google-signin/commit/b776a705f08e016723c453746245574d878afdd8))
 
 </details>
 
 <details>
-<summary>Tooling (6)</summary>
+<summary>Tooling (8)</summary>
 
 - Migrate from npm to pnpm 12 ([b1c7bef](https://github.com/wavezync/vue3-google-signin/commit/b1c7beff7573a37833d99f8bc3f3c79ef30ef4cd))
 - Use pnpm on Node 22/24 and publish with provenance ([acb8872](https://github.com/wavezync/vue3-google-signin/commit/acb8872f5131b985d574d6042dca31f5c6f22736))
@@ -86,6 +87,8 @@ Every release, newest first. Upgrading from v2? Start with the
 - Replace eslint and prettier with oxlint and oxfmt ([551e5e3](https://github.com/wavezync/vue3-google-signin/commit/551e5e3122d87f09a4d4182156fe11a1e79d8223))
 - Run on Node 24 LTS from .node-version and tidy workflows ([662ac22](https://github.com/wavezync/vue3-google-signin/commit/662ac22dd734f7861e5e90a12809ba9edc674bdd))
 - Add e2e suite against the built package ([6fb9040](https://github.com/wavezync/vue3-google-signin/commit/6fb9040d215b33c8e86d7ffff7d69bc7f5a723ec))
+- Split CI into parallel jobs and pin actions by commit SHA ([2252bdb](https://github.com/wavezync/vue3-google-signin/commit/2252bdb03b23f1aadd2ee79b26b0fba27125dcac))
+- Publish to npm with trusted publishing instead of a token ([a9f5abe](https://github.com/wavezync/vue3-google-signin/commit/a9f5abe821a89f62850d86c8d001fc977c0a2f27))
 
 </details>
 
