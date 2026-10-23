@@ -17,6 +17,7 @@ export const icons = {
     '<path d="M7 17.5A4.5 4.5 0 1 1 8 8.6a6 6 0 0 1 11.3 2.2A3.5 3.5 0 0 1 18 17.5"/><path d="M12 11.5v9M9 17.5l3 3 3-3"/>',
   popupClosed:
     '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M10 12.5l4 4M14 12.5l-4 4"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
   box: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>',
   // How sign-in works
   vue: '<path d="M2.5 4h4L12 13.5 17.5 4h4L12 20.5z"/><path d="M7.5 4L12 11.5 16.5 4"/>',
