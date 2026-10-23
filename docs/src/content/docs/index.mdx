@@ -25,6 +25,7 @@ import {
   Card,
   CardGrid,
   Code,
+  LinkCard,
   TabItem,
   Tabs,
 } from "@astrojs/starlight/components";
@@ -52,6 +53,37 @@ import LiveDemo from "../../components/LiveDemo.vue";
 <div class="live-panel not-content">
   <LiveDemo client:only="vue" />
 </div>
+
+## Used by
+
+[Hundreds of projects on GitHub](https://github.com/wavezync/vue3-google-signin/network/dependents)
+sign users in with vue3-google-signin, including:
+
+<CardGrid>
+  <LinkCard
+    title="Jiten"
+    description="A Japanese immersion-learning platform."
+    href="https://jiten.moe"
+  />
+  <LinkCard
+    title="ApiVault"
+    description="A directory of public APIs."
+    href="https://apivault.dev"
+  />
+  <LinkCard
+    title="DistApp"
+    description="A self-hostable alternative to App Center for distributing app builds."
+    href="https://distapp.app"
+  />
+  <LinkCard
+    title="Peredelano Afisha"
+    description="Open-source community events listings."
+    href="https://github.com/openworld-community/ows-events"
+  />
+</CardGrid>
+
+Using it in your project?
+[Add it here](https://github.com/wavezync/vue3-google-signin/edit/main/docs/src/content/docs/index.mdx).
 
 ## Quick start
 
