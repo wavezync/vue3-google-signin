@@ -1,24 +1,27 @@
 name: Build
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x, 24.x]
-
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .node-version
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

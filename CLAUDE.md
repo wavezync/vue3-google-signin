@@ -20,7 +20,7 @@ pnpm docs:dev     # Astro dev server on :3001 (port matches the dev client ID's 
 pnpm docs:build
 ```
 
-There is no test suite. CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, and `docs:build` on Node 22 and 24, so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
+There is no test suite. CI (`.github/workflows/build.yaml`) runs `lint`, `format:check`, `build`, and `docs:build` on Node 24 LTS (pinned in `.node-version`, also read by Cloudflare Pages), so all must pass. Publishing to npm (with provenance) happens on GitHub release creation (`publish.yaml`).
 
 ## Architecture
 

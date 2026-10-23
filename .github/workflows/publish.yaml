@@ -2,7 +2,7 @@ name: NPM Package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .node-version
           registry-url: https://registry.npmjs.org/
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
