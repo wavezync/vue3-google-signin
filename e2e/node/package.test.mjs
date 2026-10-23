@@ -33,15 +33,17 @@ test("import returns the plugin and every named export", () => {
   for (const name of EXPORTS) assert.ok(esm[name], `missing ${name}`);
 });
 
-test("the plugin installs without a clientId but rejects an empty one", () => {
+test("the plugin installs without a clientId and warns on an empty one", (t) => {
+  const warn = t.mock.method(console, "warn", () => {});
   createApp({}).use(esm.default);
   createApp({}).use(esm.default, { clientId: ref() });
+  assert.equal(warn.mock.callCount(), 0);
+
   for (const clientId of [undefined, "", "  "]) {
-    assert.throws(
-      () => createApp({}).use(esm.default, { clientId }),
-      /clientId is required/,
-    );
+    createApp({}).use(esm.default, { clientId });
   }
+  assert.equal(warn.mock.callCount(), 3);
+  assert.match(warn.mock.calls[0].arguments[0], /clientId is empty/);
 });
 
 test("components and composables render on the server", async () => {

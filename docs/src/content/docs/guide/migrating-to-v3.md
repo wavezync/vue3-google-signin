@@ -39,9 +39,13 @@ are mapped. `include_granted_scopes` is no longer always `true`.
 
 ### Plugin install
 
-`clientId` is optional, so `app.use(GoogleSignInPlugin)` no longer throws.
-Passing `clientId` as `undefined` or an empty string still throws, which
-catches a missing environment variable.
+The plugin no longer throws. `clientId` is optional, and an empty one, usually
+a missing environment variable, logs a warning and leaves sign-in disabled
+instead of breaking the whole app. You can drop workarounds like a fake client
+ID or skipping `app.use` when the variable isn't set.
+
+If you passed `client_id` to `useTokenClient` or `useCodeClient` to override
+the plugin's, use the new `clientId` option.
 
 ### Smaller changes
 

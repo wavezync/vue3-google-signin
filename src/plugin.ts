@@ -58,14 +58,19 @@ export interface GoogleSignInPluginOptions {
   locale?: string;
 }
 
-const toPluginError = (err: string) => `[${PLUGIN_NAME}]: ${err}`;
+const toPluginMessage = (msg: string) => `[${PLUGIN_NAME}]: ${msg}`;
 
 const plugin: Plugin = {
   install(app: App, options: GoogleSignInPluginOptions = {}) {
     const { clientId } = options;
-    // An explicit but empty client ID is usually a missing env variable
+    // An explicit but empty client ID is usually a missing env variable.
+    // Warn instead of throwing so the rest of the app still runs.
     if ("clientId" in options && !isRef(clientId) && !clientId?.trim()) {
-      throw new Error(toPluginError("clientId is required to initialize"));
+      console.warn(
+        toPluginMessage(
+          "clientId is empty, so Google sign-in stays disabled until a composable or button gets its own",
+        ),
+      );
     }
 
     setScriptLocale(options.locale);
