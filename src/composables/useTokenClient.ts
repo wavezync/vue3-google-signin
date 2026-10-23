@@ -4,59 +4,87 @@ import type {
   TokenClient,
   TokenResponse,
   OverridableTokenClientConfig,
+  NonOAuthError,
 } from "@/interfaces/oauth2";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "../utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 
 /**
- * Success response
+ * Successful token response
  */
-export type AuthCodeFlowSuccessResponse = Omit<
+export type TokenClientSuccessResponse = Omit<
   TokenResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * Error response
+ * Token response with an OAuth error
  */
-export type AuthCodeFlowErrorResponse = Pick<
+export type TokenClientErrorResponse = Pick<
   TokenResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * Auth Code Flow Options
+ * Options for `useTokenClient`
  *
  * @export
- * @interface AuthCodeFlowOptions
- * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback">)}
+ * @interface UseTokenClientOptions
+ * @extends {(Omit<TokenClientConfig, "client_id" | "scope" | "callback" | "error_callback">)}
  */
-export interface AuthCodeFlowOptions
-  extends Omit<TokenClientConfig, "client_id" | "scope" | "callback"> {
+export interface UseTokenClientOptions extends Omit<
+  TokenClientConfig,
+  "client_id" | "scope" | "callback" | "error_callback"
+> {
   /**
    * On success callback
    *
-   * @memberof AuthCodeFlowOptions
+   * @memberof UseTokenClientOptions
    */
-  onSuccess?: (response: AuthCodeFlowSuccessResponse) => void;
+  onSuccess?: (response: TokenClientSuccessResponse) => void;
 
   /**
    * On error callback
    *
-   * @memberof AuthCodeFlowOptions
+   * @memberof UseTokenClientOptions
    */
-  onError?: (errorResponse: AuthCodeFlowErrorResponse) => void;
+  onError?: (errorResponse: TokenClientErrorResponse) => void;
+
+  /**
+   * Called when the flow ends without an OAuth response,
+   * for example when the user closes the popup or it can't be opened
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+   * @memberof UseTokenClientOptions
+   */
+  onNonOAuthError?: (error: NonOAuthError) => void;
 
   /**
    * Authorization scopes
    *
    * @type {(MaybeRef<string> | MaybeRef<string[]>)}
    * @see https://developers.google.com/identity/protocols/oauth2/scopes
-   * @memberof ImplicitFlowOptions
+   * @memberof UseTokenClientOptions
    */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
+
+  /**
+   * Client ID for this token client. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseTokenClientOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
 }
+
+/** @deprecated Renamed to {@link UseTokenClientOptions}. */
+export type AuthCodeFlowOptions = UseTokenClientOptions;
+/** @deprecated Renamed to {@link TokenClientSuccessResponse}. */
+export type AuthCodeFlowSuccessResponse = TokenClientSuccessResponse;
+/** @deprecated Renamed to {@link TokenClientErrorResponse}. */
+export type AuthCodeFlowErrorResponse = TokenClientErrorResponse;
 
 /**
  * Token Client Result
@@ -82,28 +110,36 @@ export interface UseTokenClientReturn {
 }
 
 /**
- * Initiate login with authcode flow using token client. Return values of the composable can be used
+ * Initiate login with the implicit flow using a token client. Return values of the composable can be used
  * to trigger the login flow and determine the readiness of the client.
  * It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
  *
  * @export
- * @param {AuthCodeFlowOptions} [options={}]
+ * @param {UseTokenClientOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-token-model
  * @return {*}  {UseTokenClientReturn}
  */
 export default function useTokenClient(
-  options: AuthCodeFlowOptions = {},
+  options: UseTokenClientOptions = {},
 ): UseTokenClientReturn {
-  const { scope = "", onError, onSuccess, ...rest } = options;
+  const {
+    clientId: ownClientId,
+    scope = "",
+    onError,
+    onSuccess,
+    onNonOAuthError,
+    ...rest
+  } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
   let client: TokenClient | undefined;
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -111,14 +147,14 @@ export default function useTokenClient(
       : scopeValue;
 
     client = window.google?.accounts.oauth2.initTokenClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: `openid email profile ${scopes}`,
       callback: (response: TokenResponse) => {
         if (response.error) return onError?.(response);
 
         onSuccess?.(response);
       },
+      error_callback: onNonOAuthError,
       ...rest,
     });
 

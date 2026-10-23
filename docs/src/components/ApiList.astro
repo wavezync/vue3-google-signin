@@ -1,0 +1,141 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+import { GIS_REFERENCE, type ApiEntry } from "./button-api";
+
+interface Props {
+  entries: ApiEntry[];
+}
+const { entries } = Astro.props;
+// Prop names double as anchors, so old links like #theme keep working
+const anchor = (name: string) => name.replace(/^@/, "");
+---
+
+<dl class="api not-content">
+  {
+    entries.map((entry) => (
+      <div class="row" id={anchor(entry.name)}>
+        <dt>
+          <a class="name" href={`#${anchor(entry.name)}`}>
+            {entry.name}
+          </a>
+          {entry.default && (
+            <span class="default">
+              default <code>{entry.default}</code>
+            </span>
+          )}
+        </dt>
+        <dd>
+          {entry.type.length > 0 && (
+            <span class="types">
+              {entry.type.map((type) => (
+                <code>{type}</code>
+              ))}
+            </span>
+          )}
+          <span class="description">{entry.description}</span>
+          {entry.gis && (
+            <a class="gis" href={`${GIS_REFERENCE}#${entry.gis}`}>
+              Google reference
+              <Icon name="external" size="0.85em" />
+            </a>
+          )}
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .api {
+    margin: 1.25rem 0 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
+    overflow: hidden;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: 0.4rem 1.5rem;
+    padding: 1rem 1.25rem;
+    scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+  }
+  .row + .row {
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+  .row:target {
+    background: color-mix(in srgb, var(--sl-color-accent) 10%, transparent);
+  }
+  dt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+  .name {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .name:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .default {
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-3);
+  }
+  .default code {
+    font-family: var(--__sl-font-mono);
+    color: var(--sl-color-gray-2);
+  }
+  dd {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin: 0;
+  }
+  .types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .types code {
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-black);
+    font-family: var(--__sl-font-mono);
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-2);
+  }
+  .description {
+    color: var(--sl-color-gray-2);
+  }
+  .gis {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+    color: var(--sl-color-gray-3);
+  }
+  .gis:hover {
+    color: var(--sl-color-accent-high);
+  }
+
+  @media (max-width: 40rem) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    dt {
+      flex-direction: row;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+  }
+</style>

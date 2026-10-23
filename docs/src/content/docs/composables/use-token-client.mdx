@@ -1,0 +1,45 @@
+---
+title: useTokenClient
+description: useTokenClient runs Google's OAuth2 token flow in a popup and hands your callback an access token for calling Google APIs. Options and return values.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import tokenClient from "../../../examples/TokenClientExample.vue?raw";
+
+Initiate login with [implicit grant flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model) using token client. Return values of the composable can be used
+to trigger the login flow and determine the readiness of the client.
+It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
+
+## Usage
+
+<Code code={tokenClient} lang="vue" />
+
+## Options
+
+Every option is optional. Apart from the callbacks, options are passed to
+Google's [`TokenClientConfig`](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig).
+
+| Option                   | Type                                             | Description                                                                                                                                                                |
+| ------------------------ | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clientId`               | `MaybeRef<string>`                               | Client ID for this client. Overrides the plugin's.                                                                                                                         |
+| `scope`                  | `MaybeRef<string \| string[]>`                   | [Scopes](https://developers.google.com/identity/protocols/oauth2/scopes) to request, on top of `openid email profile`. Changing a ref re-creates the client.               |
+| `onSuccess`              | `(response: TokenClientSuccessResponse) => void` | Called with the [token response](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenResponse): `access_token`, `expires_in`, `scope` and so on. |
+| `onError`                | `(response: TokenClientErrorResponse) => void`   | Called with an [OAuth error](https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenResponse): `error`, `error_description`, `error_uri`.           |
+| `onNonOAuthError`        | `(error: NonOAuthError) => void`                 | Called when the flow ends without an OAuth response. `error.type` is `popup_closed`, `popup_failed_to_open` or `unknown`. Use it to re-enable your button.                 |
+| `include_granted_scopes` | `boolean`                                        | Keep scopes the user already granted when you ask for more. Default `true`.                                                                                                |
+| `login_hint`             | `string`                                         | Skip account selection for a known user: their email address or ID token `sub`.                                                                                            |
+| `hd`                     | `string`                                         | Limit accounts to a Google Workspace domain.                                                                                                                               |
+| `state`                  | `string`                                         | Returned unchanged in the response.                                                                                                                                        |
+| `prompt`                 | `"" \| "none" \| "consent" \| "select_account"`  | What to show the user. Default `select_account`.                                                                                                                           |
+
+:::note
+`hint`, `hosted_domain` and `enable_serial_consent` are deprecated. Use
+`login_hint` and `hd`; the consent flags no longer do anything.
+:::
+
+## Returns
+
+| Property  | Type                                                 | Description                                                                                                                                                                                                                                   |
+| --------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isReady` | `Readonly<Ref<boolean>>`                             | `true` once the client is created.                                                                                                                                                                                                            |
+| `login`   | `(overrides?: OverridableTokenClientConfig) => void` | Opens Google's popup. [`overrides`](https://developers.google.com/identity/oauth2/web/reference/js-reference#OverridableTokenClientConfig) can change `scope`, `prompt`, `login_hint`, `state` and `include_granted_scopes` for this request. |

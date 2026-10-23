@@ -66,6 +66,16 @@ export interface CredentialResponse {
 }
 
 /**
+ * The credential response passed to success callbacks, which only run when
+ * Google returned an ID token
+ *
+ * @export
+ */
+export type CredentialSuccessResponse = CredentialResponse & {
+  credential: string;
+};
+
+/**
  * Native credential response
  *
  * @export
@@ -215,6 +225,67 @@ export interface IdConfiguration {
    */
   itp_support?: boolean;
 
+  /**
+   * Skips account selection when you already know which user should sign in.
+   * An email address or the `sub` field of an ID token.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#login_hint
+   * @memberof IdConfiguration
+   */
+  login_hint?: string;
+
+  /**
+   * Limits account selection to a Google Workspace domain, or `*` for any Workspace account.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#hd
+   * @memberof IdConfiguration
+   */
+  hd?: string;
+
+  /**
+   * Use the FedCM button flow on browsers that support it.
+   *
+   * @type {boolean}
+   * @default false
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#use_fedcm_for_button
+   * @memberof IdConfiguration
+   */
+  use_fedcm_for_button?: boolean;
+
+  /**
+   * With the FedCM button flow, sign returning users in without showing the account chooser.
+   *
+   * @type {boolean}
+   * @default false
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#button_auto_select
+   * @memberof IdConfiguration
+   */
+  button_auto_select?: boolean;
+
+  /**
+   * Color scheme of the One Tap prompt. Defaults to the user's system setting.
+   *
+   * @type {("default" | "light" | "dark")}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#color_scheme
+   * @memberof IdConfiguration
+   */
+  color_scheme?: "default" | "light" | "dark";
+
+  /**
+   * Extra claims to include in the ID token, such as `"auth_time, amr"`.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#essential_claims
+   * @memberof IdConfiguration
+   */
+  essential_claims?: string;
+
+  /**
+   * @deprecated Ignored by Google: One Tap always uses FedCM now.
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#use_fedcm_for_prompt
+   */
   use_fedcm_for_prompt?: boolean;
 }
 
@@ -232,6 +303,17 @@ export interface PromptMomentNotification {
    * @memberof PromptMomentNotification
    */
   isSkippedMoment: () => boolean;
+
+  /**
+   * The detailed reason for the skipped moment. FedCM doesn't report `user_cancel`.
+   *
+   * @memberof PromptMomentNotification
+   */
+  getSkippedReason: () =>
+    | "auto_cancel"
+    | "user_cancel"
+    | "tap_outside"
+    | "issuing_failed";
 
   /**
    * Is this notification for a dismissed moment?
@@ -344,6 +426,23 @@ export interface GsiButtonConfiguration {
    * @memberof GsiButtonConfiguration
    */
   locale?: string;
+
+  /**
+   * Called when the button is clicked.
+   *
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#click_listener
+   * @memberof GsiButtonConfiguration
+   */
+  click_listener?: () => void;
+
+  /**
+   * Returned as `state` in the credential response, to tell several buttons apart.
+   *
+   * @type {string}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#state
+   * @memberof GsiButtonConfiguration
+   */
+  state?: string;
 }
 
 export type MomentListener = (
@@ -357,7 +456,6 @@ export interface RevocationResponse {
    * @type {*}
    * @memberof RevocationResponse
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   successful: any;
 
   /**
@@ -366,7 +464,6 @@ export interface RevocationResponse {
    * @type {*}
    * @memberof RevocationResponse
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
 }
 

@@ -3,26 +3,36 @@ import useGsiScript from "./useGsiScript";
 import type {
   Context,
   CredentialResponse,
+  CredentialSuccessResponse,
   NativeCallbackResponse,
   PromptMomentNotification,
 } from "@/interfaces/accounts";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "@/utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 
 export interface UseGoogleOneTapLoginOptions {
+  /**
+   * Client ID for this One Tap prompt. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
+
   /**
    * Callback to run on success
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onSuccess?: (credentialResponse: CredentialResponse) => void;
+  onSuccess?: (credentialResponse: CredentialSuccessResponse) => void;
 
   /**
-   * Callback to run on error
+   * Called when Google responds without a credential
    *
    * @memberof UseGoogleOneTapLoginOptions
    */
-  onError?: () => void;
+  onError?: (credentialResponse: CredentialResponse) => void;
 
   /**
    * Callback to run on prompt moment
@@ -141,6 +151,42 @@ export interface UseGoogleOneTapLoginOptions {
    * @memberof UseGoogleOneTapLoginOptions
    */
   itpSupport?: MaybeRef<boolean>;
+
+  /**
+   * Skips account selection when you already know which user should sign in: an email address or the `sub` field of an ID token.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#login_hint
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  loginHint?: MaybeRef<string>;
+
+  /**
+   * Limits account selection to a Google Workspace domain, or `*` for any Workspace account.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#hd
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  hd?: MaybeRef<string>;
+
+  /**
+   * Color scheme of the One Tap prompt. Defaults to the user's system setting.
+   *
+   * @type {MaybeRef<"default" | "light" | "dark">}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#color_scheme
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  colorScheme?: MaybeRef<"default" | "light" | "dark">;
+
+  /**
+   * Extra claims to include in the ID token, such as `"auth_time, amr"`.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/reference/js-reference#essential_claims
+   * @memberof UseGoogleOneTapLoginOptions
+   */
+  essentialClaims?: MaybeRef<string>;
 }
 
 export interface UseOneTapResult {
@@ -172,6 +218,7 @@ export default function useOneTap(
   options?: UseGoogleOneTapLoginOptions,
 ): UseOneTapResult {
   const {
+    clientId: ownClientId,
     disableAutomaticPrompt = false,
     onSuccess,
     onError,
@@ -187,10 +234,14 @@ export default function useOneTap(
     stateCookieDomain,
     allowedParentOrigin,
     itpSupport,
+    loginHint,
+    hd,
+    colorScheme,
+    essentialClaims,
   } = options || {};
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
 
   const login = () =>
@@ -201,7 +252,8 @@ export default function useOneTap(
 
   watchEffect((onCleanup) => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const shouldAutoLogin = !unref(disableAutomaticPrompt);
 
@@ -214,16 +266,20 @@ export default function useOneTap(
     const allowed_parent_origin = unref(allowedParentOrigin);
     const itp_support = unref(itpSupport);
     const cancel_on_tap_outside = unref(cancelOnTapOutside);
+    const login_hint = unref(loginHint);
+    const hdValue = unref(hd);
+    const color_scheme = unref(colorScheme);
+    const essential_claims = unref(essentialClaims);
 
     window.google?.accounts.id.initialize({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       callback: (credentialResponse: CredentialResponse) => {
-        if (!credentialResponse.credential) {
-          onError?.();
+        const { credential } = credentialResponse;
+        if (!credential) {
+          onError?.(credentialResponse);
           return;
         }
-        onSuccess?.(credentialResponse);
+        onSuccess?.({ ...credentialResponse, credential });
       },
       native_callback: (response: NativeCallbackResponse) => {
         onNativeCallback?.(response);
@@ -240,7 +296,10 @@ export default function useOneTap(
       prompt_parent_id,
       state_cookie_domain,
       cancel_on_tap_outside,
-      use_fedcm_for_prompt: true,
+      login_hint,
+      hd: hdValue,
+      color_scheme,
+      essential_claims,
     });
 
     isReady.value = true;

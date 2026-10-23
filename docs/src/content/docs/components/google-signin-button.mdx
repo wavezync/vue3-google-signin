@@ -1,0 +1,50 @@
+---
+title: GoogleSignInButton
+description: Google's Sign in with Google button as a Vue component, with a live playground and every prop and event.
+---
+
+import ApiList from "../../../components/ApiList.astro";
+import ButtonPlayground from "../../../components/ButtonPlayground.vue";
+import {
+  appearance,
+  events,
+  oneTap,
+  signIn,
+} from "../../../components/button-api";
+
+`GoogleSignInButton` renders Google's own Sign in with Google button. The plugin
+registers it globally, and you can also import it from `vue3-google-signin`.
+
+```vue
+<GoogleSignInButton theme="filled_black" shape="pill" @success="onSuccess" />
+```
+
+## Playground
+
+Change the props and the button re-renders. It's the real button, so you can
+sign in with it too.
+
+<ButtonPlayground client:visible />
+
+## Props
+
+Every prop is optional.
+
+### Appearance
+
+<ApiList entries={appearance} />
+
+### Sign-in
+
+<ApiList entries={signIn} />
+
+### One Tap
+
+These apply with `one-tap`, which also shows Google's One Tap prompt while the
+button is on the page.
+
+<ApiList entries={oneTap} />
+
+## Events
+
+<ApiList entries={events} />

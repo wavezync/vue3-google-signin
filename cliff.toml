@@ -1,0 +1,87 @@
+# git-cliff config (https://git-cliff.org). Run `pnpm changelog`, not
+# git-cliff directly: scripts/changelog.mjs adds the headers and writes both
+# CHANGELOG.md and the docs site's changelog page.
+
+[changelog]
+body = """
+{%- macro repo() -%}
+https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
+{%- endmacro -%}
+
+{%- macro entry(commit) -%}
+{% if commit.scope and commit.scope != "docs" %}**{{ commit.scope }}:** {% endif -%}
+{{ commit.message | split(pat="\n") | first | upper_first | trim }}
+{%- set user = commit.remote.username | default(value="") %} ([{{ commit.id | truncate(length=7, end="") }}]({{ self::repo() }}/commit/{{ commit.id }}))
+{%- if user and user != "kasvith" %} by [@{{ user }}](https://github.com/{{ user }})
+{%- if commit.remote.pr_number | default(value="") %} in [#{{ commit.remote.pr_number }}]({{ self::repo() }}/pull/{{ commit.remote.pr_number }}){% endif %}
+{%- endif %}
+{%- endmacro -%}
+
+{% if version -%}
+## {{ version | trim_start_matches(pat="v") }}
+
+Released {{ timestamp | date(format="%B %-d, %Y") }}.
+{%- if previous.version %} [Compare with {{ previous.version | trim_start_matches(pat="v") }}]({{ self::repo() }}/compare/{{ previous.version }}...{{ version }}){% endif %}
+{% else -%}
+## Unreleased
+{% if previous.version %}
+[Compare with {{ previous.version | trim_start_matches(pat="v") }}]({{ self::repo() }}/compare/{{ previous.version }}...HEAD)
+{% endif -%}
+{% endif %}
+{%- set breaking = commits | filter(attribute="breaking", value=true) %}
+{%- if breaking | length > 0 %}
+### Breaking changes
+{% for commit in breaking %}
+- {{ self::entry(commit=commit) }}
+{%- endfor %}
+{% endif %}
+{%- for group, commits in commits | filter(attribute="breaking", value=false) | group_by(attribute="group") %}
+{%- set name = group | striptags | trim %}
+{%- set collapsed = name in ["Documentation", "Tooling"] %}
+{% if collapsed -%}
+<details>
+<summary>{{ name }} ({{ commits | length }})</summary>
+{% else -%}
+### {{ name }}
+{% endif %}
+{%- for commit in commits %}
+- {{ self::entry(commit=commit) }}
+{%- endfor %}
+{% if collapsed %}
+</details>
+{% endif %}
+{%- endfor %}
+{%- set new = github.contributors | default(value=[]) | filter(attribute="is_first_time", value=true) %}
+{%- if new | length > 0 %}
+### New contributors
+{% for c in new %}
+- [@{{ c.username }}](https://github.com/{{ c.username }}) made their first contribution
+{%- if c.pr_number %} in [#{{ c.pr_number }}]({{ self::repo() }}/pull/{{ c.pr_number }}){% endif %}
+{%- endfor %}
+{% endif %}
+"""
+# Keep the blank line that ends each release: without it, a heading right
+# after </details> renders as plain text
+trim = false
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+protect_breaking_commits = true
+tag_pattern = "v[0-9].*"
+commit_parsers = [
+  { message = "^(chore: )?bump", skip = true },
+  # Docs-site work is documentation, whatever its type
+  { message = "^[a-z]+\\(docs\\)", group = "<!-- 4 -->Documentation" },
+  { message = "^feat", group = "<!-- 0 -->Features" },
+  { message = "^fix", group = "<!-- 1 -->Bug fixes" },
+  { message = "^perf", group = "<!-- 2 -->Performance" },
+  { message = "^(refactor|revert)", group = "<!-- 3 -->Refactoring" },
+  { message = "^docs", group = "<!-- 4 -->Documentation" },
+  { message = "^(build|ci|test)", group = "<!-- 5 -->Tooling" },
+  { message = "^(chore|style|wip)", skip = true },
+]
+
+[remote.github]
+owner = "wavezync"
+repo = "vue3-google-signin"

@@ -8,6 +8,22 @@ export type ErrorCode =
   | "temporarily_unavailable";
 
 /**
+ * An error that isn't an OAuth response, passed to `error_callback`
+ *
+ * @export
+ * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+ * @interface NonOAuthError
+ */
+export interface NonOAuthError {
+  /**
+   * - `popup_failed_to_open`: the popup window couldn't be opened
+   * - `popup_closed`: the popup was closed before an OAuth response was returned
+   * - `unknown`: any other error
+   */
+  type: "popup_failed_to_open" | "popup_closed" | "unknown";
+}
+
+/**
  * CodeResponse from Google
  *
  * @export
@@ -82,34 +98,32 @@ export interface CodeClientConfig {
   state?: string;
 
   /**
-   * Optional, defaults to `true`. If set to false, [more granular Google Account permissions](https://developers.googleblog.com/2018/10/more-granular-google-account.html)
-   * will be disabled for clients created before 2019.
-   * No effect for newer clients, since more granular permissions is always enabled for them.
-   *
-   * @type {boolean}
-   * @default true
-   * @memberof CodeClientConfig
+   * Optional, defaults to `true`. Keeps scopes the user already granted when you
+   * request more later (incremental authorization).
    */
+  include_granted_scopes?: boolean;
+
+  /**
+   * Optional. Skips account selection when you know which user should authorize
+   * the request: their email address or the `sub` field of their ID token.
+   */
+  login_hint?: string;
+
+  /**
+   * Optional. Limits account selection to this Google Workspace domain.
+   */
+  hd?: string;
+
+  /** @deprecated No effect: granular permissions are always on. */
+  enable_granular_consent?: boolean;
+
+  /** @deprecated No effect: granular permissions are always on. */
   enable_serial_consent?: boolean;
 
-  /**
-   * Optional. If your application knows which user should authorize the request,
-   * it can use this property to provide a hint to Google.
-   * The email address for the target user. For more information, see the login_hint field in the OpenID Connect docs.
-   *
-   * @type {string}
-   * @memberof CodeClientConfig
-   */
+  /** @deprecated Use `login_hint`. */
   hint?: string;
 
-  /**
-   * Optional. If your application knows the Workspace domain the user belongs to,
-   * use this to provide a hint to Google. For more information,
-   * see the [hd](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters) field in the OpenID Connect docs.
-   *
-   * @type {string}
-   * @memberof CodeClientConfig
-   */
+  /** @deprecated Use `hd`. */
   hosted_domain?: string;
 
   /**
@@ -129,6 +143,13 @@ export interface CodeClientConfig {
    * @memberof CodeClientConfig
    */
   select_account?: boolean;
+
+  /**
+   * Optional. Handles errors that aren't OAuth responses, such as the popup being closed.
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeClientConfig
+   */
+  error_callback?: (error: NonOAuthError) => void;
 }
 
 export interface CodeClient {
@@ -193,27 +214,32 @@ export interface TokenClientConfig {
   prompt?: "" | "none" | "consent" | "select_account";
 
   /**
-   * 	Optional, defaults to true. If set to false,
-   * [more granular Google Account permissions](https://developers.googleblog.com/2018/10/more-granular-google-account.html)
-   * will be disabled for clients created before 2019. No effect for newer clients,
-   * since more granular permissions is always enabled for them.
+   * Optional, defaults to `true`. Keeps scopes the user already granted when you
+   * request more later (incremental authorization).
    */
+  include_granted_scopes?: boolean;
+
+  /**
+   * Optional. Skips account selection when you know which user should authorize
+   * the request: their email address or the `sub` field of their ID token.
+   */
+  login_hint?: string;
+
+  /**
+   * Optional. Limits account selection to this Google Workspace domain.
+   */
+  hd?: string;
+
+  /** @deprecated No effect: granular permissions are always on. */
+  enable_granular_consent?: boolean;
+
+  /** @deprecated No effect: granular permissions are always on. */
   enable_serial_consent?: boolean;
 
-  /**
-   * Optional. If your application knows which user should authorize the request,
-   * it can use this property to provide a hint to Google.
-   * The email address for the target user. For more information,
-   * see the [login_hint](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters) field in the OpenID Connect docs.
-   */
+  /** @deprecated Use `login_hint`. */
   hint?: string;
 
-  /**
-   * Optional. If your application knows the Workspace domain the user belongs to,
-   * use this to provide a hint to Google. For more information,
-   * see the [hd](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters)
-   * field in the OpenID Connect docs.
-   */
+  /** @deprecated Use `hd`. */
   hosted_domain?: string;
 
   /**
@@ -222,6 +248,13 @@ export interface TokenClientConfig {
    * request and the authorization server's response.
    */
   state?: string;
+
+  /**
+   * Optional. Handles errors that aren't OAuth responses, such as the popup being closed.
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#TokenClientConfig
+   */
+  error_callback?: (error: NonOAuthError) => void;
 }
 
 export interface OverridableTokenClientConfig {
@@ -231,19 +264,29 @@ export interface OverridableTokenClientConfig {
   prompt?: string;
 
   /**
-   * Optional. If set to false,
-   * [more granular Google Account permissions](https://developers.googleblog.com/2018/10/more-granular-google-account.html)
-   * will be disabled for clients created before 2019.
-   * No effect for newer clients, since more granular permissions is always enabled for them.
+   * Optional. A space-delimited list of scopes to request instead of the client's.
    */
-  enable_serial_consent?: boolean;
+  scope?: string;
 
   /**
-   * Optional. If your application knows which user should authorize the request,
-   * it can use this property to provide a hint to Google.
-   *  The email address for the target user. For more information,
-   * see the [login_hint](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters) field in the OpenID Connect docs.
+   * Optional, defaults to `true`. Keeps scopes the user already granted when you
+   * request more later (incremental authorization).
    */
+  include_granted_scopes?: boolean;
+
+  /**
+   * Optional. Skips account selection when you know which user should authorize
+   * the request: their email address or the `sub` field of their ID token.
+   */
+  login_hint?: string;
+
+  /** @deprecated No effect: granular permissions are always on. */
+  enable_granular_consent?: boolean;
+
+  /** @deprecated No effect: granular permissions are always on. */
+  enable_serial_consent?: boolean;
+
+  /** @deprecated Use `login_hint`. */
   hint?: string;
 
   /**

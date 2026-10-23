@@ -1,0 +1,147 @@
+---
+import LineIcon from "./LineIcon.astro";
+import type { IconName } from "./icons";
+
+const steps: [IconName, string, string][] = [
+  [
+    "vue",
+    "Your app shows the button",
+    "GoogleSignInButton renders it, or useOneTap shows Google's prompt. Google's script loads once.",
+  ],
+  [
+    "user",
+    "The user picks an account",
+    "In Google's own window, so passwords never touch your app.",
+  ],
+  [
+    "token",
+    "Your callback gets a token",
+    "An ID token that says who signed in, or an access token or code for Google APIs.",
+  ],
+  [
+    "shield",
+    "Your server verifies it",
+    "Check the token's signature with Google's public keys, then start a session.",
+  ],
+];
+---
+
+<ol class="how not-content">
+  {
+    steps.map(([icon, title, text], i) => (
+      <li>
+        <span class="badge">
+          <LineIcon name={icon} size={26} />
+          <span class="n">{i + 1}</span>
+        </span>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .how {
+    --badge: 3.5rem;
+    --gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gap);
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+  }
+  /* Dashed connector from this step's badge to the next one */
+  li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--badge) / 2);
+    left: calc(var(--badge) + 0.75rem);
+    right: calc(0.75rem - var(--gap));
+    border-top: 1.5px dashed var(--sl-color-gray-4);
+  }
+  .badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--badge);
+    height: var(--badge);
+    margin-bottom: 0.4rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 60%, transparent);
+    color: var(--sl-color-white);
+  }
+  .n {
+    position: absolute;
+    top: -0.55rem;
+    right: -0.55rem;
+    display: grid;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge :global(.seg-h) {
+    stroke: var(--sl-color-purple);
+  }
+  .badge :global(.seg-p) {
+    stroke: var(--sl-color-accent);
+  }
+  .badge :global(.seg-s) {
+    stroke: var(--sl-color-blue);
+  }
+  h3 {
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: var(--sl-color-white);
+  }
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--sl-color-gray-3);
+  }
+
+  @media (max-width: 52rem) {
+    .how {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.75rem;
+    }
+    li {
+      grid-template-columns: var(--badge) minmax(0, 1fr);
+      column-gap: 1.25rem;
+      row-gap: 0.3rem;
+    }
+    .badge {
+      grid-row: span 2;
+      margin: 0;
+    }
+    h3 {
+      align-self: end;
+    }
+    li:not(:last-child)::after {
+      top: calc(var(--badge) + 0.5rem);
+      bottom: -1.25rem;
+      left: calc(var(--badge) / 2);
+      right: auto;
+      border-top: 0;
+      border-left: 1.5px dashed var(--sl-color-gray-4);
+    }
+  }
+</style>

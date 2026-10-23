@@ -1,0 +1,48 @@
+---
+title: useCodeClient
+description: useCodeClient runs Google's OAuth2 authorization code flow and hands your callback a code for your server to exchange for tokens. Options and return values.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import codeClient from "../../../examples/CodeClientExample.vue?raw";
+
+Initiate login with [auth code flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model) using code client. Return values of the composable can be used
+to trigger the login flow and determine the readiness of the client.
+It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
+
+## Usage
+
+<Code code={codeClient} lang="vue" />
+
+## Options
+
+Every option is optional. Apart from the callbacks, options are passed to
+Google's [`CodeClientConfig`](https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeClientConfig).
+
+| Option                   | Type                                            | Description                                                                                                                                                                                                                                           |
+| ------------------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clientId`               | `MaybeRef<string>`                              | Client ID for this client. Overrides the plugin's.                                                                                                                                                                                                    |
+| `scope`                  | `MaybeRef<string \| string[]>`                  | [Scopes](https://developers.google.com/identity/protocols/oauth2/scopes) to request, on top of `openid email profile`. Changing a ref re-creates the client.                                                                                          |
+| `onSuccess`              | `(response: CodeClientSuccessResponse) => void` | Called with the [code response](https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeResponse). Send `response.code` to your server and [exchange it](/guide/creating-custom-buttons/#verify-code-on-the-backend) for tokens. |
+| `onError`                | `(response: CodeClientErrorResponse) => void`   | Called with an [OAuth error](https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeResponse): `error`, `error_description`, `error_uri`.                                                                                       |
+| `onNonOAuthError`        | `(error: NonOAuthError) => void`                | Called when the flow ends without an OAuth response. `error.type` is `popup_closed`, `popup_failed_to_open` or `unknown`. Use it to re-enable your button.                                                                                            |
+| `include_granted_scopes` | `boolean`                                       | Keep scopes the user already granted when you ask for more. Default `true`.                                                                                                                                                                           |
+| `login_hint`             | `string`                                        | Skip account selection for a known user: their email address or ID token `sub`.                                                                                                                                                                       |
+| `hd`                     | `string`                                        | Limit accounts to a Google Workspace domain.                                                                                                                                                                                                          |
+| `state`                  | `string`                                        | Returned unchanged in the response.                                                                                                                                                                                                                   |
+| `ux_mode`                | `"popup" \| "redirect"`                         | Use a popup (default) or redirect the whole page.                                                                                                                                                                                                     |
+| `redirect_uri`           | `string`                                        | Where Google sends the user in redirect mode. Must match an authorized redirect URI. Defaults to the current origin.                                                                                                                                  |
+| `select_account`         | `boolean`                                       | Always ask the user to pick an account. Default `false`.                                                                                                                                                                                              |
+
+:::note
+`hint`, `hosted_domain` and `enable_serial_consent` are deprecated. Use
+`login_hint` and `hd`; the consent flags no longer do anything.
+:::
+
+## Returns
+
+| Property                 | Type                            | Description                                                                                                                            |
+| ------------------------ | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `isReady`                | `Readonly<Ref<boolean>>`        | `true` once the client is created.                                                                                                     |
+| `login`                  | `() => void`                    | Opens Google's popup, or redirects in redirect mode.                                                                                   |
+| `codeRequestRedirectUrl` | `Readonly<Ref<string \| null>>` | The URL `login()` would open, for opening it yourself, for example in the system browser [from Electron](/guide/using-with-electron/). |

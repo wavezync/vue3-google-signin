@@ -1,0 +1,95 @@
+---
+import { Code } from "@astrojs/starlight/components";
+import InstallCommand from "./InstallCommand.astro";
+---
+
+<ol class="steps not-content">
+  <li>
+    <h3>Install the package</h3>
+    <InstallCommand />
+  </li>
+  <li>
+    <h3>Register the plugin</h3>
+    <Code
+      lang="ts"
+      title="main.ts"
+      code={`import { createApp } from "vue";
+import GoogleSignInPlugin from "vue3-google-signin";
+import App from "./App.vue";
+
+createApp(App)
+  .use(GoogleSignInPlugin, {
+    clientId: "YOUR_CLIENT_ID.apps.googleusercontent.com",
+  })
+  .mount("#app");`}
+    />
+  </li>
+  <li>
+    <h3>Add a flow</h3>
+    <p>
+      Drop in <code>GoogleSignInButton</code> or one of the composables from{" "}
+      <a href="#pick-how-users-sign-in">the flows above</a>, then follow the{" "}
+      <a href="/guide/">guide</a> for your setup.
+    </p>
+  </li>
+</ol>
+
+<style>
+  .steps {
+    display: grid;
+    gap: 2.5rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+  li {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    row-gap: 0.85rem;
+    counter-increment: step;
+  }
+  li::before {
+    content: counter(step);
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 50%;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-weight: 600;
+    color: var(--sl-color-white);
+  }
+  h3 {
+    margin: 0;
+    align-self: center;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sl-color-white);
+  }
+  li > :global(*:not(h3)) {
+    grid-column: 2;
+    justify-self: start;
+    max-width: 100%;
+  }
+  li > :global(.expressive-code) {
+    justify-self: stretch;
+  }
+  p {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+  p code {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.9em;
+    color: var(--sl-color-white);
+  }
+  a {
+    color: var(--sl-color-accent);
+  }
+</style>

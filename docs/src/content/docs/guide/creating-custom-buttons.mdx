@@ -1,0 +1,102 @@
+---
+title: Creating Custom Buttons
+description: Build your own Google login button with the useTokenClient and useCodeClient composables.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import TokenClientExample from "../../../examples/TokenClientExample.vue";
+import tokenClient from "../../../examples/TokenClientExample.vue?raw";
+import codeClient from "../../../examples/CodeClientExample.vue?raw";
+import codeVerification from "../../../examples/code-verification.js?raw";
+import CodeClientDemo from "../../../components/CodeClientDemo.vue";
+
+Often, you may want a custom designed button for Google Sign-in.
+`vue3-google-signin` provides two composables for this:
+
+- `useTokenClient`: [Token Model authentication flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model)
+- `useCodeClient`: [Code Model authentication flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model)
+
+Pick the flow that fits your use case.
+
+:::note
+A custom Google button has to follow Google's
+[branding guidelines](https://developers.google.com/identity/branding-guidelines):
+the multicolor G logo, Google's colors and wording such as "Sign in with Google".
+The demos on this page follow them.
+:::
+
+:::tip
+To choose the right authorization model, see Google's [guide](https://developers.google.com/identity/oauth2/web/guides/choose-authorization-model).
+:::
+
+## With `useTokenClient`
+
+With the [Token Model auth flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model), Google returns an **Access Token** to the browser,
+which can be used directly to call Google APIs.
+
+:::tip
+For backend API requests, you can pass this token from the frontend to the backend in a header like `x-google-token`.
+:::
+
+Both composables return `isReady` and `login`:
+
+- `isReady` is a _reactive variable_ that tells you whether the Google API has loaded.
+  Use it to disable the button until then, or however suits your application.
+- `login` is a _method_ that starts the login flow with Google.
+
+The example below disables the button until the API has loaded and while Google's popup is open.
+If the user closes the popup, or the browser blocks it, `onNonOAuthError` re-enables the button.
+
+<Code code={tokenClient} lang="vue" />
+
+<div class="demo not-content">
+  <TokenClientExample client:only="vue" />
+</div>
+
+## With `useCodeClient`
+
+With the [Code Model auth flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model), you get a `code` from Google.
+Your **backend server** verifies it to obtain user information, an Access Token, a Refresh Token, etc.
+
+Usage is similar to the previous section.
+The only difference is an _optional_ part that calls a backend API to verify the code, using the body of a **POST** request.
+
+<Code code={codeClient} lang="vue" />
+
+<div class="demo not-content">
+  <CodeClientDemo client:only="vue" />
+</div>
+
+## Verify code on the backend
+
+Once you have a code, the backend must verify it to get the **Access Token** / **Refresh Token**, as described in the [previous section](#with-usecodeclient).
+
+:::note
+This depends on your backend programming language.
+:::
+
+For completeness, here is a simple snippet that verifies the code and obtains tokens in **Node.js** with [**Express**](https://expressjs.com/).
+
+First, get the following from the [Google Developers Console](https://console.cloud.google.com/):
+
+- `CLIENT_ID`
+- `CLIENT_SECRET`
+- `REDIRECT_URL`
+
+You can find them in **Your project > APIs & auth > Credentials**.
+
+Read more about OAuth2 [here](https://developers.google.com/identity/protocols/oauth2).
+
+Install the [`google-auth-library`](https://www.npmjs.com/package/google-auth-library) package:
+
+```sh
+npm install google-auth-library
+```
+
+Here is a sample implementation using Express:
+
+<Code code={codeVerification} lang="js" title="server.js" />
+
+:::danger
+You **must** store Refresh Tokens in **secure storage**.
+:::

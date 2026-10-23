@@ -1,53 +1,30 @@
-name: NPM Package
+name: Publish to npm
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
   contents: read
-  packages: write
+  # npm trusted publishing: npm trades GitHub's OIDC token for a short-lived
+  # publish token and adds provenance, so no npm token is stored here
+  id-token: write
 
 jobs:
-  build:
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20
-          cache: "npm"
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
           registry-url: https://registry.npmjs.org/
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build
+          # No dependency cache in release builds, as npm recommends
+          cache: ""
+      - run: pnpm lint
+      - run: pnpm build
+      # Ship only what passes the same tests as CI
+      - run: pnpm --filter e2e test
+      # Trusted publishing needs npm 11.5.1+; Node 24 bundles 11.x
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-  # publish-gpr:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-  #         registry-url: https://npm.pkg.github.com/
-  #     - run: npm ci
-  #     - run: npm run build
-  #     - run: npm publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

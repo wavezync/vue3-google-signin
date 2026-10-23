@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://vue3-google-signin.wavezync.com/sitemap-index.xml

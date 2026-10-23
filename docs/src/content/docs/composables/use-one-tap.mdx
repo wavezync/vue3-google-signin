@@ -1,0 +1,58 @@
+---
+title: useOneTap
+description: useOneTap shows Google's One Tap sign-in prompt, automatically or when you call it, and hands your callback an ID token. Options and return values.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import automatic from "../../../examples/OneTapAutomaticExample.vue?raw";
+import manual from "../../../examples/OneTapManualExample.vue?raw";
+
+Use Google [One Tap login](https://developers.google.com/identity/gsi/web/guides/display-google-one-tap) flow.
+
+This composable provides automatic login and manual control over the flow initialization.
+For more refer the [guide](/guide/one-tap-login/).
+
+## Usage
+
+### Automatic
+
+<Code code={automatic} lang="vue" />
+
+### Manual Trigger
+
+<Code code={manual} lang="vue" />
+
+## Options
+
+Every option is optional. Options typed `MaybeRef` also accept a ref, and
+changing it re-initializes One Tap.
+
+| Option                              | Type                                               | Description                                                                                                                                                                                                 |
+| ----------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clientId`                          | `MaybeRef<string>`                                 | Client ID for this prompt. Overrides the plugin's.                                                                                                                                                          |
+| `onSuccess`                         | `(response: CredentialSuccessResponse) => void`    | Called with the [credential response](https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse). Decode `response.credential` with [`decodeCredential`](/helpers/account/). |
+| `onError`                           | `(response: CredentialResponse) => void`           | Called when Google responds without a credential.                                                                                                                                                           |
+| `onPromptMomentNotification`        | `(notification: PromptMomentNotification) => void` | Called as the prompt is displayed, skipped or dismissed. See [`PromptMomentNotification`](https://developers.google.com/identity/gsi/web/reference/js-reference#PromptMomentNotification).                  |
+| `onNativeCallback`                  | `(response: NativeCallbackResponse) => void`       | Handles a [password credential](https://developers.google.com/identity/gsi/web/reference/js-reference#native_callback) picked from the browser's password manager.                                          |
+| `onIntermediateIframeCloseCallback` | `() => void`                                       | Called when the user closes [intermediate iframe](https://developers.google.com/identity/gsi/web/reference/js-reference#intermediate_iframe_close_callback) One Tap.                                        |
+| `disableAutomaticPrompt`            | `MaybeRef<boolean>`                                | Don't prompt on mount. Call `login()` to show the prompt. Default `false`.                                                                                                                                  |
+| `autoSelect`                        | `MaybeRef<boolean>`                                | [Sign returning users in](https://developers.google.com/identity/gsi/web/reference/js-reference#auto_select) without a click when only one Google session has approved your app.                            |
+| `loginUri`                          | `MaybeRef<string>`                                 | [Your login endpoint](https://developers.google.com/identity/gsi/web/reference/js-reference#login_uri), for the redirect UX.                                                                                |
+| `cancelOnTapOutside`                | `MaybeRef<boolean>`                                | [Close the prompt](https://developers.google.com/identity/gsi/web/reference/js-reference#cancel_on_tap_outside) when the user clicks outside it. Default `true`.                                            |
+| `promptParentId`                    | `MaybeRef<string>`                                 | [DOM ID](https://developers.google.com/identity/gsi/web/reference/js-reference#prompt_parent_id) of the element to show the prompt in.                                                                      |
+| `nonce`                             | `MaybeRef<string>`                                 | [Random string](https://developers.google.com/identity/gsi/web/reference/js-reference#nonce) included in the ID token, to prevent replay attacks.                                                           |
+| `context`                           | `MaybeRef<"signin" \| "signup" \| "use">`          | [Changes the prompt's wording](https://developers.google.com/identity/gsi/web/reference/js-reference#context).                                                                                              |
+| `stateCookieDomain`                 | `MaybeRef<string>`                                 | [Parent domain](https://developers.google.com/identity/gsi/web/reference/js-reference#state_cookie_domain) to share One Tap state across subdomains.                                                        |
+| `allowedParentOrigin`               | `MaybeRef<string \| string[]>`                     | [Origins allowed to embed](https://developers.google.com/identity/gsi/web/reference/js-reference#allowed_parent_origin) One Tap in an intermediate iframe.                                                  |
+| `itpSupport`                        | `MaybeRef<boolean>`                                | [Upgraded One Tap UX](https://developers.google.com/identity/gsi/web/reference/js-reference#itp_support) on browsers with Intelligent Tracking Prevention.                                                  |
+| `loginHint`                         | `MaybeRef<string>`                                 | [Skip account selection](https://developers.google.com/identity/gsi/web/reference/js-reference#login_hint) for a known user: their email address or ID token `sub`.                                         |
+| `hd`                                | `MaybeRef<string>`                                 | [Limit accounts](https://developers.google.com/identity/gsi/web/reference/js-reference#hd) to a Google Workspace domain, or `*` for any Workspace account.                                                  |
+| `colorScheme`                       | `MaybeRef<"default" \| "light" \| "dark">`         | [Color scheme](https://developers.google.com/identity/gsi/web/reference/js-reference#color_scheme) of the prompt. Defaults to the system setting.                                                           |
+| `essentialClaims`                   | `MaybeRef<string>`                                 | [Extra claims](https://developers.google.com/identity/gsi/web/reference/js-reference#essential_claims) for the ID token, such as `"auth_time, amr"`.                                                        |
+
+## Returns
+
+| Property  | Type                     | Description                                                        |
+| --------- | ------------------------ | ------------------------------------------------------------------ |
+| `isReady` | `Readonly<Ref<boolean>>` | `true` once Google's script has loaded and One Tap is initialized. |
+| `login`   | `() => void`             | Shows the prompt. Does nothing until `isReady` is `true`.          |

@@ -1,0 +1,14 @@
+# Old VitePress URLs (*.html) -> Starlight's directory URLs
+/index.html / 301
+/components/google-signin-button.html /components/google-signin-button/ 301
+/composables/use-code-client.html /composables/use-code-client/ 301
+/composables/use-gsi-script.html /composables/use-gsi-script/ 301
+/composables/use-one-tap.html /composables/use-one-tap/ 301
+/composables/use-token-client.html /composables/use-token-client/ 301
+/guide/creating-custom-buttons.html /guide/creating-custom-buttons/ 301
+/guide/google-signin-button.html /guide/google-signin-button/ 301
+/guide/index.html /guide/ 301
+/guide/one-tap-login.html /guide/one-tap-login/ 301
+/guide/using-with-electron.html /guide/using-with-electron/ 301
+/helpers/account.html /helpers/account/ 301
+/helpers/oauth2.html /helpers/oauth2/ 301

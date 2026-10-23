@@ -1,0 +1,47 @@
+---
+title: One Tap Login
+description: Show Google's One Tap sign-in prompt in a Vue 3 app with useOneTap, either when the page loads or when your own code triggers it.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import OneTapAutomaticExample from "../../../examples/OneTapAutomaticExample.vue";
+import automatic from "../../../examples/OneTapAutomaticExample.vue?raw";
+import OneTapManualExample from "../../../examples/OneTapManualExample.vue";
+import manual from "../../../examples/OneTapManualExample.vue?raw";
+
+## Automatically
+
+Google [One Tap](https://developers.google.com/identity/gsi/web/guides/display-google-one-tap) login is another way to quickly onboard users.
+It displays a small dialog to the side, or a popup if the dialog's visibility is limited.
+
+Use the `useOneTap` composable. It triggers the One Tap prompt automatically once the Google API has loaded.
+
+<Code code={automatic} lang="vue" />
+
+<OneTapAutomaticExample client:only="vue" />
+
+:::note
+If you close the automatic One Tap prompt, you might not see it again for a while because
+Google enforces an [exponential cooldown](https://developers.google.com/identity/gsi/web/guides/features#exponential_cooldown).
+:::
+
+## Manually
+
+You may want to trigger the One Tap flow manually. Use the values returned by `useOneTap` for this.
+
+:::tip
+To disable the automatic prompt, set `disableAutomaticPrompt: true`.
+:::
+
+<Code code={manual} lang="vue" />
+
+<div class="demo not-content">
+  <OneTapManualExample client:only="vue" />
+</div>
+
+:::note
+If you closed a One Tap prompt before, you might not see it for a while because
+Google enforces an [exponential cooldown](https://developers.google.com/identity/gsi/web/guides/features#exponential_cooldown).
+
+Even clicking the button may not show the prompt during the cooldown.
+:::

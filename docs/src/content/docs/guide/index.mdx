@@ -1,0 +1,134 @@
+---
+title: Get Started
+description: Install vue3-google-signin and register the plugin in your Vue 3 or Nuxt app.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## Prerequisite
+
+This project uses the [Google Identity Services](https://developers.google.com/identity/gsi/web) library under the hood.
+It's a set of helpers that let you add Google login to Vue 3 apps.
+
+You need to configure a project in the [Google API Console](https://console.developers.google.com/apis) and obtain a **Client ID** by following
+Google's [guide](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id).
+
+:::tip
+Make sure to properly configure **Redirects** and **JavaScript Origins** in the Cloud Console.
+
+For popups to work, you may need to add the same URL to **both** Redirects and JavaScript Origins.
+:::
+
+:::note
+If you want to use the library with Nuxt, jump to the [Nuxt section](#with-nuxt).
+:::
+
+## Installation
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+
+```sh
+npm install vue3-google-signin
+```
+
+</TabItem>
+  <TabItem label="pnpm">
+
+```sh
+pnpm add vue3-google-signin
+```
+
+</TabItem>
+  <TabItem label="yarn">
+
+```sh
+yarn add vue3-google-signin
+```
+
+</TabItem>
+</Tabs>
+
+## Setup the Library
+
+In your application entry point (`main.js` or `main.ts`), register the plugin:
+
+```js title="main.ts"
+import GoogleSignInPlugin from "vue3-google-signin";
+
+app.use(GoogleSignInPlugin, {
+  clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
+});
+
+app.mount("#app");
+```
+
+Now the library is ready to be used.
+
+### Setting the client ID later
+
+If your client ID comes from your server, pass a ref and set it when it
+arrives. Nothing initializes until the ref has a value, and changing it
+re-initializes every composable and button.
+
+```ts title="main.ts"
+import { ref } from "vue";
+import GoogleSignInPlugin from "vue3-google-signin";
+
+const clientId = ref<string>();
+app.use(GoogleSignInPlugin, { clientId });
+
+fetch("/api/config")
+  .then((response) => response.json())
+  .then((config) => (clientId.value = config.googleClientId));
+```
+
+Each composable also takes a `clientId` option, and `GoogleSignInButton` a
+`client-id` prop, which override the plugin's. See
+[Dynamic Client ID](/guide/dynamic-client-id/) for the details.
+
+## With Nuxt
+
+To use the library with **Nuxt 3**, use the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module.
+It takes care of component registration and plugin initialization.
+
+### Add package
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+
+```sh
+npm install nuxt-vue3-google-signin
+```
+
+</TabItem>
+  <TabItem label="pnpm">
+
+```sh
+pnpm add nuxt-vue3-google-signin
+```
+
+</TabItem>
+  <TabItem label="yarn">
+
+```sh
+yarn add nuxt-vue3-google-signin
+```
+
+</TabItem>
+</Tabs>
+
+### Initialize
+
+Add the following entry to `nuxt.config.ts` (or `nuxt.config.js`):
+
+```ts title="nuxt.config.ts"
+import { defineNuxtConfig } from "nuxt/config";
+
+export default defineNuxtConfig({
+  modules: ["nuxt-vue3-google-signin"],
+  googleSignIn: {
+    clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
+  },
+});
+```

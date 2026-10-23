@@ -1,0 +1,599 @@
+---
+import LineIcon from "./LineIcon.astro";
+---
+
+<bento-grid class="bento not-content">
+  <article class="wide">
+    <div class="art" aria-hidden="true">
+      <div class="timeline">
+        <div class="lane">
+          <span class="who">Server</span>
+          <div class="track">
+            <span class="bar server" style="--from: 0%; --to: 30%"
+              >Render HTML</span
+            >
+          </div>
+        </div>
+        <div class="lane">
+          <span class="who">Browser</span>
+          <div class="track">
+            <span class="bar hydrate" style="--from: 30%; --to: 52%"
+              >Hydrate</span
+            >
+            <span class="bar script" style="--from: 52%; --to: 82%"
+              >Load Google's script</span
+            >
+            <span class="bar ready" style="--from: 82%; --to: 100%"
+              >isReady</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text">
+      <h3><LineIcon name="layers" size={20} />Works with Nuxt and SSR</h3>
+      <p>
+        Components render on the server. Google's script loads once the page
+        reaches the browser, then <code>isReady</code> turns true.
+      </p>
+    </div>
+  </article>
+
+  <article>
+    <div class="art" aria-hidden="true">
+      <div class="size">
+        <p class="figure">4.3 kB</p>
+        <div class="meter ours">
+          <span>vue3-google-signin</span><span>4.3 kB</span>
+          <span class="track"><span class="fill"></span></span>
+        </div>
+        <div class="meter theirs">
+          <span>Google's script</span><span>≈ 100 kB</span>
+          <span class="track"><span class="fill"></span></span>
+        </div>
+      </div>
+    </div>
+    <div class="text">
+      <h3><LineIcon name="box" size={20} />Small</h3>
+      <p>
+        4.3 kB gzipped, about 4% of Google's own script. Vue is the only peer
+        dependency.
+      </p>
+    </div>
+  </article>
+
+  <article>
+    <div class="art" aria-hidden="true">
+      <div class="editor">
+        <code class="code"
+          ><span><span class="fn">useTokenClient</span>({"{"}</span><span
+            >{"  "}onSuccess: (<span class="arg">res</span>) =&gt; {"{"}</span
+          ><span>{"    "}res.<i class="caret"></i></span></code
+        >
+        <ul class="suggest">
+          <li class="on"><i></i>access_token<span>string</span></li>
+          <li><i></i>expires_in<span>string</span></li>
+          <li><i></i>scope<span>string</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text">
+      <h3><LineIcon name="braces" size={20} />Typed callbacks</h3>
+      <p>Options and responses are typed, so your editor lists the fields.</p>
+    </div>
+  </article>
+
+  <article>
+    <div class="art" aria-hidden="true">
+      <ol class="log">
+        <li><i></i><code>clientId = ref()</code><span>waiting</span></li>
+        <li class="ok">
+          <i></i><code>clientId.value = acme</code><span>ready</span>
+        </li>
+        <li class="ok">
+          <i></i><code>clientId.value = globex</code><span>switched</span>
+        </li>
+        <li class="ok"><i></i><code>isReady</code><span>true</span></li>
+      </ol>
+    </div>
+    <div class="text">
+      <h3>
+        <LineIcon name="cloudDown" size={20} />Dynamic, multi-tenant client IDs
+      </h3>
+      <p>
+        Set the client ID from your server, switch it per tenant, or give each
+        component its own. <a href="/guide/dynamic-client-id/">See how</a>
+      </p>
+    </div>
+  </article>
+
+  <article>
+    <div class="art" aria-hidden="true">
+      <div class="popup">
+        <div class="window">
+          <div class="titlebar">
+            <span>Sign in</span>
+            <span class="close"><LineIcon name="close" size={12} /></span>
+            <svg class="cursor" viewBox="0 0 24 24" width="22" height="22"
+              ><path d="M5 3l14 7.5-6 1.7L10 18z"></path></svg
+            >
+          </div>
+          <div class="lines"><i></i><i></i><i class="short"></i></div>
+        </div>
+        <code class="event">type: "popup_closed"</code>
+      </div>
+    </div>
+    <div class="text">
+      <h3><LineIcon name="popupClosed" size={20} />Knows when the popup closes</h3>
+      <p>
+        <code>onNonOAuthError</code> tells you, so you can re-enable your button.
+      </p>
+    </div>
+  </article>
+</bento-grid>
+
+<script>
+  // A soft spotlight that follows the pointer across the tiles
+  class BentoGrid extends HTMLElement {
+    connectedCallback() {
+      const tiles = [...this.querySelectorAll<HTMLElement>("article")];
+      this.addEventListener("pointermove", (event) => {
+        for (const tile of tiles) {
+          const box = tile.getBoundingClientRect();
+          tile.style.setProperty("--x", `${event.clientX - box.left}px`);
+          tile.style.setProperty("--y", `${event.clientY - box.top}px`);
+        }
+      });
+    }
+  }
+  customElements.define("bento-grid", BentoGrid);
+</script>
+
+<style>
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  article {
+    --line: color-mix(in srgb, var(--sl-color-gray-5) 70%, transparent);
+    position: relative;
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sl-color-gray-6) 75%, transparent),
+      color-mix(in srgb, var(--sl-color-gray-6) 25%, transparent)
+    );
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .wide {
+    grid-column: span 4;
+  }
+  /* Spotlight fill and rim, shown while the pointer is over the grid */
+  article::before,
+  article::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      22rem circle at var(--x, 50%) var(--y, -30%),
+      color-mix(in srgb, var(--sl-color-accent) 14%, transparent),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  article::after {
+    z-index: 1;
+    padding: 1px;
+    background: radial-gradient(
+      18rem circle at var(--x, 50%) var(--y, -30%),
+      color-mix(in srgb, var(--sl-color-accent) 70%, transparent),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  bento-grid:hover article::before,
+  bento-grid:hover article::after {
+    opacity: 1;
+  }
+
+  /* The illustration on top of each tile, on a faint dot grid */
+  .art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 14rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    container-type: inline-size;
+  }
+  .art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--sl-color-gray-4) 55%, transparent) 1px,
+      transparent 1.4px
+    );
+    background-size: 16px 16px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+  .text {
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sl-color-white);
+  }
+  h3 :global(svg) {
+    flex: none;
+    color: var(--sl-color-accent-high);
+  }
+  .text p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--sl-color-gray-3);
+  }
+  .text a {
+    color: var(--sl-color-accent);
+  }
+  .text code {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.88em;
+    color: var(--sl-color-white);
+  }
+  .art code,
+  .art .log,
+  .art .suggest {
+    font-family: var(--__sl-font-mono);
+  }
+
+  /* SSR: server and browser lanes */
+  .timeline {
+    display: grid;
+    gap: 0.9rem;
+    width: 100%;
+  }
+  .lane {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .who {
+    font-size: 0.8rem;
+    text-align: end;
+    color: var(--sl-color-gray-3);
+  }
+  .timeline .track {
+    position: relative;
+    height: 2.4rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--sl-color-black) 60%, transparent);
+  }
+  .bar {
+    position: absolute;
+    inset-block: 0.3rem;
+    left: calc(var(--from) + 0.3rem);
+    width: calc(var(--to) - var(--from) - 0.4rem);
+    display: flex;
+    align-items: center;
+    padding-inline: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .server {
+    background: var(--sl-color-purple-low);
+    color: var(--sl-color-purple-high);
+  }
+  .hydrate {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+  }
+  .script {
+    background: var(--sl-color-blue-low);
+    color: var(--sl-color-blue-high);
+  }
+  .ready {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-family: var(--__sl-font-mono);
+  }
+  /* Too narrow for a to-scale timeline: list the stages in order instead */
+  @container (max-width: 30rem) {
+    .lane {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.35rem;
+    }
+    .who {
+      text-align: start;
+    }
+    .timeline .track {
+      display: grid;
+      gap: 0.3rem;
+      height: auto;
+      padding: 0.3rem;
+    }
+    .bar {
+      position: static;
+      width: auto;
+      height: 1.9rem;
+    }
+  }
+
+  /* Size: big figure and a bar against Google's script */
+  .size {
+    display: grid;
+    gap: 0.7rem;
+    width: 100%;
+  }
+  .figure {
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: 3.25rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--sl-color-white);
+  }
+  .meter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+  }
+  .meter .track {
+    grid-column: span 2;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sl-color-gray-5) 60%, transparent);
+    overflow: hidden;
+  }
+  .fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+  }
+  .ours .fill {
+    width: 4.3%;
+    min-width: 0.5rem;
+    background: var(--sl-color-accent);
+  }
+  .theirs .fill {
+    width: 100%;
+    background: var(--sl-color-gray-4);
+  }
+
+  /* Types: an editor with autocomplete open */
+  .editor {
+    width: 100%;
+    max-width: 17rem;
+    font-size: 0.78rem;
+  }
+  .code {
+    display: grid;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-2);
+    white-space: pre;
+  }
+  .fn {
+    color: var(--sl-color-blue-high);
+  }
+  .arg {
+    color: var(--sl-color-purple-high);
+  }
+  .caret {
+    display: inline-block;
+    width: 1.5px;
+    height: 1em;
+    vertical-align: text-bottom;
+    background: var(--sl-color-white);
+  }
+  .suggest {
+    margin: -0.35rem 0 0 6ch;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.6rem;
+    background: var(--sl-color-gray-6);
+    list-style: none;
+    box-shadow: 0 14px 30px -14px rgb(0 0 0 / 0.6);
+  }
+  .suggest li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.35rem;
+    color: var(--sl-color-gray-2);
+  }
+  .suggest li.on {
+    background: color-mix(in srgb, var(--sl-color-accent) 22%, transparent);
+    color: var(--sl-color-white);
+  }
+  .suggest i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 0.2rem;
+    background: var(--sl-color-blue);
+  }
+  .suggest span {
+    margin-inline-start: auto;
+    color: var(--sl-color-gray-3);
+  }
+
+  /* Client ID: a short log, dots joined by a dashed line */
+  .log {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 19rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.78rem;
+  }
+  .log::before {
+    content: "";
+    position: absolute;
+    inset-block: 0.5rem;
+    left: 0.34rem;
+    border-left: 1.5px dashed var(--sl-color-gray-4);
+  }
+  .log li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 0.75rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+  }
+  .log i {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 2px solid var(--sl-color-gray-4);
+    border-radius: 50%;
+    background: var(--sl-color-black);
+  }
+  .log code {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--sl-color-gray-2);
+  }
+  .log span {
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-3);
+  }
+  .log .ok i {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent);
+  }
+  .log .ok span {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+  }
+
+  /* Popup: a closing window and the event it fires */
+  .popup {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+  }
+  .window {
+    position: relative;
+    width: 12.5rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.75rem;
+    background: var(--sl-color-black);
+  }
+  .titlebar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.5rem 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.72rem;
+    color: var(--sl-color-gray-3);
+  }
+  .close {
+    display: grid;
+    place-items: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 0.35rem;
+    background: var(--sl-color-red-low);
+    color: var(--sl-color-red-high);
+  }
+  .cursor {
+    position: absolute;
+    right: -0.55rem;
+    top: 1rem;
+    fill: var(--sl-color-white);
+    stroke: var(--sl-color-black);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .lines {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.85rem 0.75rem 1rem;
+  }
+  .lines i {
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--sl-color-gray-5);
+  }
+  .lines .short {
+    width: 60%;
+  }
+  .event {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--sl-color-red) 45%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sl-color-red) 12%, transparent);
+    font-size: 0.72rem;
+    color: var(--sl-color-red-high);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 60rem) {
+    .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    article {
+      grid-column: span 1;
+    }
+    .wide {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 36rem) {
+    .bento {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .wide {
+      grid-column: span 1;
+    }
+  }
+</style>

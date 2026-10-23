@@ -1,0 +1,155 @@
+---
+// Replaces Starlight's hero on the home page (the only page with `hero`).
+import "@fontsource-variable/outfit/wght.css";
+// Preloaded below, so the headline's font is on its way before the CSS asks
+import outfit from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
+import InstallCommand from "./InstallCommand.astro";
+import HeroFlow from "./HeroFlow.astro";
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero ?? {};
+
+// The G ring from the logo (src/assets/logo.svg), drawn huge behind the flow
+const ring = [
+  ["#ff3d00", "M1085.7 895L887.6 895A602 602 0 0 1 1322.6 511.5L1161.7 796A421 421 0 0 0 1085.7 895Z"],
+  ["#ff3d00", "M1426 678.9L1525.8 501.3A602 602 0 0 1 1982 809.8L1835.2 920.3A421 421 0 0 0 1426 678.9Z"],
+  ["#ffc107", "M1835.2 920.3L1982 809.8A602 602 0 0 1 1985.5 1381.7L1839 1269.3A421 421 0 0 0 1835.2 920.3Z"],
+  ["#4caf50", "M1839 1269.3L1985.5 1381.7A602 602 0 0 1 978.3 1467.9L1079.7 1291.8A421 421 0 0 0 1839 1269.3Z"],
+];
+---
+
+<link rel="preload" href={outfit} as="font" type="font/woff2" crossorigin />
+
+<section class="hero not-content">
+  <div class="copy">
+    <h1 id="_top" data-page-title set:html={title} />
+    {tagline && <p class="tagline" set:html={tagline} />}
+    <InstallCommand />
+    <div class="actions">
+      {
+        actions.map(({ text, link, variant }) => (
+          <a href={link} class:list={["action", variant ?? "primary"]}>
+            {text}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div class="stage">
+    <svg class="ring glow" viewBox="700 480 1400 1240" aria-hidden="true">
+      {ring.map(([fill, d]) => <path fill={fill} d={d} />)}
+    </svg>
+    <svg class="ring line" viewBox="700 480 1400 1240" aria-hidden="true">
+      {ring.map(([fill, d]) => <path stroke={fill} d={d} />)}
+    </svg>
+    <HeroFlow />
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-block: clamp(2.5rem, 8vh, 6rem) clamp(3rem, 10vh, 7rem);
+  }
+
+  .copy {
+    display: grid;
+    justify-items: start;
+    gap: 1.75rem;
+  }
+  h1 {
+    margin: 0;
+    font-family: "Outfit Variable", var(--__sl-font);
+    font-size: clamp(3rem, 2rem + 4.2vw, 5.5rem);
+    font-weight: 650;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    color: var(--sl-color-white);
+    text-wrap: balance;
+  }
+  .tagline {
+    margin: 0;
+    max-width: 34ch;
+    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--sl-color-gray-2);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.9rem;
+    padding: 0 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+  }
+  .primary {
+    background: var(--sl-color-white);
+    color: var(--sl-color-black);
+  }
+  .primary:hover {
+    background: var(--sl-color-accent-high);
+  }
+  .minimal,
+  .secondary {
+    border: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+  .minimal:hover,
+  .secondary:hover {
+    border-color: var(--sl-color-gray-3);
+  }
+  .action:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 3px;
+  }
+
+  .stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+  }
+  .ring {
+    position: absolute;
+    z-index: -1;
+    width: 150%;
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+  }
+  .glow {
+    opacity: 0.32;
+    filter: blur(70px);
+  }
+  .line path {
+    fill: none;
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.55;
+  }
+  :root[data-theme="light"] .glow {
+    opacity: 0.22;
+  }
+
+
+  @media (max-width: 50rem) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ring {
+      width: 120%;
+    }
+  }
+</style>

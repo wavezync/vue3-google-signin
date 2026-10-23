@@ -1,0 +1,19 @@
+// Cloudflare Workers config for the docs site, a static Astro build served as
+// Workers static assets. Workers Builds deploys it from the repo root (where
+// this file and the lockfile live): build `pnpm docs:build`, deploy
+// `npx wrangler deploy`. Build variables (PNPM_VERSION, VITE_GOOGLE_CLIENT_ID,
+// optional GITHUB_TOKEN) are set in the Worker's Settings > Build.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard
+  "name": "vue3-google-signin",
+  "compatibility_date": "2026-10-19",
+  "assets": {
+    "directory": "./docs/dist",
+    // Starlight builds a 404.html; serve it, with a 404 status, for unknown paths
+    "not_found_handling": "404-page",
+    // /guide/ serves guide/index.html and /guide redirects there, as on Pages.
+    // docs/dist/_redirects and _headers still apply.
+    "html_handling": "auto-trailing-slash",
+  },
+}

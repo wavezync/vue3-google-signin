@@ -1,0 +1,73 @@
+---
+title: Vue3 Google Sign-in
+description: Add Sign in with Google, One Tap and Google OAuth2 to Vue 3 and Nuxt apps with one component and three composables, built on Google Identity Services.
+template: splash
+head:
+  - tag: title
+    content: "Vue3 Google Sign-in: Google login and One Tap for Vue 3"
+  - tag: meta
+    attrs:
+      property: og:title
+      content: "Vue3 Google Sign-in: Google login and One Tap for Vue 3"
+  - tag: meta
+    attrs:
+      property: og:type
+      content: website
+  - tag: script
+    attrs:
+      type: application/ld+json
+    content: '{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"vue3-google-signin","alternateName":"Vue3 Google Sign-in","description":"Add Sign in with Google, One Tap and Google OAuth2 to Vue 3 and Nuxt apps with one component and three composables, built on Google Identity Services.","url":"https://vue3-google-signin.wavezync.com/","codeRepository":"https://github.com/wavezync/vue3-google-signin","programmingLanguage":["TypeScript","Vue"],"runtimePlatform":"Vue 3","license":"https://opensource.org/licenses/MIT","image":"https://vue3-google-signin.wavezync.com/og.jpg","author":{"@type":"Person","name":"Kasun Vithanage","url":"https://kasvith.me"},"keywords":"Vue 3, Google Sign-In, Google One Tap, Google Identity Services, OAuth2, Nuxt"}'
+hero:
+  title: Google <span style="white-space:nowrap">sign-in</span> for Vue 3.
+  tagline: Google's sign-in button, One Tap and OAuth2 token and code flows, as one Vue component and three composables.
+  actions:
+    - text: Get Started
+      link: /guide/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/wavezync/vue3-google-signin
+      icon: external
+      variant: minimal
+---
+
+import HowItWorks from "../../components/HowItWorks.astro";
+import FlowExplorer from "../../components/FlowExplorer.astro";
+import Features from "../../components/Features.astro";
+import UsedBy from "../../components/UsedBy.astro";
+import GetStarted from "../../components/GetStarted.astro";
+import MadeBy from "../../components/MadeBy.astro";
+
+## How sign-in works
+
+Google runs the account picker and consent screens. Your app gets a token and
+decides what to do with it.
+
+<HowItWorks />
+
+## Pick how users sign in
+
+Follow the questions to the flow that fits, then compare its code and what your
+app gets back. Each one is a few lines of Vue.
+
+<FlowExplorer />
+
+## Built for real apps
+
+It handles the parts around Google's script, so your own code stays small.
+
+<Features />
+
+## Used by
+
+Projects like these sign users in with it, along with hundreds more on
+[GitHub](https://github.com/wavezync/vue3-google-signin/network/dependents).
+Using it too?
+[Add yours](https://github.com/wavezync/vue3-google-signin/edit/main/docs/src/content/docs/index.mdx).
+
+<UsedBy />
+
+## Get started
+
+<GetStarted />
+
+<MadeBy />

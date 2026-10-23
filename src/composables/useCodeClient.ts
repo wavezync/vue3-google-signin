@@ -3,60 +3,88 @@ import type {
   CodeClient,
   CodeResponse,
   CodeClientConfig,
+  NonOAuthError,
 } from "@/interfaces/oauth2";
-import { inject, unref, watchEffect, ref, readonly, type Ref } from "vue";
-import { GoogleClientIdKey } from "@/utils/symbols";
+import { unref, watchEffect, ref, readonly, type Ref } from "vue";
+import { useClientId } from "@/utils/symbols";
 import type { MaybeRef } from "@/utils/types";
 import { buildCodeRequestRedirectUrl } from "../utils/oauth2";
 
 /**
- * On success with implicit flow
+ * Successful code response
  */
-export type ImplicitFlowSuccessResponse = Omit<
+export type CodeClientSuccessResponse = Omit<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * On error with implicit flow
+ * Code response with an OAuth error
  */
-export type ImplicitFlowErrorResponse = Pick<
+export type CodeClientErrorResponse = Pick<
   CodeResponse,
   "error" | "error_description" | "error_uri"
 >;
 
 /**
- * Options for Implicit flow
+ * Options for `useCodeClient`
  *
  * @export
- * @interface ImplicitFlowOptions
- * @extends {(Omit<CodeClientConfig, "client_id" | "scope" | "callback">)}
+ * @interface UseCodeClientOptions
+ * @extends {(Omit<CodeClientConfig, "client_id" | "scope" | "callback" | "error_callback">)}
  */
-export interface ImplicitFlowOptions
-  extends Omit<CodeClientConfig, "client_id" | "scope" | "callback"> {
+export interface UseCodeClientOptions extends Omit<
+  CodeClientConfig,
+  "client_id" | "scope" | "callback" | "error_callback"
+> {
   /**
    * On success callback
    *
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
-  onSuccess?: (response: ImplicitFlowSuccessResponse) => void;
+  onSuccess?: (response: CodeClientSuccessResponse) => void;
 
   /**
    * On error callback
    *
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
-  onError?: (errorResponse: ImplicitFlowErrorResponse) => void;
+  onError?: (errorResponse: CodeClientErrorResponse) => void;
+
+  /**
+   * Called when the flow ends without an OAuth response,
+   * for example when the user closes the popup or it can't be opened
+   *
+   * @see https://developers.google.com/identity/oauth2/web/reference/js-reference#CodeClientConfig
+   * @memberof UseCodeClientOptions
+   */
+  onNonOAuthError?: (error: NonOAuthError) => void;
 
   /**
    * Authorization scopes
    *
    * @type {(MaybeRef<string> | MaybeRef<string[]>)}
    * @see https://developers.google.com/identity/protocols/oauth2/scopes
-   * @memberof ImplicitFlowOptions
+   * @memberof UseCodeClientOptions
    */
   scope?: MaybeRef<string> | MaybeRef<string[]>;
+
+  /**
+   * Client ID for this code client. Overrides the one given to the plugin.
+   *
+   * @type {MaybeRef<string>}
+   * @see https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+   * @memberof UseCodeClientOptions
+   */
+  clientId?: MaybeRef<string | undefined>;
 }
+
+/** @deprecated Renamed to {@link UseCodeClientOptions}. */
+export type ImplicitFlowOptions = UseCodeClientOptions;
+/** @deprecated Renamed to {@link CodeClientSuccessResponse}. */
+export type ImplicitFlowSuccessResponse = CodeClientSuccessResponse;
+/** @deprecated Renamed to {@link CodeClientErrorResponse}. */
+export type ImplicitFlowErrorResponse = CodeClientErrorResponse;
 
 /**
  * Result of composable
@@ -91,29 +119,37 @@ export interface UseCodeClientReturn {
 }
 
 /**
- * Initiate login with implicit flow using code client. Return values of the composable can be used
+ * Initiate login with the authorization code flow using a code client. Return values of the composable can be used
  * to trigger the login flow and determine the readiness of the client.
  * It also provides callbacks such as `onSuccess` and `onError` that can be used to obtain the results from the login client.
  *
  * @export
- * @param {ImplicitFlowOptions} [options={}]
+ * @param {UseCodeClientOptions} [options={}]
  * @see https://developers.google.com/identity/oauth2/web/guides/use-code-model
  * @return {*}  {UseCodeClientReturn}
  */
 export default function useCodeClient(
-  options: ImplicitFlowOptions = {},
+  options: UseCodeClientOptions = {},
 ): UseCodeClientReturn {
-  const { scope = "", onError, onSuccess, ...rest } = options;
+  const {
+    clientId: ownClientId,
+    scope = "",
+    onError,
+    onSuccess,
+    onNonOAuthError,
+    ...rest
+  } = options;
 
   const { scriptLoaded } = useGsiScript();
-  const clientId = inject<string>(GoogleClientIdKey);
+  const clientId = useClientId(ownClientId);
   const isReady = ref(false);
   const codeRequestRedirectUrl = ref<string | null>(null);
   let client: CodeClient | undefined;
 
   watchEffect(() => {
     isReady.value = false;
-    if (!scriptLoaded.value) return;
+    const client_id = clientId();
+    if (!scriptLoaded.value || !client_id) return;
 
     const scopeValue = unref(scope);
     const scopes = Array.isArray(scopeValue)
@@ -122,21 +158,20 @@ export default function useCodeClient(
     const computedScopes = `openid email profile ${scopes}`;
 
     codeRequestRedirectUrl.value = buildCodeRequestRedirectUrl({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: computedScopes,
       ...rest,
     });
 
     client = window.google?.accounts.oauth2.initCodeClient({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client_id: clientId!,
+      client_id,
       scope: computedScopes,
       callback: (response: CodeResponse) => {
         if (response.error) return onError?.(response);
 
         onSuccess?.(response);
       },
+      error_callback: onNonOAuthError,
       ...rest,
     });
 

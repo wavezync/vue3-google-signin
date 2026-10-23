@@ -59,20 +59,20 @@ export function revokeAccessToken(accessToken: string, done?: () => void) {
   });
 }
 
-export type ImplicitFlowOptions = Omit<
+export type CodeRequestRedirectUrlOptions = Omit<
   CodeClientConfig,
   "redirect" | "callback" | "ux_mode"
 >;
 
 /**
- * Get the OAuth2 redirect URL for login with implicit flow
+ * Get the OAuth2 redirect URL for the authorization code flow
  *
  * @export
- * @param {ImplicitFlowOptions} options
+ * @param {CodeRequestRedirectUrlOptions} options
  * @return {string}
  */
 export function buildCodeRequestRedirectUrl(
-  options: ImplicitFlowOptions,
+  options: CodeRequestRedirectUrlOptions,
 ): string {
   const baseUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
@@ -80,15 +80,16 @@ export function buildCodeRequestRedirectUrl(
     gsiwebsdk: "3",
     client_id: options.client_id,
     scope: options.scope,
-    include_granted_scopes: "true",
+    include_granted_scopes: `${options.include_granted_scopes ?? true}`,
     access_type: "offline",
     response_type: "code",
     prompt: "consent",
   });
 
-  if (options.hint) queryParams.append("hint", options.hint);
-  if (options.hosted_domain)
-    queryParams.append("hosted_domain", options.hosted_domain);
+  const loginHint = options.login_hint ?? options.hint;
+  const hd = options.hd ?? options.hosted_domain;
+  if (loginHint) queryParams.append("login_hint", loginHint);
+  if (hd) queryParams.append("hd", hd);
   if (options.redirect_uri === undefined) {
     queryParams.append("redirect_uri", window.origin);
   } else {

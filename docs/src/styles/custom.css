@@ -1,0 +1,334 @@
+/* Brand accent (Vue green) for Starlight */
+:root {
+  --sl-color-accent-low: #0b3a26;
+  --sl-color-accent: #2fa36b;
+  --sl-color-accent-high: #b6f0d1;
+}
+:root[data-theme="light"] {
+  --sl-color-accent-low: #c9f2dc;
+  --sl-color-accent: #1f8a55;
+  --sl-color-accent-high: #0d3d25;
+}
+
+/* Page-to-page view transitions are turned on in astro.config.mjs (head).
+   With reduced motion the new page swaps in without the cross-fade. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Live demos in the guides, on a dot-grid stage */
+.demo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  min-height: 9rem;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 1rem;
+  background-color: var(--sl-color-black);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--sl-color-gray-4) 45%, transparent) 1px,
+    transparent 1.4px
+  );
+  background-size: 18px 18px;
+  /* Google's button iframe is light; a dark color-scheme paints a box around it */
+  color-scheme: light;
+}
+
+/* Custom buttons in the demos follow Google's branding guidelines:
+   https://developers.google.com/identity/branding-guidelines */
+.demo button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 16px 0 12px;
+  border: 1px solid #747775;
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: #1f1f1f;
+  font:
+    500 14px/20px Roboto,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  letter-spacing: 0.25px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.demo button::before {
+  content: "";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.demo button:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  box-shadow:
+    0 1px 2px 0 rgb(60 64 67 / 0.3),
+    0 1px 3px 1px rgb(60 64 67 / 0.15);
+}
+.demo button:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}
+.demo button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+:root[data-theme="dark"] .demo button {
+  border-color: #8e918f;
+  background-color: #131314;
+  color: #e3e3e3;
+}
+:root[data-theme="dark"] .demo button:hover:not(:disabled) {
+  background-color: #1e1f20;
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.5),
+    0 1px 3px 1px rgb(0 0 0 / 0.3);
+}
+
+/* Home page (Starlight marks it data-has-hero) */
+/* Starlight's nav bar becomes a clear strip that holds the floating glass nav */
+[data-has-hero] .header {
+  height: auto;
+  padding: 0.6rem 1rem 0;
+  border-bottom: 0;
+  background: none;
+}
+
+/* The hero's ring runs off the page edge; clip it at the full-width panel */
+[data-has-hero] .content-panel {
+  overflow-x: clip;
+}
+[data-has-hero] .sl-markdown-content h2 {
+  margin-top: clamp(4rem, 10vh, 7rem);
+  font-family: "Outfit Variable", var(--__sl-font);
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+[data-has-hero] .sl-markdown-content h2 + p {
+  max-width: 52ch;
+  font-size: 1.125rem;
+  color: var(--sl-color-gray-2);
+}
+
+/* Tables in docs pages, styled like the component reference lists */
+.sl-markdown-content table:not(:where(.not-content *)) {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  vertical-align: top;
+}
+.sl-markdown-content tr:last-child > td:not(:where(.not-content *)) {
+  border-bottom: 0;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+  background: color-mix(in srgb, var(--sl-color-gray-6) 70%, transparent);
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-2);
+}
+.sl-markdown-content td:first-child > code:not(:where(.not-content *)) {
+  color: var(--sl-color-accent-high);
+  font-weight: 600;
+}
+
+/* Dropdowns: every native <select> gets a styled menu where the browser
+   supports customizable selects; other browsers keep their own menu */
+@supports (appearance: base-select) {
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+  ::picker(select) {
+    min-width: 10rem;
+    margin-block: 0.4rem;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 90%, transparent);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 18px 40px -14px rgb(0 0 0 / 0.5);
+    color: var(--sl-color-gray-2);
+    opacity: 0;
+    translate: 0 -4px;
+    transition:
+      opacity 0.15s,
+      translate 0.15s,
+      overlay 0.15s allow-discrete,
+      display 0.15s allow-discrete;
+  }
+  select:open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  @starting-style {
+    select:open::picker(select) {
+      opacity: 0;
+      translate: 0 -4px;
+    }
+  }
+  option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 0.55rem;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+  }
+  option:hover,
+  option:focus-visible {
+    outline: none;
+    background: color-mix(in srgb, var(--sl-color-white) 9%, transparent);
+    color: var(--sl-color-white);
+  }
+  option:checked {
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+  }
+  option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+  }
+  /* A thin chevron instead of the default triangle; it flips when open */
+  select::picker-icon {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    align-self: center;
+    margin-inline-start: auto;
+    padding-inline-start: 0;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    color: var(--sl-color-gray-3);
+    rotate: 45deg;
+    translate: 0 -0.15rem;
+    transition:
+      rotate 0.2s,
+      translate 0.2s;
+  }
+  select:open::picker-icon {
+    rotate: 225deg;
+    translate: 0 0.1rem;
+  }
+  /* Starlight's theme switcher already draws its own icons */
+  starlight-theme-select select::picker-icon {
+    display: none;
+  }
+}
+
+/* The changelog page (generated by `pnpm changelog`): releases on a timeline,
+   each a dot on the rail; the newest one is filled */
+.changelog {
+  --rail: 1.5rem;
+  margin-inline-start: 0.45rem;
+  padding-inline-start: var(--rail);
+  border-inline-start: 2px solid var(--sl-color-gray-5);
+}
+.changelog .level-h2 {
+  position: relative;
+  margin-top: 3rem;
+}
+.changelog > .level-h2:first-child {
+  margin-top: 0;
+}
+.changelog .level-h2::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--rail) - 1px - 0.45rem);
+  top: 0.45em;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--sl-color-accent);
+  border-radius: 50%;
+  background: var(--sl-color-bg);
+}
+.changelog > .level-h2:first-child::before {
+  background: var(--sl-color-accent);
+  box-shadow: 0 0 0 4px var(--sl-color-accent-low);
+}
+.changelog h2 {
+  font-variant-numeric: tabular-nums;
+}
+/* "Released <date>. Compare with <version>" */
+.changelog .level-h2 + p {
+  margin-top: 0.25rem;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+/* Change groups, each marked with its own color */
+.changelog .level-h3 {
+  margin-top: 1.5rem;
+}
+.changelog h3 {
+  --mark: var(--sl-color-gray-4);
+  font-size: var(--sl-text-base);
+}
+/* Starlight keeps headings inline so the anchor link follows them */
+.changelog h3::before {
+  content: "";
+  display: inline-block;
+  margin-inline-end: 0.5rem;
+  vertical-align: 0.1em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--mark);
+}
+.changelog h3[id^="breaking-changes"] {
+  --mark: var(--sl-color-orange);
+  color: var(--sl-color-orange-high);
+}
+.changelog h3[id^="features"] {
+  --mark: var(--sl-color-accent);
+}
+.changelog h3[id^="bug-fixes"] {
+  --mark: var(--sl-color-blue);
+}
+.changelog h3[id^="performance"] {
+  --mark: var(--sl-color-purple);
+}
+.changelog li + li {
+  margin-top: 0.3rem;
+}
+.changelog a[href*="/commit/"] {
+  font-family: var(--__sl-font-mono);
+  font-size: var(--sl-text-xs);
+  color: var(--sl-color-gray-3);
+}
+/* Documentation and tooling changes start collapsed */
+.sl-markdown-content .changelog details {
+  margin-top: 1rem;
+  padding: 0;
+  border: 0;
+}
+.changelog summary {
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+  cursor: pointer;
+}
+.changelog summary:hover {
+  color: var(--sl-color-white);
+}

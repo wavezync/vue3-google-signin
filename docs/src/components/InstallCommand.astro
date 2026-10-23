@@ -1,0 +1,133 @@
+---
+const managers = [
+  ["pnpm", "pnpm add vue3-google-signin"],
+  ["npm", "npm install vue3-google-signin"],
+  ["yarn", "yarn add vue3-google-signin"],
+];
+---
+
+<install-command class="not-content">
+  <div class="managers" role="group" aria-label="Package manager">
+    {
+      managers.map(([name, command], i) => (
+        <button
+          type="button"
+          aria-pressed={i === 0 ? "true" : "false"}
+          data-command={command}
+        >
+          {name}
+        </button>
+      ))
+    }
+  </div>
+  <code><span aria-hidden="true">$ </span><span data-text>{managers[0][1]}</span></code>
+  <button type="button" class="copy" aria-label="Copy install command">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+      ><rect x="9" y="9" width="11" height="11" rx="2"></rect><path
+        d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg
+    >
+    <span data-status class="sr-only" aria-live="polite"></span>
+  </button>
+</install-command>
+
+<script>
+  class InstallCommand extends HTMLElement {
+    connectedCallback() {
+      const text = this.querySelector<HTMLElement>("[data-text]")!;
+      const status = this.querySelector<HTMLElement>("[data-status]")!;
+      const copy = this.querySelector<HTMLButtonElement>(".copy")!;
+      const pick = [...this.querySelectorAll<HTMLButtonElement>("[data-command]")];
+      for (const button of pick) {
+        button.addEventListener("click", () => {
+          for (const b of pick) b.setAttribute("aria-pressed", String(b === button));
+          text.textContent = button.dataset.command!;
+        });
+      }
+      copy.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(text.textContent!);
+        copy.dataset.copied = "";
+        status.textContent = "Copied";
+        setTimeout(() => {
+          delete copy.dataset.copied;
+          status.textContent = "";
+        }, 1600);
+      });
+    }
+  }
+  customElements.define("install-command", InstallCommand);
+</script>
+
+<style>
+  install-command {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    max-width: 100%;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1.45rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 70%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .managers {
+    display: flex;
+    gap: 0.125rem;
+  }
+  button {
+    min-height: 2.25rem;
+    padding: 0 0.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: var(--sl-color-gray-3);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  button:hover {
+    color: var(--sl-color-white);
+  }
+  button[aria-pressed="true"] {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 1px;
+  }
+  code {
+    padding: 0 0.75rem;
+    font-family: var(--__sl-font-mono);
+    font-size: 0.9rem;
+    color: var(--sl-color-white);
+    white-space: nowrap;
+  }
+  code span:first-child {
+    color: var(--sl-color-gray-3);
+  }
+  .copy {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    padding: 0;
+  }
+  .copy svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .copy[data-copied] {
+    color: var(--sl-color-accent-high);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

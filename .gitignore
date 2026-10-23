@@ -28,4 +28,11 @@ coverage
 *.sln
 *.sw?
 
-docs/.vitepress/cache
+# astro
+.astro
+
+# playwright
+test-results/
+playwright-report/
+blob-report/
+.wrangler/
