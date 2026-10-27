@@ -78,8 +78,7 @@ const isHome = Boolean(Astro.locals.starlightRoute.entry.data.hero);
   }
 
   .title {
-    min-width: 0;
-    overflow: clip;
+    flex-shrink: 0;
   }
   nav {
     display: flex;
@@ -125,8 +124,12 @@ const isHome = Boolean(Astro.locals.starlightRoute.entry.data.hero);
     border-radius: 999px;
     background: color-mix(in srgb, var(--sl-color-white) 5%, transparent);
   }
+  /* Icon only, as on mobile; the button keeps its label and shortcut */
+  .end :global(button[data-open-modal] > :not(svg)) {
+    display: none !important;
+  }
 
-  @media (max-width: 62rem) {
+  @media (max-width: 65rem) {
     nav {
       display: none;
     }

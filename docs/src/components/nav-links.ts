@@ -4,7 +4,6 @@ export const navLinks = [
   { text: "Components", href: "/components/google-signin-button/" },
   { text: "Composables", href: "/composables/use-one-tap/" },
   { text: "FAQ", href: "/guide/faq/" },
-  { text: "Changelog", href: "/changelog/" },
 ];
 
 export const wavezync = { text: "WaveZync", href: "https://wavezync.com" };
