@@ -89,46 +89,62 @@ Each composable also takes a `clientId` option, and `GoogleSignInButton` a
 
 ## With Nuxt
 
-To use the library with **Nuxt 3**, use the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module.
-It takes care of component registration and plugin initialization.
+For **Nuxt 3 and 4**, use the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module.
+It installs the plugin and auto-imports `GoogleSignInButton`, the composables
+and the helpers.
 
 ### Add package
 
-<Tabs syncKey="pkg">
-  <TabItem label="npm">
-
 ```sh
-npm install nuxt-vue3-google-signin
+npx nuxi@latest module add nuxt-vue3-google-signin
 ```
-
-</TabItem>
-  <TabItem label="pnpm">
-
-```sh
-pnpm add nuxt-vue3-google-signin
-```
-
-</TabItem>
-  <TabItem label="yarn">
-
-```sh
-yarn add nuxt-vue3-google-signin
-```
-
-</TabItem>
-</Tabs>
 
 ### Initialize
 
-Add the following entry to `nuxt.config.ts` (or `nuxt.config.js`):
+Add the module and your client ID to `nuxt.config.ts`:
 
 ```ts title="nuxt.config.ts"
-import { defineNuxtConfig } from "nuxt/config";
-
 export default defineNuxtConfig({
   modules: ["nuxt-vue3-google-signin"],
   googleSignIn: {
     clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
   },
+});
+```
+
+The module also takes `locale`, the plugin's option of the same name.
+
+Import types from the module, which re-exports all of them:
+
+```ts
+import type { CredentialResponse } from "nuxt-vue3-google-signin";
+```
+
+### Set the client ID when the server starts
+
+The client ID is part of Nuxt's public runtime config, so an environment
+variable overrides it when the server starts, and one build can serve any
+client ID:
+
+```sh
+NUXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID=your-client-id node .output/server/index.mjs
+```
+
+`process.env` in `nuxt.config.ts` is read at build time instead. With
+`nuxi generate`, the client ID is fixed when you generate.
+
+### A client ID per request
+
+To pick the client ID per request, for example one per domain, set
+`googleSignIn: { plugin: false }` and install the plugin in your own Nuxt
+plugin. Auto-imports keep working. Add `vue3-google-signin` to your
+dependencies to import it.
+
+```ts title="plugins/google-sign-in.ts"
+import GoogleSignInPlugin from "vue3-google-signin";
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const clientId = clientIdFor(useRequestURL().hostname); // your lookup
+  nuxtApp.vueApp.use(GoogleSignInPlugin, { clientId });
 });
 ```
