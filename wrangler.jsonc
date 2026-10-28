@@ -16,4 +16,7 @@
     // docs/dist/_redirects and _headers still apply.
     "html_handling": "auto-trailing-slash",
   },
+  // Lets Workers Builds run `wrangler preview` for pull request branches.
+  // Empty: previews reuse the settings above.
+  "previews": {},
 }
