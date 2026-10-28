@@ -12,6 +12,21 @@ Every release, newest first. Upgrading from v2? Start with the
 
 <div class="changelog">
 
+## 3.0.1
+
+Released October 28, 2026. [Compare with 3.0.0](https://github.com/wavezync/vue3-google-signin/compare/v3.0.0...v3.0.1)
+
+### Bug fixes
+
+- **button:** Render only once the button's element is mounted ([1901c3b](https://github.com/wavezync/vue3-google-signin/commit/1901c3bad94c40c8d79dc71c3a71f37b25c70d39))
+
+<details>
+<summary>Documentation (1)</summary>
+
+- Stop the home nav clipping the site title ([2ae8e86](https://github.com/wavezync/vue3-google-signin/commit/2ae8e86dbc3d415f0717cb907cf5b5deae1d24f4))
+
+</details>
+
 ## 3.0.0
 
 Released October 23, 2026. [Compare with 2.1.1](https://github.com/wavezync/vue3-google-signin/compare/v2.1.1...v3.0.0)
