@@ -1,0 +1,293 @@
+---
+title: Verify Users on Your Server
+description: Send Google's ID token to your server, verify it with google-auth-library in a Nuxt server route or an Express app, start a session, limit sign-in to a Workspace domain, and sign users out.
+---
+
+import { Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+`GoogleSignInButton` and `useOneTap` hand your page a `credential`: an ID
+token, a JWT signed by Google that says who the user is. Your API can't take
+the browser's word for it, since anyone can send it a made-up token. Before you
+create an account or a session, your server has to check that Google signed the
+token, that it was issued for your client ID, and that it hasn't expired.
+
+[`decodeCredential`](/helpers/account/) reads the token without checking any of
+that. Use it to show the user's name and picture, never to decide who they are.
+
+<Steps>
+
+1. The user signs in with the button or One Tap, and your page gets the
+   `credential`.
+
+2. The page posts it to your server.
+
+3. The server verifies it with
+   [google-auth-library](https://www.npmjs.com/package/google-auth-library) and
+   reads the user from it.
+
+4. The server starts a session, and from then on your app uses the session, not
+   the token. The ID token expires after about an hour.
+
+</Steps>
+
+## What's in the token
+
+| Claim                               | What it is                                                                       |
+| ----------------------------------- | -------------------------------------------------------------------------------- |
+| `sub`                               | The user's Google account ID. Unique and never changes: key your users on it.    |
+| `email`                             | The user's email address. It can change, so don't use it as the user's ID.       |
+| `email_verified`                    | Whether Google has verified the email address.                                   |
+| `name`, `given_name`, `family_name` | The user's name, if they share it.                                               |
+| `picture`                           | A URL of the user's profile picture.                                             |
+| `hd`                                | The user's Google Workspace domain. Missing for personal accounts.               |
+| `aud`                               | The client ID the token was issued for. `verifyIdToken` checks it against yours. |
+| `exp`                               | When the token expires, in seconds since the epoch.                              |
+| `nonce`                             | The `nonce` you passed to the button or One Tap, if any.                         |
+
+## Send the token to your server
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue title="src/components/SignIn.vue"
+<script setup lang="ts">
+import {
+  GoogleSignInButton,
+  type CredentialSuccessResponse,
+} from "vue3-google-signin";
+
+async function onSuccess({ credential }: CredentialSuccessResponse) {
+  const response = await fetch("/api/auth/google", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential }),
+  });
+  if (!response.ok) throw new Error("Google sign-in failed");
+  // The server set a session cookie: load the signed-in part of your app
+}
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>
+```
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+```vue title="pages/login.vue"
+<script setup lang="ts">
+import type { CredentialSuccessResponse } from "nuxt-vue3-google-signin";
+
+const { fetch: refreshSession } = useUserSession();
+
+async function onSuccess({ credential }: CredentialSuccessResponse) {
+  await $fetch("/api/auth/google", { method: "POST", body: { credential } });
+  await refreshSession();
+  await navigateTo("/");
+}
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>
+```
+
+`useUserSession` comes from nuxt-auth-utils, which the next step sets up.
+
+</TabItem>
+</Tabs>
+
+The same handler works as `useOneTap`'s `onSuccess`.
+
+## Verify it on the server
+
+`verifyIdToken` fetches and caches Google's public keys, checks the signature,
+the audience, the issuer and the expiry, and throws if any check fails.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+Any backend works. This one is [Express](https://expressjs.com/):
+
+```sh
+npm install express express-session google-auth-library
+```
+
+```js title="server.js"
+import express from "express";
+import session from "express-session";
+import { OAuth2Client } from "google-auth-library";
+
+const google = new OAuth2Client();
+const app = express();
+app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.post("/api/auth/google", async (req, res) => {
+  let payload;
+  try {
+    const ticket = await google.verifyIdToken({
+      idToken: req.body.credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    payload = ticket.getPayload();
+  } catch {
+    return res.status(401).json({ error: "Invalid Google credential" });
+  }
+  if (!payload?.email_verified) {
+    return res.status(401).json({ error: "Email not verified" });
+  }
+
+  // Look the user up by payload.sub in your database, or create them
+  req.session.user = {
+    id: payload.sub,
+    email: payload.email,
+    name: payload.name,
+    picture: payload.picture,
+  };
+  res.json(req.session.user);
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  req.session.destroy(() => res.sendStatus(204));
+});
+
+app.listen(3001);
+```
+
+`audience` is the same client ID you gave the plugin.
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+Add [nuxt-auth-utils](https://github.com/atinux/nuxt-auth-utils) for the
+session and google-auth-library for the check:
+
+```sh
+npx nuxi@latest module add auth-utils
+npm install google-auth-library
+```
+
+nuxt-auth-utils keeps the session in an encrypted cookie. In development it
+generates the `NUXT_SESSION_PASSWORD` it needs; in production, set it to a
+random string of at least 32 characters.
+
+```ts title="server/api/auth/google.post.ts"
+import { OAuth2Client } from "google-auth-library";
+
+const google = new OAuth2Client();
+
+export default defineEventHandler(async (event) => {
+  const { credential } = await readBody<{ credential: string }>(event);
+  const { clientId } = useRuntimeConfig(event).public.googleSignIn;
+
+  const payload = await google
+    .verifyIdToken({ idToken: credential, audience: clientId })
+    .then((ticket) => ticket.getPayload())
+    .catch(() => undefined);
+  if (!payload?.email_verified) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Invalid Google credential",
+    });
+  }
+
+  // Look the user up by payload.sub in your database, or create them
+  await setUserSession(event, {
+    user: {
+      id: payload.sub,
+      email: payload.email,
+      name: payload.name,
+      picture: payload.picture,
+    },
+  });
+  return { ok: true };
+});
+```
+
+The route reads the client ID from the module's runtime config, so it always
+matches the one the button used. Type the session's user once:
+
+```ts title="auth.d.ts"
+declare module "#auth-utils" {
+  interface User {
+    id: string;
+    email?: string;
+    name?: string;
+    picture?: string;
+  }
+}
+
+export {};
+```
+
+[Using with Nuxt](/guide/nuxt/#protect-pages) shows how to protect pages with
+the session.
+
+</TabItem>
+</Tabs>
+
+## Only allow your Workspace domain
+
+Pass `hd` to the button or One Tap so Google only offers accounts from your
+domain:
+
+```vue
+<GoogleSignInButton hd="example.com" @success="onSuccess" />
+```
+
+That is only a hint to Google's UI. Enforce it on the server, after
+`verifyIdToken`:
+
+```ts
+if (payload.hd !== "example.com") {
+  throw createError({
+    statusCode: 403,
+    statusMessage: "Use your work account",
+  });
+}
+```
+
+## Sign users out
+
+Signing out ends your session; the user stays signed in to Google. Clear the
+session, then call `disableAutoSelect` so that One Tap with `autoSelect`
+doesn't sign them straight back in.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```ts
+async function signOut() {
+  await fetch("/api/auth/logout", { method: "POST" });
+  window.google?.accounts.id.disableAutoSelect();
+}
+```
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+```ts
+const { clear } = useUserSession();
+
+async function signOut() {
+  await clear();
+  window.google?.accounts.id.disableAutoSelect();
+  await navigateTo("/login");
+}
+```
+
+</TabItem>
+</Tabs>
+
+To remove your app from the user's Google account as well, for example when
+they delete their account with you, call [`idRevoke`](/helpers/account/) with
+their `sub` or email address. Google then shows them the consent screen again
+the next time they sign in.

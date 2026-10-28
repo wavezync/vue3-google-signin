@@ -1,51 +1,50 @@
 ---
-title: Creating Custom Buttons
-description: Build your own Google login button with the useTokenClient and useCodeClient composables.
+title: Build a Custom Button
+description: Build your own Google sign-in button with useTokenClient or useCodeClient, keep it disabled while Google loads and while the popup is open, and find out who signed in.
 ---
 
 import { Code } from "@astrojs/starlight/components";
 import TokenClientExample from "../../../examples/TokenClientExample.vue";
 import tokenClient from "../../../examples/TokenClientExample.vue?raw";
 import codeClient from "../../../examples/CodeClientExample.vue?raw";
-import codeVerification from "../../../examples/code-verification.js?raw";
 import CodeClientDemo from "../../../components/CodeClientDemo.vue";
 
-Often, you may want a custom designed button for Google Sign-in.
-`vue3-google-signin` provides two composables for this:
+Google's button is drawn in an iframe, so its [props](/guide/google-signin-button/#style-the-button)
+are the only way to change it. For a button in your own design, use one of
+Google's OAuth2 flows behind your own `<button>`:
 
-- `useTokenClient`: [Token Model authentication flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model)
-- `useCodeClient`: [Code Model authentication flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model)
+- `useTokenClient`, the [token model](https://developers.google.com/identity/oauth2/web/guides/use-token-model):
+  Google gives the browser an **access token**.
+- `useCodeClient`, the [code model](https://developers.google.com/identity/oauth2/web/guides/use-code-model):
+  Google gives the browser a **code**, which your server exchanges for tokens.
 
-Pick the flow that fits your use case.
+Neither gives the browser an ID token, so finding out who signed in takes one
+more step on your server, described [below](#find-out-who-signed-in). If all
+you need is sign-in, Google's button is less work.
 
 :::note
 A custom Google button has to follow Google's
 [branding guidelines](https://developers.google.com/identity/branding-guidelines):
-the multicolor G logo, Google's colors and wording such as "Sign in with Google".
-The demos on this page follow them.
+the multicolor G logo, Google's colors and wording such as "Sign in with
+Google". The demos on this page follow them.
 :::
 
 :::tip
-To choose the right authorization model, see Google's [guide](https://developers.google.com/identity/oauth2/web/guides/choose-authorization-model).
+In Nuxt, both composables are auto-imported: leave out the `import` lines.
 :::
 
 ## With `useTokenClient`
 
-With the [Token Model auth flow](https://developers.google.com/identity/oauth2/web/guides/use-token-model), Google returns an **Access Token** to the browser,
-which can be used directly to call Google APIs.
-
-:::tip
-For backend API requests, you can pass this token from the frontend to the backend in a header like `x-google-token`.
-:::
-
 Both composables return `isReady` and `login`:
 
-- `isReady` is a _reactive variable_ that tells you whether the Google API has loaded.
-  Use it to disable the button until then, or however suits your application.
-- `login` is a _method_ that starts the login flow with Google.
+- `isReady` is a ref that turns `true` once Google's script has loaded and the
+  client is ready. Disable your button until then.
+- `login()` opens Google's popup. Call it from a click, or the browser blocks
+  the popup.
 
-The example below disables the button until the API has loaded and while Google's popup is open.
-If the user closes the popup, or the browser blocks it, `onNonOAuthError` re-enables the button.
+The example below also disables the button while the popup is open. If the
+user closes the popup, or the browser blocks it, `onNonOAuthError` re-enables
+it.
 
 <Code code={tokenClient} lang="vue" />
 
@@ -53,13 +52,14 @@ If the user closes the popup, or the browser blocks it, `onNonOAuthError` re-ena
   <TokenClientExample client:only="vue" />
 </div>
 
+The access token is ready to call Google APIs from the browser:
+[Call Google APIs](/guide/google-apis/#in-the-browser) shows how to ask for
+scopes, check what the user granted and handle expiry.
+
 ## With `useCodeClient`
 
-With the [Code Model auth flow](https://developers.google.com/identity/oauth2/web/guides/use-code-model), you get a `code` from Google.
-Your **backend server** verifies it to obtain user information, an Access Token, a Refresh Token, etc.
-
-Usage is similar to the previous section.
-The only difference is an _optional_ part that calls a backend API to verify the code, using the body of a **POST** request.
+Usage is the same. `onSuccess` receives a `code`, which you post to your server
+with an `X-Requested-With` header:
 
 <Code code={codeClient} lang="vue" />
 
@@ -67,36 +67,36 @@ The only difference is an _optional_ part that calls a backend API to verify the
   <CodeClientDemo client:only="vue" />
 </div>
 
-## Verify code on the backend
+Your server exchanges the code for an access token and a refresh token with your
+client secret. [Call Google APIs](/guide/google-apis/#on-your-server) has the
+server code for Express and for a Nuxt server route.
 
-Once you have a code, the backend must verify it to get the **Access Token** / **Refresh Token**, as described in the [previous section](#with-usecodeclient).
+## Find out who signed in
 
-:::note
-This depends on your backend programming language.
-:::
+- **With a code**, the exchange on your server also returns `tokens.id_token`,
+  because `openid` is always requested. Check it with `verifyIdToken` as in
+  [Verify users on your server](/guide/verify-users/#verify-it-on-the-server).
+- **With an access token**, send it to your server, which asks Google about it.
+  `getTokenInfo` from google-auth-library returns the user's `sub` and email,
+  and `aud`, the client ID the token was issued for. Check that `aud` is your
+  client ID, or a token issued to another app would sign someone in:
 
-For completeness, here is a simple snippet that verifies the code and obtains tokens in **Node.js** with [**Express**](https://expressjs.com/).
+```ts
+import { OAuth2Client } from "google-auth-library";
 
-First, get the following from the [Google Developers Console](https://console.cloud.google.com/):
+const google = new OAuth2Client();
 
-- `CLIENT_ID`
-- `CLIENT_SECRET`
-- `REDIRECT_URL`
-
-You can find them in **Your project > APIs & auth > Credentials**.
-
-Read more about OAuth2 [here](https://developers.google.com/identity/protocols/oauth2).
-
-Install the [`google-auth-library`](https://www.npmjs.com/package/google-auth-library) package:
-
-```sh
-npm install google-auth-library
+const info = await google.getTokenInfo(accessToken);
+if (info.aud !== process.env.GOOGLE_CLIENT_ID) throw new Error("Wrong client");
+// info.sub is the user's Google account ID, info.email their email address
 ```
 
-Here is a sample implementation using Express:
+## Pre-select the account
 
-<Code code={codeVerification} lang="js" title="server.js" />
+Both composables pass Google's options through:
 
-:::danger
-You **must** store Refresh Tokens in **secure storage**.
-:::
+- `login_hint`: the user's email address or `sub`, to skip the account chooser
+  for a user you already know.
+- `hd`: limit the chooser to a Google Workspace domain.
+- `select_account: true` (code client) or `login({ prompt: "select_account" })`
+  (token client): always show the account chooser, for "Use another account".

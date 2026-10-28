@@ -1,150 +1,182 @@
 ---
 title: Get Started
-description: Install vue3-google-signin and register the plugin in your Vue 3 or Nuxt app.
+description: Create a Google client ID, install vue3-google-signin in a Vue 3 or Nuxt app, and render a working Sign in with Google button.
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 
-## Prerequisite
+vue3-google-signin wraps
+[Google Identity Services](https://developers.google.com/identity/gsi/web)
+(GIS), the library behind Sign in with Google. It gives you Google's button as
+a Vue component, and One Tap and the two OAuth2 flows as composables. It works
+in any Vue 3 app, and in Nuxt 3 and 4 through the
+[nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin)
+module.
 
-This project uses the [Google Identity Services](https://developers.google.com/identity/gsi/web) library under the hood.
-It's a set of helpers that let you add Google login to Vue 3 apps.
+## Pick what you're building
 
-You need to configure a project in the [Google API Console](https://console.developers.google.com/apis) and obtain a **Client ID** by following
-Google's [guide](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id).
+| You want to                                                                               | Use                                 | You get                                  |
+| ----------------------------------------------------------------------------------------- | ----------------------------------- | ---------------------------------------- |
+| [Sign users in](/guide/google-signin-button/)                                             | `GoogleSignInButton`                | An ID token that says who the user is    |
+| [Sign users in without a trip to a login page](/guide/one-tap-login/)                     | `useOneTap`                         | An ID token                              |
+| [Sign users in with a button in your own design](/guide/creating-custom-buttons/)         | `useTokenClient` or `useCodeClient` | An access token or a code                |
+| [Read the user's Calendar, Drive, ... in the browser](/guide/google-apis/#in-the-browser) | `useTokenClient`                    | An access token that lasts about an hour |
+| [Call Google APIs from your server](/guide/google-apis/#on-your-server)                   | `useCodeClient`                     | A code your server exchanges for tokens  |
+
+Each row links to its guide. Whichever you pick, the steps below are the same.
+
+## Create a client ID
+
+<Steps>
+
+1. Open [Credentials](https://console.cloud.google.com/apis/credentials) in
+   the Google Cloud console, and pick or create a project. If the console asks
+   you to configure the consent screen first, give it your app's name and a
+   support email.
+
+2. Click **Create credentials** > **OAuth client ID** and choose **Web
+   application**.
+
+3. Under **Authorized JavaScript origins**, add every origin your app runs on,
+   with its port. For local development add both `http://localhost` and the dev
+   server's origin: `http://localhost:5173` for Vite, `http://localhost:3000`
+   for Nuxt.
+
+4. Copy the client ID. It ends in `.apps.googleusercontent.com`. It isn't a
+   secret: it ships to the browser.
+
+</Steps>
 
 :::tip
-Make sure to properly configure **Redirects** and **JavaScript Origins** in the Cloud Console.
-
-For popups to work, you may need to add the same URL to **both** Redirects and JavaScript Origins.
+Changes to the origins can take a few minutes to apply. If a popup fails with
+`redirect_uri_mismatch`, add the same origin under **Authorized redirect URIs**
+too.
 :::
 
-:::note
-If you want to use the library with Nuxt, jump to the [Nuxt section](#with-nuxt).
-:::
+## Install
 
-## Installation
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
 
-<Tabs syncKey="pkg">
-  <TabItem label="npm">
+Install the package with your package manager:
 
 ```sh
 npm install vue3-google-signin
 ```
 
-</TabItem>
-  <TabItem label="pnpm">
+Register the plugin in your entry point. Keep the client ID in an environment
+variable so each environment can use its own:
 
-```sh
-pnpm add vue3-google-signin
-```
-
-</TabItem>
-  <TabItem label="yarn">
-
-```sh
-yarn add vue3-google-signin
-```
-
-</TabItem>
-</Tabs>
-
-## Setup the Library
-
-In your application entry point (`main.js` or `main.ts`), register the plugin:
-
-```js title="main.ts"
+```ts title="src/main.ts"
+import { createApp } from "vue";
 import GoogleSignInPlugin from "vue3-google-signin";
+import App from "./App.vue";
 
-app.use(GoogleSignInPlugin, {
-  clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
-});
-
-app.mount("#app");
+createApp(App)
+  .use(GoogleSignInPlugin, {
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  })
+  .mount("#app");
 ```
 
-Now the library is ready to be used.
-
-### Setting the client ID later
-
-If your client ID comes from your server, pass a ref and set it when it
-arrives. Nothing initializes until the ref has a value, and changing it
-re-initializes every composable and button.
-
-```ts title="main.ts"
-import { ref } from "vue";
-import GoogleSignInPlugin from "vue3-google-signin";
-
-const clientId = ref<string>();
-app.use(GoogleSignInPlugin, { clientId });
-
-fetch("/api/config")
-  .then((response) => response.json())
-  .then((config) => (clientId.value = config.googleClientId));
+```sh title=".env"
+VITE_GOOGLE_CLIENT_ID=1234567890-abc.apps.googleusercontent.com
 ```
 
-Each composable also takes a `clientId` option, and `GoogleSignInButton` a
-`client-id` prop, which override the plugin's. See
-[Dynamic Client ID](/guide/dynamic-client-id/) for the details.
+</TabItem>
+  <TabItem label="Nuxt">
 
-## With Nuxt
-
-For **Nuxt 3 and 4**, use the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module.
-It installs the plugin and auto-imports `GoogleSignInButton`, the composables
-and the helpers.
-
-### Add package
+Add the module. `nuxi` installs it and adds it to `modules` in
+`nuxt.config.ts`:
 
 ```sh
 npx nuxi@latest module add nuxt-vue3-google-signin
 ```
 
-### Initialize
+Give it your client ID. The module stores it in Nuxt's runtime config, which
+reads this variable from `.env` in development and from the environment when
+the server starts:
 
-Add the module and your client ID to `nuxt.config.ts`:
+```sh title=".env"
+NUXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID=1234567890-abc.apps.googleusercontent.com
+```
+
+Or set it in `nuxt.config.ts`:
 
 ```ts title="nuxt.config.ts"
 export default defineNuxtConfig({
   modules: ["nuxt-vue3-google-signin"],
   googleSignIn: {
-    clientId: "CLIENT ID OBTAINED FROM GOOGLE API CONSOLE",
+    clientId: "1234567890-abc.apps.googleusercontent.com",
   },
 });
 ```
 
-The module also takes `locale`, the plugin's option of the same name.
+</TabItem>
+</Tabs>
 
-Import types from the module, which re-exports all of them:
+## Add a sign-in button
 
-```ts
-import type { CredentialResponse } from "nuxt-vue3-google-signin";
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue title="src/components/SignIn.vue"
+<script setup lang="ts">
+import {
+  GoogleSignInButton,
+  type CredentialSuccessResponse,
+} from "vue3-google-signin";
+
+const onSuccess = ({ credential }: CredentialSuccessResponse) => {
+  // An ID token (JWT). Send it to your server and verify it there.
+  console.log(credential);
+};
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>
 ```
 
-### Set the client ID when the server starts
+The plugin also registers `GoogleSignInButton` globally, so the import is only
+there for your editor.
 
-The client ID is part of Nuxt's public runtime config, so an environment
-variable overrides it when the server starts, and one build can serve any
-client ID:
+</TabItem>
+  <TabItem label="Nuxt">
 
-```sh
-NUXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID=your-client-id node .output/server/index.mjs
+```vue title="pages/login.vue"
+<script setup lang="ts">
+import type { CredentialSuccessResponse } from "nuxt-vue3-google-signin";
+
+const onSuccess = ({ credential }: CredentialSuccessResponse) => {
+  // An ID token (JWT). Send it to your server and verify it there.
+  console.log(credential);
+};
+</script>
+
+<template>
+  <GoogleSignInButton @success="onSuccess" />
+</template>
 ```
 
-`process.env` in `nuxt.config.ts` is read at build time instead. With
-`nuxi generate`, the client ID is fixed when you generate.
+`GoogleSignInButton`, the composables and the helpers are auto-imported. Import
+types from `nuxt-vue3-google-signin`.
 
-### A client ID per request
+</TabItem>
+</Tabs>
 
-To pick the client ID per request, for example one per domain, set
-`googleSignIn: { plugin: false }` and install the plugin in your own Nuxt
-plugin. Auto-imports keep working. Add `vue3-google-signin` to your
-dependencies to import it.
+Start your dev server and open the page. Google draws its button; sign in and
+the ID token shows up in the console.
 
-```ts title="plugins/google-sign-in.ts"
-import GoogleSignInPlugin from "vue3-google-signin";
+## Next steps
 
-export default defineNuxtPlugin((nuxtApp) => {
-  const clientId = clientIdFor(useRequestURL().hostname); // your lookup
-  nuxtApp.vueApp.use(GoogleSignInPlugin, { clientId });
-});
-```
+- [Verify users on your server](/guide/verify-users/): check the ID token and
+  start a session. Don't trust the token until you have.
+- [Using with Nuxt](/guide/nuxt/): runtime config, server-side rendering,
+  protected pages and a client ID per domain.
+- [Sign in with One Tap](/guide/one-tap-login/): Google's prompt for signed-out
+  visitors, on any page.
+- [Call Google APIs](/guide/google-apis/): ask for Calendar, Drive or Gmail
+  access.
+- [Set the client ID at runtime](/guide/dynamic-client-id/): load it from your
+  server, or use one per tenant.

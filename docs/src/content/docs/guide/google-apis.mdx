@@ -1,0 +1,313 @@
+---
+title: Call Google APIs
+description: Ask users for access to Google APIs such as Calendar, Drive and Gmail. Use an access token in the browser with useTokenClient, or exchange a code for a refresh token on your server with useCodeClient, in Vue or Nuxt.
+---
+
+import { Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Signing in tells you who the user is. Reading their calendar or their Drive
+files needs their consent for those
+[scopes](https://developers.google.com/identity/protocols/oauth2/scopes), and
+an access token. There are two ways to get one:
+
+|                              | [In the browser](#in-the-browser) | [On your server](#on-your-server)                  |
+| ---------------------------- | --------------------------------- | -------------------------------------------------- |
+| Composable                   | `useTokenClient`                  | `useCodeClient`                                    |
+| Google returns               | An access token                   | A code that your server exchanges for tokens       |
+| How long access lasts        | About an hour, then ask again     | Until the user revokes it, through a refresh token |
+| Works while the user is away | No                                | Yes                                                |
+| Needs a backend              | No                                | Yes, with your client secret                       |
+
+Both ask for `openid email profile` and add the scopes you pass. Before you
+start:
+
+- Enable each API you call, such as the Google Calendar API, under
+  [APIs & Services](https://console.cloud.google.com/apis/library) in the
+  Google Cloud console.
+- Add the scopes to your app's OAuth consent screen. For sensitive scopes,
+  users see an "unverified app" warning until Google verifies your app.
+
+## In the browser
+
+`useTokenClient` opens Google's consent popup and hands you an access token to
+call the API with `fetch`. This component lists the user's next ten calendar
+events:
+
+```vue title="UpcomingEvents.vue"
+<script setup lang="ts">
+import { ref } from "vue";
+import { hasGrantedAllScopes, useTokenClient } from "vue3-google-signin";
+
+const CALENDAR = "https://www.googleapis.com/auth/calendar.readonly";
+const events = ref<{ id: string; summary?: string }[]>([]);
+
+const { isReady, login } = useTokenClient({
+  scope: CALENDAR,
+  onSuccess: async (response) => {
+    // Users can untick a scope on the consent screen
+    if (!hasGrantedAllScopes(response, CALENDAR)) return;
+
+    const query = new URLSearchParams({
+      timeMin: new Date().toISOString(),
+      singleEvents: "true",
+      orderBy: "startTime",
+      maxResults: "10",
+    });
+    const result = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events?${query}`,
+      { headers: { Authorization: `Bearer ${response.access_token}` } },
+    );
+    events.value = (await result.json()).items;
+  },
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">Show my calendar</button>
+  <ul>
+    <li v-for="event in events" :key="event.id">{{ event.summary }}</li>
+  </ul>
+</template>
+```
+
+In Nuxt, the component is the same without the imports.
+
+### When the token expires
+
+The token lasts `expires_in` seconds, usually an hour, and there's no refresh
+token in the browser. Keep the expiry with the token, and when it has passed,
+call `login()` again from a click. With `prompt: ""`, Google skips the consent
+screen for scopes the user already granted:
+
+```ts
+let token: { value: string; expiresAt: number } | undefined;
+
+// in onSuccess
+token = {
+  value: response.access_token,
+  expiresAt: Date.now() + Number(response.expires_in) * 1000,
+};
+
+// before a call
+if (!token || Date.now() >= token.expiresAt) login({ prompt: "" });
+```
+
+Browsers block popups that don't come from a click, so call `login()` from an
+event handler, not on a timer.
+
+### Ask for more scopes later
+
+Ask for a scope when the user turns on the feature that needs it, not when they
+sign in. Each `useTokenClient` call can ask for different scopes, and
+`include_granted_scopes` (on by default) keeps what they granted before in the
+new token. To ask once with other scopes, pass them to `login`:
+
+```ts
+login({ scope: "https://www.googleapis.com/auth/drive.file" });
+```
+
+### Disconnect
+
+[`revokeAccessToken`](/helpers/oauth2/#revokeaccesstoken) revokes every scope
+the user granted your app, for a "Disconnect Google" button:
+
+```ts
+if (token) revokeAccessToken(token.value, () => (token = undefined));
+```
+
+## On your server
+
+Use `useCodeClient` when your server calls Google for the user, also while
+they're away: syncing a calendar every night, or filing Drive documents from a
+background job.
+
+<Steps>
+
+1. The page gets a code from Google with `useCodeClient` and posts it to your
+   server with an `X-Requested-With: XmlHttpRequest` header.
+
+2. The server checks the header, which Google asks for in popup mode against
+   cross-site request forgery, and exchanges the code with your client secret.
+
+3. The server stores the refresh token and gets an access token from it
+   whenever it needs one.
+
+</Steps>
+
+Find the client secret with your OAuth client in the Google Cloud console's
+[Credentials](https://console.cloud.google.com/apis/credentials) page. Keep it
+on the server.
+
+### Get the code
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue title="ConnectCalendar.vue"
+<script setup lang="ts">
+import { useCodeClient } from "vue3-google-signin";
+
+const { isReady, login } = useCodeClient({
+  scope: "https://www.googleapis.com/auth/calendar.readonly",
+  onSuccess: async ({ code }) => {
+    await fetch("/api/google/connect", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XmlHttpRequest",
+      },
+      body: JSON.stringify({ code }),
+    });
+  },
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">Connect Google Calendar</button>
+</template>
+```
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+```vue title="components/ConnectCalendar.vue"
+<script setup lang="ts">
+const { isReady, login } = useCodeClient({
+  scope: "https://www.googleapis.com/auth/calendar.readonly",
+  onSuccess: async ({ code }) => {
+    await $fetch("/api/google/connect", {
+      method: "POST",
+      headers: { "X-Requested-With": "XmlHttpRequest" },
+      body: { code },
+    });
+  },
+});
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="login()">Connect Google Calendar</button>
+</template>
+```
+
+</TabItem>
+</Tabs>
+
+### Exchange the code
+
+Both examples assume the user already signed in, as in
+[Verify users on your server](/guide/verify-users/), so the refresh token can be
+stored against them.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+With [Express](https://expressjs.com/) and google-auth-library:
+
+```js title="server.js"
+import { OAuth2Client } from "google-auth-library";
+
+app.post("/api/google/connect", async (req, res) => {
+  if (req.get("X-Requested-With") !== "XmlHttpRequest") {
+    return res.sendStatus(403);
+  }
+
+  const google = new OAuth2Client({
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    // In popup mode, the origin of the page that called useCodeClient
+    redirectUri: "https://app.example.com",
+  });
+  try {
+    const { tokens } = await google.getToken(req.body.code);
+    // Google usually sends a refresh token only the first time a user consents
+    if (tokens.refresh_token) {
+      await saveRefreshToken(req.session.user.id, tokens.refresh_token);
+    }
+    res.sendStatus(204);
+  } catch {
+    res.sendStatus(400);
+  }
+});
+```
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+Add the client secret to private runtime config, set with
+`NUXT_GOOGLE_CLIENT_SECRET`:
+
+```ts title="nuxt.config.ts"
+export default defineNuxtConfig({
+  modules: ["nuxt-vue3-google-signin", "nuxt-auth-utils"],
+  runtimeConfig: {
+    googleClientSecret: "",
+  },
+});
+```
+
+```ts title="server/api/google/connect.post.ts"
+import { OAuth2Client } from "google-auth-library";
+
+export default defineEventHandler(async (event) => {
+  if (getHeader(event, "x-requested-with") !== "XmlHttpRequest") {
+    throw createError({ statusCode: 403 });
+  }
+  const { user } = await requireUserSession(event);
+  const { code } = await readBody<{ code: string }>(event);
+  const config = useRuntimeConfig(event);
+
+  const google = new OAuth2Client({
+    clientId: config.public.googleSignIn.clientId,
+    clientSecret: config.googleClientSecret,
+    // In popup mode, the origin of the page that called useCodeClient
+    redirectUri: getRequestURL(event).origin,
+  });
+  const { tokens } = await google.getToken(code);
+
+  // Google usually sends a refresh token only the first time a user consents
+  if (tokens.refresh_token) {
+    await saveRefreshToken(user.id, tokens.refresh_token);
+  }
+  return { ok: true };
+});
+```
+
+</TabItem>
+</Tabs>
+
+`saveRefreshToken` stands for your own storage. Encrypt refresh tokens at rest,
+and delete them when the user disconnects or deletes their account.
+
+Because `openid` is always requested, `tokens.id_token` holds an ID token too.
+Check it with `verifyIdToken`, as in
+[Verify users](/guide/verify-users/#verify-it-on-the-server), to learn which
+Google account connected.
+
+### Use the refresh token
+
+Give the client the stored refresh token. `getAccessToken` refreshes the access
+token when it has expired:
+
+```ts
+const google = new OAuth2Client({ clientId, clientSecret });
+google.setCredentials({ refresh_token: storedRefreshToken });
+
+const { token } = await google.getAccessToken();
+const result = await fetch(
+  "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+  { headers: { Authorization: `Bearer ${token}` } },
+);
+```
+
+If you'd rather not call the REST endpoints yourself, the
+[googleapis](https://www.npmjs.com/package/googleapis) package takes the same
+client as its `auth` option.
+
+### Redirect mode
+
+With `ux_mode: "redirect"`, `login()` sends the whole page to Google, which
+comes back to your `redirect_uri` with `code` and `state` in the query string.
+List that URI under Authorized redirect URIs. Your server handles the URL:
+instead of the header, check that `state` matches the value you passed to
+`useCodeClient`, then exchange the code with `redirectUri` set to the same
+`redirect_uri`.
