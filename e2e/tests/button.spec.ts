@@ -70,3 +70,23 @@ test("one-tap prompts, forwards prompt moments and cancels on unmount", async ({
   await page.getByRole("button", { name: "toggle" }).click();
   await expect.poll(() => calls(page, "id.cancel")).toHaveLength(1);
 });
+
+test("remounts into its element once Google's script has loaded", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await open(page, "button");
+  await expect(page.getByTestId("gsi-button")).toBeVisible();
+
+  // Mounting again finds the script already loaded
+  const toggle = page.getByRole("button", { name: "toggle" });
+  await toggle.click();
+  await toggle.click();
+  await expect(page.getByTestId("gsi-button")).toBeVisible();
+
+  const renders = await calls(page, "id.renderButton");
+  expect(renders.map((call) => call.args[0])).toEqual(["[div]", "[div]"]);
+  expect(await calls(page, "id.initialize")).toHaveLength(2);
+  expect(errors).toEqual([]);
+});

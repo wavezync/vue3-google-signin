@@ -316,7 +316,10 @@ const { scriptLoaded } = useGsiScript();
 
 watchEffect(() => {
   const client_id = clientId();
-  if (!scriptLoaded.value || !client_id) return;
+  const parent = targetElement.value;
+  // The effect first runs in setup, before the element exists. Once Google's
+  // script has loaded (say, after a route change), wait for the mount.
+  if (!scriptLoaded.value || !client_id || !parent) return;
 
   window.google?.accounts.id.initialize({
     client_id,
@@ -353,7 +356,7 @@ watchEffect(() => {
     button_auto_select: props.buttonAutoSelect,
   });
 
-  window.google?.accounts.id.renderButton(targetElement.value! as HTMLElement, {
+  window.google?.accounts.id.renderButton(parent, {
     type: props.type,
     theme: props.theme,
     size: props.size,
