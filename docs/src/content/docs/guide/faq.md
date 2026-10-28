@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Answers about extra OAuth2 scopes, verifying users on your server, custom nonces, closed popups, One Tap not showing, and Nuxt and SSR.
+description: Answers about extra OAuth2 scopes, verifying users on your server, custom nonces, popups, One Tap not showing, and Nuxt and SSR.
 ---
 
 ## Which one should I use?
@@ -51,6 +51,13 @@ get back is the ID token, with your nonce in its `nonce` claim. This is what
 flows such as Sui's zkLogin need. The token and code clients don't return ID
 tokens.
 
+## Nothing happens after the popup closes
+
+Google's popup reports back to your page with `postMessage`, which a
+`Cross-Origin-Opener-Policy: same-origin` header blocks. Some security
+middleware, such as nuxt-security, sends it by default. Send
+`same-origin-allow-popups` instead.
+
 ## How do I know the user closed the popup?
 
 `useTokenClient` and `useCodeClient` call `onNonOAuthError` when the popup is
@@ -98,6 +105,6 @@ Yes. Use the [Nuxt module](/guide/#with-nuxt). Components and composables
 render on the server and load Google's script once the page is in the browser.
 `decodeCredential` works on the server too.
 
-To import types such as `CredentialResponse` in a Nuxt app installed with pnpm,
-add `vue3-google-signin` to your own dependencies. pnpm doesn't let you import
-packages that only the Nuxt module depends on.
+Import types such as `CredentialResponse` from `nuxt-vue3-google-signin`.
+See [With Nuxt](/guide/#with-nuxt) to set the client ID when the server starts
+or per request.
