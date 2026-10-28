@@ -2,17 +2,30 @@
 // endpoints (src/pages/llms*.txt.ts) list the pages in the same order.
 export const sidebar = [
   {
-    label: "Guide",
+    label: "Start Here",
     items: [
       { label: "Get Started", slug: "guide" },
-      { label: "Google Sign-in Button", slug: "guide/google-signin-button" },
-      { label: "One Tap Login", slug: "guide/one-tap-login" },
+      { label: "Using with Nuxt", slug: "guide/nuxt" },
+    ],
+  },
+  {
+    label: "Guides",
+    items: [
+      { label: "Sign In with the Button", slug: "guide/google-signin-button" },
+      { label: "Sign In with One Tap", slug: "guide/one-tap-login" },
+      { label: "Verify Users on Your Server", slug: "guide/verify-users" },
+      { label: "Build a Custom Button", slug: "guide/creating-custom-buttons" },
+      { label: "Call Google APIs", slug: "guide/google-apis" },
       {
-        label: "Creating Custom Buttons",
-        slug: "guide/creating-custom-buttons",
+        label: "Set the Client ID at Runtime",
+        slug: "guide/dynamic-client-id",
       },
-      { label: "Dynamic Client ID", slug: "guide/dynamic-client-id" },
-      { label: "Using with Electron", slug: "guide/using-with-electron" },
+      { label: "Desktop Apps", slug: "guide/using-with-electron" },
+    ],
+  },
+  {
+    label: "Help",
+    items: [
       { label: "FAQ", slug: "guide/faq" },
       { label: "Migrating to v3", slug: "guide/migrating-to-v3" },
       { label: "Changelog", slug: "changelog" },

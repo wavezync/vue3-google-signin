@@ -1,6 +1,6 @@
 ---
-title: Dynamic Client ID
-description: Set the Google client ID after your app starts, change it later, or give each component its own.
+title: Set the Client ID at Runtime
+description: Load the Google client ID from your server after the app starts, switch it per tenant, give each component its own, or set it per environment and per domain in Nuxt.
 ---
 
 import { Steps } from "@astrojs/starlight/components";
@@ -113,6 +113,20 @@ app.use(GoogleSignInPlugin);
 A component's own `clientId` wins while it has a value. Leave it empty and the
 component falls back to the plugin's.
 :::
+
+## In Nuxt
+
+The Nuxt module keeps the client ID in runtime config, so the usual answers are
+different:
+
+- **One build, a client ID per environment.** Set
+  `NUXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID` where the server runs. No ref needed.
+  See [Using with Nuxt](/guide/nuxt/#set-the-client-id-from-the-environment).
+- **A client ID per domain or request.** Turn off the module's plugin and
+  install vue3-google-signin in your own Nuxt plugin, which can read the
+  request. See [Using with Nuxt](/guide/nuxt/#a-client-id-per-domain).
+- **A client ID per component.** The `clientId` option and `client-id` prop
+  work as above.
 
 ## A missing client ID
 

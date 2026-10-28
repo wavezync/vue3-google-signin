@@ -1,0 +1,81 @@
+---
+title: Desktop Apps with Electron and Tauri
+description: Sign users in to Electron, Tauri and other desktop apps by opening Google's sign-in in the system browser with useCodeClient's codeRequestRedirectUrl, then handing the session back to the app.
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+Electron, Tauri and NW.js render your app in an embedded browser, and Google
+blocks sign-in from embedded browsers: the user sees "This browser or app may
+not be secure". Run the sign-in in the user's own browser instead, the way VS
+Code signs in to GitHub.
+
+<Steps>
+
+1. The app builds Google's sign-in URL with `useCodeClient` and opens it in the
+   system browser.
+
+2. The user signs in there. Google redirects to your server's `redirect_uri`
+   with a `code` and the `state` you passed.
+
+3. Your server checks `state`, exchanges the code with your client secret, and
+   signs the user in.
+
+4. The server sends the browser back to the app through a custom protocol link,
+   such as `myapp://signed-in?ticket=...`, with a short-lived, one-time ticket
+   instead of Google's tokens.
+
+5. The app trades the ticket for its own session with your server.
+
+</Steps>
+
+## Open the sign-in URL
+
+`useCodeClient` returns `codeRequestRedirectUrl`, the URL `login()` would open
+in redirect mode. Open it in the system browser:
+
+```vue title="SignIn.vue"
+<script setup lang="ts">
+import { useCodeClient } from "vue3-google-signin";
+
+// Also send it to your server, which checks it in the callback
+const state = crypto.randomUUID();
+
+const { isReady, codeRequestRedirectUrl } = useCodeClient({
+  redirect_uri: "https://api.example.com/auth/google/callback",
+  state,
+});
+
+function signIn() {
+  // Electron: shell.openExternal, exposed by your preload script.
+  // Tauri: openUrl from @tauri-apps/plugin-opener.
+  window.desktop.openExternal(codeRequestRedirectUrl.value!);
+}
+</script>
+
+<template>
+  <button :disabled="!isReady" @click="signIn">Sign in with Google</button>
+</template>
+```
+
+List the `redirect_uri` under **Authorized redirect URIs** for your client ID.
+The URL asks for offline access with the consent screen, so the exchange
+returns a refresh token too.
+
+## Handle the callback
+
+Your server's callback works like
+[redirect mode](/guide/google-apis/#redirect-mode): check that `state` is the
+one the app sent, then exchange the code with `redirectUri` set to the same
+`redirect_uri`. The exchange returns `tokens.id_token`; verify it as in
+[Verify users on your server](/guide/verify-users/#verify-it-on-the-server) to
+learn who signed in.
+
+## Return to the app
+
+To bring the user back, register a protocol for your app, such as
+[`app.setAsDefaultProtocolClient`](https://www.electronjs.org/docs/latest/api/app#appsetasdefaultprotocolclientprotocol-path-args)
+in Electron or the deep link plugin in Tauri, and have the callback page
+redirect to it. Keep Google's tokens on your server; the link only needs to
+carry the one-time ticket. A local loopback server or a WebSocket from the app
+to your server also works, depending on your platform.

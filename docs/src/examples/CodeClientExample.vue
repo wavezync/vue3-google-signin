@@ -6,15 +6,15 @@ import {
 } from "vue3-google-signin";
 
 const handleOnSuccess = async (response: CodeClientSuccessResponse) => {
-  // send code to a backend server to verify it.
-  console.log("Code: ", response.code);
-
-  // use axios or something to reach backend server
-  const result = await fetch("https://YOUR_BACKEND/code/verify", {
+  // Send the code to your server, which exchanges it for tokens
+  await fetch("/api/google/connect", {
     method: "POST",
-    body: JSON.stringify({
-      code: response.code,
-    }),
+    headers: {
+      "Content-Type": "application/json",
+      // Google asks your server to check this header in popup mode
+      "X-Requested-With": "XmlHttpRequest",
+    },
+    body: JSON.stringify({ code: response.code }),
   });
 };
 

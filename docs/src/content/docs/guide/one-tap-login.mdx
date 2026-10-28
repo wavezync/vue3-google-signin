@@ -1,37 +1,39 @@
 ---
-title: One Tap Login
-description: Show Google's One Tap sign-in prompt in a Vue 3 app with useOneTap, either when the page loads or when your own code triggers it.
+title: Sign In with One Tap
+description: Show Google's One Tap sign-in prompt in Vue or Nuxt with useOneTap, on page load or from your own button, only to signed-out visitors, and find out why it didn't show.
 ---
 
-import { Code } from "@astrojs/starlight/components";
+import { Code, Tabs, TabItem } from "@astrojs/starlight/components";
 import OneTapAutomaticExample from "../../../examples/OneTapAutomaticExample.vue";
 import automatic from "../../../examples/OneTapAutomaticExample.vue?raw";
 import OneTapManualExample from "../../../examples/OneTapManualExample.vue";
 import manual from "../../../examples/OneTapManualExample.vue?raw";
 
-## Automatically
+Google [One Tap](https://developers.google.com/identity/gsi/web/guides/display-google-one-tap)
+asks users who are signed in to Google whether to continue as that account,
+without leaving the page. The browser draws the prompt through its
+[FedCM](https://developers.google.com/identity/gsi/web/guides/fedcm-migration)
+API, so how it looks depends on the browser. Like the button, it hands you an
+ID token: [verify it on your server](/guide/verify-users/) before you trust it.
 
-Google [One Tap](https://developers.google.com/identity/gsi/web/guides/display-google-one-tap) login is another way to quickly onboard users.
-It displays a small dialog to the side, or a popup if the dialog's visibility is limited.
+:::note
+In Nuxt, `useOneTap` is auto-imported: leave out the `import` lines.
+:::
 
-Use the `useOneTap` composable. It triggers the One Tap prompt automatically once the Google API has loaded.
+## Prompt when the page loads
+
+Call `useOneTap` in a component. The prompt shows as soon as Google's script
+has loaded:
 
 <Code code={automatic} lang="vue" />
 
 <OneTapAutomaticExample client:only="vue" />
 
-:::note
-If you close the automatic One Tap prompt, you might not see it again for a while because
-Google enforces an [exponential cooldown](https://developers.google.com/identity/gsi/web/guides/features#exponential_cooldown).
-:::
+When the component unmounts, the prompt closes.
 
-## Manually
+## Prompt from your own button
 
-You may want to trigger the One Tap flow manually. Use the values returned by `useOneTap` for this.
-
-:::tip
-To disable the automatic prompt, set `disableAutomaticPrompt: true`.
-:::
+Set `disableAutomaticPrompt` and call `login()` when you want the prompt:
 
 <Code code={manual} lang="vue" />
 
@@ -39,9 +41,104 @@ To disable the automatic prompt, set `disableAutomaticPrompt: true`.
   <OneTapManualExample client:only="vue" />
 </div>
 
-:::note
-If you closed a One Tap prompt before, you might not see it for a while because
-Google enforces an [exponential cooldown](https://developers.google.com/identity/gsi/web/guides/features#exponential_cooldown).
+## Only prompt signed-out visitors
 
-Even clicking the button may not show the prompt during the cooldown.
-:::
+One Tap is meant for visitors who aren't signed in to your app. Put it in a
+component and mount that component only while nobody is signed in. Once the
+user signs in, the component unmounts and the prompt goes away.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue title="App.vue"
+<script setup lang="ts">
+import GoogleOneTap from "./components/GoogleOneTap.vue";
+import { useAuth } from "./auth"; // your auth state
+
+const { user } = useAuth();
+</script>
+
+<template>
+  <GoogleOneTap v-if="!user" />
+  <RouterView />
+</template>
+```
+
+</TabItem>
+  <TabItem label="Nuxt">
+
+```vue title="layouts/default.vue"
+<script setup lang="ts">
+const { loggedIn } = useUserSession();
+</script>
+
+<template>
+  <GoogleOneTap v-if="!loggedIn" />
+  <slot />
+</template>
+```
+
+`GoogleOneTap` is a component that calls `useOneTap`.
+[Using with Nuxt](/guide/nuxt/#one-tap-on-every-page) has the whole setup with
+nuxt-auth-utils.
+
+</TabItem>
+</Tabs>
+
+## Sign returning users in automatically
+
+With `autoSelect: true`, a returning user who has only one Google session that
+approved your app is signed in without a tap:
+
+```ts
+useOneTap({
+  autoSelect: true,
+  onSuccess: ({ credential }) => signIn(credential),
+});
+```
+
+When they sign out, call `window.google?.accounts.id.disableAutoSelect()`, or
+One Tap signs them straight back in. See
+[Sign users out](/guide/verify-users/#sign-users-out).
+
+## Change the prompt's wording
+
+`context` picks the title Google shows: `"signin"` (the default), `"signup"` or
+`"use"`.
+
+```ts
+useOneTap({ context: "signup", onSuccess });
+```
+
+## Find out why it didn't show
+
+One Tap doesn't always show. `onPromptMomentNotification` reports what
+happened:
+
+```ts
+useOneTap({
+  onSuccess,
+  onPromptMomentNotification: (notification) => {
+    if (notification.isSkippedMoment()) {
+      console.log("skipped:", notification.getSkippedReason());
+    }
+    if (notification.isDismissedMoment()) {
+      console.log("dismissed:", notification.getDismissedReason());
+    }
+  },
+});
+```
+
+The usual reasons:
+
+- **Cooldown.** After a user closes the prompt, the browser waits before
+  showing it again, longer each time. Google calls this the
+  [exponential cooldown](https://developers.google.com/identity/gsi/web/guides/features#exponential_cooldown).
+  Clicking a button that calls `login()` doesn't skip it.
+- **Origin.** The page's origin, with its port, must be listed under Authorized
+  JavaScript origins for your client ID.
+- **No Google session.** The user isn't signed in to Google in this browser, or
+  has turned off third-party sign-in prompts in the browser's settings.
+
+Because One Tap can always be skipped, keep a
+[sign-in button](/guide/google-signin-button/) on your login page too.

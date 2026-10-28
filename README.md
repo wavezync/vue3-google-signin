@@ -49,35 +49,14 @@ app.mount("#app");
 
 ## With Nuxt
 
-To easily use the library with **Nuxt3** we have provided a module called [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) which take care of proper component registration and plugin initialization :fire:.
+For **Nuxt 3 and 4**, add the [nuxt-vue3-google-signin](https://github.com/wavezync/nuxt-vue3-google-signin) module. It installs the plugin and auto-imports the component, composables and helpers.
 
-### Add package
-
-- With **NPM**
-
-```bash
-npm install -S nuxt-vue3-google-signin
+```sh
+npx nuxi@latest module add nuxt-vue3-google-signin
 ```
-
-- With **Yarn**
-
-```bash
-yarn add nuxt-vue3-google-signin
-```
-
-- With **PNPM**
-
-```bash
-pnpm add nuxt-vue3-google-signin
-```
-
-### Initialize
-
-Now you can add following entry to the `nuxt.config.ts`(or `nuxt.config.js`)
 
 ```ts
-import { defineNuxtConfig } from "nuxt/config";
-
+// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ["nuxt-vue3-google-signin"],
   googleSignIn: {
@@ -85,6 +64,8 @@ export default defineNuxtConfig({
   },
 });
 ```
+
+Or leave `clientId` out and set `NUXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID` when the server starts. The [Nuxt guide](https://vue3-google-signin.wavezync.com/guide/nuxt/) covers SSR, sessions, protected pages and server routes.
 
 ## Development
 
