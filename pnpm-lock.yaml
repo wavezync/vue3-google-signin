@@ -2313,8 +2313,8 @@ packages:
       typescript:
         optional: true
 
-  immutable@4.3.5:
-    resolution: {integrity: sha512-8eabxkth9gZatlwl5TBuJnCsoTADlL6ftEr7A4qgdaTsPyreilDSnUk57SO+jfKcNtxPa22U5KK6DSeAYhpBJw==}
+  immutable@4.3.9:
+    resolution: {integrity: sha512-ObHy4YN7ycwZOUCLI1/6svfyAFu7vL8RhAvVu/bh/RZW9EPlOyDaQ9jDQWCtdqzaXUjgXZCW1migtHE7YI7UGQ==}
 
   import-without-cache@0.4.1:
     resolution: {integrity: sha512-vXoV9PjKHEednCUu01e98TkImxy67e3BJXbTIOmIq4Hyzw3IAwYRcuPkfeTzJzwyyts4kjuA73x+pWJLc4f86A==}
@@ -5391,7 +5391,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  immutable@4.3.5:
+  immutable@4.3.9:
     optional: true
 
   import-without-cache@0.4.1: {}
@@ -6093,7 +6093,7 @@ snapshots:
   sass@1.71.1:
     dependencies:
       chokidar: 3.6.0
-      immutable: 4.3.5
+      immutable: 4.3.9
       source-map-js: 1.2.2
     optional: true
 
